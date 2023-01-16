@@ -1,0 +1,35 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/30 20:36:33 by hoslim            #+#    #+#             */
+/*   Updated: 2023/01/16 13:02:18 by hoslim           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/minishell.h"
+
+//0. check cmd
+//1. parsing
+//2. built-in
+//3. check a cmd with path
+//4. check a cmd without path
+//5. tokenize
+//6. re-asembled token
+//7. exec
+
+int	exit_code = 0;
+
+int	main(void)
+{
+	t_info	*info;
+
+	info = init_info();
+	if (!info)
+		return (error(NULL, "Failed to initailzie\n"));
+	start_shell(info);
+	return (0);
+}
