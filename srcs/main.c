@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:36:33 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/16 13:02:18 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/16 13:47:31 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,16 @@
 //6. re-asembled token
 //7. exec
 
-int	exit_code = 0;
+int	exit_code;
+//사용시 한번씩 초기화 필요
 
-int	main(void)
+int	main(int ac, char **av, char **envp)
 {
 	t_info	*info;
 
-	info = init_info();
+	(void)ac;
+	(void)av;
+	info = init_info(envp);
 	if (!info)
 		return (error(NULL, "Failed to initailzie\n"));
 	start_shell(info);

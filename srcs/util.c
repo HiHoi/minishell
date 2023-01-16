@@ -6,11 +6,23 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/15 19:57:04 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/16 13:46:45 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	exit_code;
+
+int	count_line(char **line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+		i++;
+	return (i);
+}
 
 void	free_info(t_info *info)
 {
@@ -26,18 +38,20 @@ int	error(t_info *info, char *s)
 		free_info(info);
 	if (s)
 		write(2, s, ft_strlen(s));
-	return (ERROR);
+	exit(exit_code);
 }
 
-t_info	*init_info(void)
+t_info	*init_info(char **envp)
 {
 	t_info	*info;
+	int		i;
 
-	info = malloc(sizeof(t_info));
-	if (!info)
-		return (NULL);
-	info->cmd = malloc(sizeof(t_cmd));
-	if (!info->cmd)
-		return (NULL);
+	info = ft_calloc(1, sizeof(t_info));
+	info->cmd = ft_calloc(1, sizeof(t_cmd));
+	info->en = ft_calloc(count_line(envp), sizeof(char *));
+	i = -1;
+	while (envp[++i])
+		info->en[i] = ft_strdup(envp[i]);
+	info->en[i] = NULL;
 	return (info);
 }
