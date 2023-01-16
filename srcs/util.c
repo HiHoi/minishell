@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/16 13:46:45 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/16 15:38:04 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,16 @@ void	free_info(t_info *info)
 		free(info->cmd);
 	if (info)
 		free(info);
+}
+
+int	hs_error_return(t_info *info, char *s, int errno)
+{
+	if (info)
+		free_info(info);
+	if (s)
+		write(2, s, ft_strlen(s));
+	exit_code = errno;
+	return (exit_code);
 }
 
 int	error(t_info *info, char *s)

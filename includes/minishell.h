@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/16 13:43:25 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/16 18:38:09 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,22 @@ typedef struct s_info
 	char			**en;
 }	t_info;
 
+typedef struct s_shell
+{
+	pid_t	pid;
+	int		fd[2];
+	int		exit_num;
+}	t_shell;
+
+typedef struct s_prog
+{
+	pid_t			pid;
+	int				fd[2];
+	int				exit_num;
+	struct s_prog	*next;
+	struct s_prog	*prev;
+}	t_prog;
+
 typedef struct s_cmd
 {
 	int				type;
@@ -61,8 +77,10 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 void	*ft_calloc(size_t nelem, size_t elsize);
 
 t_info	*init_info(char **envp);
+void	hs_pipeline(t_info *info);
 void	start_shell(t_info *info);
 int		error(t_info *info, char *s);
+int		hs_error_return(t_info *info, char *s, int errno);
 
 void	parsing_cmd(t_info *info, char *buf);
 int		count_line(char **line);
