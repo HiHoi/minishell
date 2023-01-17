@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/16 13:46:45 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/17 12:58:49 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,18 @@ int	error(t_info *info, char *s)
 	if (s)
 		write(2, s, ft_strlen(s));
 	exit(exit_code);
+}
+
+int	hs_error_return(t_info *info, t_cmd *cmd, char *s)
+{
+	if (info)
+		free_info(info);
+	if (cmd)
+		free(cmd);
+	if (s)
+		write(2, s, ft_strlen(s));
+	exit_code = 127;
+	return (exit_code);
 }
 
 t_info	*init_info(char **envp)

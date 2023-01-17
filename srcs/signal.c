@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/16 13:07:51 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/17 14:53:22 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,9 @@ void	start_shell(t_info *info)
 		{
 			add_history(buf);
 			parsing_cmd(info, buf);
+			hs_do_something(info);
 			free(buf);
+			info->cmd->str = NULL;
 		}
 	}
 }
