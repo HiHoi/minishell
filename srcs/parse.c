@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 19:23:51 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/17 12:46:59 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/17 20:07:01 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,7 @@ void	hs_check_lexical(t_cmd *cmd, char *buf)
 void	parsing_cmd(t_info *info, char *buf)
 {
 	check_type(info->cmd, buf);
+	info->cmd->str = ft_strdup(buf);
 	if (info->cmd->type != T_WORD)
 		hs_check_lexical(info->cmd, buf);
-	else
-		info->cmd->str = ft_strdup(buf);
 }
