@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_util.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:35:04 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/17 19:54:40 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/18 18:44:25 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,10 +147,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 int	ft_strcmp(char *s1, char *s2)
 {
 	int	i;
-	int	result;
 
 	i = 0;
-	result = 0;
 	if (!s1 || !s2)
 		return (0);
 	while (*(s1 + i) == *(s2 + i))

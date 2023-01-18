@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/17 19:54:55 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/18 23:33:22 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@ typedef struct s_cmd
 {
 	int				type;
 	int				len;
+	int				exec_flag;
+	int				parent_flag;
+	int				parse_flag;
+	int				fd[2];
 	char			*str;
 	struct s_cmd	*left;
 	struct s_cmd	*right;
@@ -77,5 +81,7 @@ void	hs_redirect(t_cmd *cmd);
 void	hs_search_tree(t_cmd *cmd, char **envp);
 char	*pipe_parsing_cmd(char **path, char *cmd);
 char	**pipe_parsing_envp(char **envp);
+
+int		hs_check_builtin(t_cmd *cmd);
 
 #endif

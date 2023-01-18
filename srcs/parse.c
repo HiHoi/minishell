@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 19:23:51 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/17 20:07:01 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/18 23:42:54 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,31 +28,46 @@ void	hs_lexical_pipe(t_cmd *cmd, char *buf)
 void	hs_lexical_redi(t_cmd *cmd, char *buf)
 {
 	int		i;
+	char	**line;
+	char	*file;
 
-	i = -1;
-	while (buf[++i])
+	line = ft_split(buf, ' ');
+	cmd->left = ft_calloc(1, sizeof(t_cmd));
+	cmd->right = ft_calloc(1, sizeof(t_cmd));
+	if (!ft_strcmp(line[0], "<") || !ft_strcmp(line[0], "<<") || !ft_strcmp(line[0], ">") \
+	|| !ft_strcmp(line[0], ">>"))
 	{
-		if (buf[i] == '<')
-		{
-			if (buf[i + 1] == '<')
-				i++;
-			break ;
-		}
-		else if (buf[i] == '>')
-		{
-			if (buf[i + 1] == '>')
-				i++;
-			break ;
-		}
+		cmd->left->str = ft_strdup(line[1]);
+		if (line[2])
+			cmd->right->str = ft_strdup(line[2]);
 	}
-	hs_lexical_parse(cmd, buf, i);
+	else
+	{
+		i = -1;
+		while (line[0][++i])
+		{
+			if (line[0][i] == '>' || line[0][i] == '<')
+			{
+				if (line[0][i + 1] == '>' || line[0][i + 1] == '<')
+					i++;
+				break ;
+			}
+		}
+		file = ft_substr(line[0], i + 1, ft_strlen(line[0]) - i + 1);
+		cmd->left->str = ft_strdup(file);
+		if (line[1])
+			cmd->right->str = ft_strdup(line[1]);
+	}
 }
 
 void	hs_check_lexical(t_cmd *cmd, char *buf)
 {
-	if (check_type(cmd, buf) == T_WORD)
+	if (buf == NULL || check_type(cmd, buf) == T_WORD)
+	{
+		printf("%s\n", cmd->str);
 		return ;
-	else if (check_type(cmd, buf) == T_PIPE)
+	}
+	if (check_type(cmd, buf) == T_PIPE)
 		hs_lexical_pipe(cmd, buf);
 	else if (check_type(cmd, buf) == T_REDI)
 		hs_lexical_redi(cmd, buf);

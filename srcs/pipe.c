@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/17 19:58:22 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/18 21:34:44 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,64 +86,77 @@ void	hs_proc_parent(t_cmd *cmd, int fd[2], char **envp)
 
 void	hs_pipeline(t_cmd *cmd, char **envp)
 {
-	int		fd[2];
 	pid_t	pid;
 
-	if (pipe(fd) == -1)
+	if (pipe(cmd->fd) == -1)
 		hs_error_return(NULL, cmd, "Failed to pipe");
 	pid = fork();
 	if (pid == -1)
 		hs_error_return(NULL, NULL, "Failed to fork");
 	else if (pid == 0)
-		hs_proc_child(cmd->left, fd, envp);
-	else
-	{
-		waitpid(pid, 0, WNOHANG);
-		hs_proc_parent(cmd->right, fd, envp);
-	}
+		hs_proc_child(cmd->left, cmd->fd, envp);
+	waitpid(pid, 0, WNOHANG);
 }
 
-void	hs_cmd(t_cmd *cur, char **envp)
+// void	hs_pipeline_main(t_cmd *cmd, char **envp)
+// {
+// 	pid_t	pid;
+
+// 	pid = fork();
+// 	if (pid == -1)
+// 		hs_error_return(NULL, NULL, "Failed to fork\n");
+// 	else if (pid == 0)
+// 		hs_pipeline(cmd, envp);
+// 	else
+// 		waitpid(pid, 0, 0);
+// }
+
+void	hs_cmd(t_cmd *cmd, char **envp)
 {
 	pid_t	pid;
 	char	**parse_en;
 	char	*path;
 	char	**parse_cmd;
 
+	if (cmd->exec_flag == 1)
+		return ;
 	pid = fork();
 	if (pid == -1)
 		hs_error_return(NULL, NULL, "Failed to fork\n");
 	else if (pid == 0)
 	{
-		parse_en = pipe_parsing_envp(envp);
-		parse_cmd = ft_split(cur->str, ' ');
-		path = pipe_parsing_cmd(parse_en, parse_cmd[0]);
-		execve(path, parse_cmd, envp);
-		error(NULL, "Failed to execve\n");
+		// if (hs_check_builtin(cmd) != 0)
+		// {
+			parse_en = pipe_parsing_envp(envp);
+			parse_cmd = ft_split(cmd->str, ' ');
+			path = pipe_parsing_cmd(parse_en, parse_cmd[0]);
+			execve(path, parse_cmd, envp);
+			error(NULL, "Failed to execve\n");
+		// }
 	}
 	else
 		waitpid(pid, 0, 0);
 }
 
-void	hs_do_something(t_info *info)
-{
-	t_cmd	*cur;
-	pid_t	pid;
+// void	hs_do_something(t_info *info)
+// {
+// 	t_cmd	*cur;
+// 	pid_t	pid;
 
-	cur = info->cmd;
-	if (cur->type == T_WORD)
-		hs_cmd(cur, info->en);
-	else if (cur->type == T_PIPE)
-	{
-		pid = fork();
-		if (pid == -1)
-			hs_error_return(NULL, NULL, "Failed to fork\n");
-		else if (pid == 0)
-			hs_pipeline(cur, info->en);
-		else
-			waitpid(pid, 0, 0);
-	}
-}
+// 	cur = info->cmd;
+// 	if (cur->type == T_WORD)
+// 		hs_cmd(cur, info->en);
+// 	else if (cur->type == T_PIPE)
+// 	{
+// 		pid = fork();
+// 		if (pid == -1)
+// 			hs_error_return(NULL, NULL, "Failed to fork\n");
+// 		else if (pid == 0)
+// 			hs_pipeline(cur, info->en);
+// 		else
+// 			waitpid(pid, 0, 0);
+// 	}
+// }
 
 void	hs_excute_tree(t_cmd *cmd, char **envp)
 {
@@ -158,8 +171,8 @@ void	hs_excute_tree(t_cmd *cmd, char **envp)
 void	hs_search_tree(t_cmd *cmd, char **envp)
 {
 	hs_excute_tree(cmd, envp);
-	if (cmd->right != NULL)
-		hs_search_tree(cmd->right, envp);
 	if (cmd->left != NULL)
 		hs_search_tree(cmd->left, envp);
+	if (cmd->right != NULL)
+		hs_search_tree(cmd->right, envp);
 }

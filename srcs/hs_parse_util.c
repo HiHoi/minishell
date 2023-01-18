@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hs_parse_util.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:42:56 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/17 19:01:49 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/18 23:27:42 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ void	hs_lexical_parse(t_cmd *cmd, char *buf, int i)
 	char	*right_str;
 
 	cmd->left = ft_calloc(1, sizeof(t_cmd));
-	left_str = ft_substr(buf, 0, i);
-	cmd->left->str = ft_strdup(left_str);
 	cmd->right = ft_calloc(1, sizeof(t_cmd));
+	left_str = ft_substr(buf, 0, i);
 	right_str = ft_substr(buf, i + 1, ft_strlen(buf) - i);
+	cmd->left->str = ft_strdup(left_str);
 	cmd->right->str = ft_strdup(right_str);
 }
 

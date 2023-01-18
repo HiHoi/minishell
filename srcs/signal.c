@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/17 20:09:38 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/18 21:39:39 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	start_shell(t_info *info)
 			add_history(buf);
 			parsing_cmd(info, buf);
 			//hs_do_something(info);
-			hs_search_tree(info->cmd, info->en);
+			//hs_search_tree(info->cmd, info->en);
 			free(buf);
 			info->cmd->str = NULL;
 		}
