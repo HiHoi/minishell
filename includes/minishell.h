@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/16 12:52:12 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/16 13:43:25 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 typedef struct s_info
 {
 	struct s_cmd	*cmd;
-	char			**envp;
+	char			**en;
 }	t_info;
 
 typedef struct s_cmd
@@ -60,10 +60,11 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 void	*ft_calloc(size_t nelem, size_t elsize);
 
-t_info	*init_info(void);
+t_info	*init_info(char **envp);
 void	start_shell(t_info *info);
 int		error(t_info *info, char *s);
 
 void	parsing_cmd(t_info *info, char *buf);
+int		count_line(char **line);
 
 #endif
