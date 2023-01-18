@@ -12,7 +12,10 @@ SRCS = \
 		./srcs/tokenize.c\
 		./srcs/util.c\
 		./srcs/signal.c\
-		./srcs/parse.c
+		./srcs/parse.c\
+		./srcs/hs_parse_util.c\
+		./srcs/pipe.c\
+		./srcs/redirection.c
 
 OBJS = $(SRCS:.c=.o)
 HEADER = ./includes/

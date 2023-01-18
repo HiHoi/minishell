@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/16 13:43:25 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/17 19:54:55 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <fcntl.h>
 # include <dirent.h>
 # include <signal.h>
 # include <readline/readline.h>
@@ -59,12 +60,22 @@ char	*ft_strdup(const char *src);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 void	*ft_calloc(size_t nelem, size_t elsize);
+int		ft_strcmp(char *s1, char *s2);
 
 t_info	*init_info(char **envp);
 void	start_shell(t_info *info);
 int		error(t_info *info, char *s);
+int		hs_error_return(t_info *info, t_cmd *cmd, char *s);
 
 void	parsing_cmd(t_info *info, char *buf);
+int		check_type(t_cmd *cmd, char *buf);
 int		count_line(char **line);
+void	hs_lexical_parse(t_cmd *cmd, char *buf, int i);
+
+void	hs_do_something(t_info *info);
+void	hs_redirect(t_cmd *cmd);
+void	hs_search_tree(t_cmd *cmd, char **envp);
+char	*pipe_parsing_cmd(char **path, char *cmd);
+char	**pipe_parsing_envp(char **envp);
 
 #endif
