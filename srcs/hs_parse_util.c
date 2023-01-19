@@ -3,33 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   hs_parse_util.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:42:56 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/18 23:27:42 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/19 16:07:24 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	hs_lexical_parse(t_cmd *cmd, char *buf, int i)
+void	hs_parse_pipe(t_cmd *cmd, char *buf, int i)
 {
 	char	*left_str;
 	char	*right_str;
 
-	cmd->left = ft_calloc(1, sizeof(t_cmd));
-	cmd->right = ft_calloc(1, sizeof(t_cmd));
+	cmd->left = init_cmd();
+	cmd->right = init_cmd();
 	left_str = ft_substr(buf, 0, i);
 	right_str = ft_substr(buf, i + 1, ft_strlen(buf) - i);
 	cmd->left->str = ft_strdup(left_str);
 	cmd->right->str = ft_strdup(right_str);
 }
 
+void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag)
+{
+	if (flag == 1)
+	{
+		cmd->right->str = ft_substr(buf, idx + 1, ft_strlen(buf) - idx);
+		if (idx == 0)
+			cmd->left->str = NULL;
+		else
+			cmd->left->str = ft_substr(buf, 0, idx);
+	}
+	else if (flag == 2)
+	{
+		cmd->left->str = ft_substr(buf, 0, idx);
+		if (idx == (int)ft_strlen(buf) - 1)
+			cmd->right->str = NULL;
+		else
+			cmd->right->str = ft_substr(buf, idx + 1, ft_strlen(buf) - idx);
+	}
+}
+
 int	check_type(t_cmd *cmd, char *buf)
 {
 	int	i;
+	int	ret;
 
 	i = 0;
+	ret = T_WORD;
 	while (buf[i])
 	{
 		if (buf[i] == '|')
@@ -38,13 +60,9 @@ int	check_type(t_cmd *cmd, char *buf)
 			return (T_PIPE);
 		}
 		else if (buf[i] == '<' || buf[i] == '>')
-		{
-			cmd->type = T_REDI;
-			return (T_REDI);
-		}
-		else
-			cmd->type = T_WORD;
-		buf++;
+			ret = T_REDI;
+		i++;
 	}
-	return (T_WORD);
+	cmd->type = ret;
+	return (ret);
 }

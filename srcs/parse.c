@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 19:23:51 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/18 23:42:54 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/19 19:11:55 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,58 +15,56 @@
 void	hs_lexical_pipe(t_cmd *cmd, char *buf)
 {
 	int		i;
+	int		idx;
+
+	i = -1;
+	idx = 0;
+	while (buf[++i])
+	{
+		if (buf[i] == '|')
+			idx = i;
+	}
+	hs_parse_pipe(cmd, buf, idx);
+}
+
+int	hs_check_redi(char *buf, char redi)
+{
+	int	i;
 
 	i = -1;
 	while (buf[++i])
 	{
-		if (buf[i] == '|')
+		if (buf[i] == redi)
+		{
+			if (buf[i + 1] == redi)
+				i++;
 			break ;
+		}
 	}
-	hs_lexical_parse(cmd, buf, i);
+	if (buf[i] == '\0')
+		return (-1);
+	return (i);
 }
 
 void	hs_lexical_redi(t_cmd *cmd, char *buf)
 {
 	int		i;
-	char	**line;
-	char	*file;
+	int		j;
 
-	line = ft_split(buf, ' ');
-	cmd->left = ft_calloc(1, sizeof(t_cmd));
-	cmd->right = ft_calloc(1, sizeof(t_cmd));
-	if (!ft_strcmp(line[0], "<") || !ft_strcmp(line[0], "<<") || !ft_strcmp(line[0], ">") \
-	|| !ft_strcmp(line[0], ">>"))
-	{
-		cmd->left->str = ft_strdup(line[1]);
-		if (line[2])
-			cmd->right->str = ft_strdup(line[2]);
-	}
-	else
-	{
-		i = -1;
-		while (line[0][++i])
-		{
-			if (line[0][i] == '>' || line[0][i] == '<')
-			{
-				if (line[0][i + 1] == '>' || line[0][i + 1] == '<')
-					i++;
-				break ;
-			}
-		}
-		file = ft_substr(line[0], i + 1, ft_strlen(line[0]) - i + 1);
-		cmd->left->str = ft_strdup(file);
-		if (line[1])
-			cmd->right->str = ft_strdup(line[1]);
-	}
+	cmd->left = init_cmd();
+	cmd->right = init_cmd();
+	i = hs_check_redi(buf, '<');
+	j = hs_check_redi(buf, '>');
+	if (i != -1)
+		hs_parse_redi(i, cmd, buf, 1);
+	if (i == -1 && j != -1)
+		hs_parse_redi(j, cmd, buf, 2);
 }
 
 void	hs_check_lexical(t_cmd *cmd, char *buf)
 {
 	if (buf == NULL || check_type(cmd, buf) == T_WORD)
-	{
-		printf("%s\n", cmd->str);
 		return ;
-	}
 	if (check_type(cmd, buf) == T_PIPE)
 		hs_lexical_pipe(cmd, buf);
 	else if (check_type(cmd, buf) == T_REDI)
