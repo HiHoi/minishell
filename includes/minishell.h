@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/19 20:51:05 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/19 21:30:40 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 void	*ft_calloc(size_t nelem, size_t elsize);
 int		ft_strcmp(char *s1, char *s2);
+char	*ft_strchr(const char *str, int c);
 
 t_info	*init_info(char **envp);
 t_cmd	*init_cmd(void);

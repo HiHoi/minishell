@@ -3,14 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   ft_util.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:35:04 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/18 18:44:25 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/19 21:30:19 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+char	*ft_strchr(const char *str, int c)
+{
+	char	find;
+	int		i;
+
+	i = 0;
+	find = (unsigned char)c;
+	while (str[i])
+	{
+		if (str[i] == find)
+			return ((char *)&str[i]);
+		i++;
+	}
+	if (str[i] == find)
+		return ((char *)&str[i]);
+	return (0);
+}
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {

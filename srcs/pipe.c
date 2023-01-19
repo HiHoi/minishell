@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/19 21:22:14 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/19 21:39:39 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,7 +190,7 @@ void	hs_search_tree(t_cmd *cmd, char **envp)
 		hs_excute_tree(cmd, envp);
 	else
 		waitpid(pid, 0, 0);
-	if (cmd->type == T_PIPE)
+	if (cmd->type == T_PIPE || cmd->type == T_REDI)
 	{
 		cmd->left->exec_flag = 1;
 		cmd->right->exec_flag = 1;
