@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/17 19:54:55 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/19 21:30:40 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # define T_WORD 10
 # define T_PIPE 11
 # define T_REDI 12
+# define T_NULL 13
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -46,6 +47,10 @@ typedef struct s_cmd
 {
 	int				type;
 	int				len;
+	int				exec_flag;
+	int				parent_flag;
+	int				parse_flag;
+	int				fd[2];
 	char			*str;
 	struct s_cmd	*left;
 	struct s_cmd	*right;
@@ -61,8 +66,10 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 void	*ft_calloc(size_t nelem, size_t elsize);
 int		ft_strcmp(char *s1, char *s2);
+char	*ft_strchr(const char *str, int c);
 
 t_info	*init_info(char **envp);
+t_cmd	*init_cmd(void);
 void	start_shell(t_info *info);
 int		error(t_info *info, char *s);
 int		hs_error_return(t_info *info, t_cmd *cmd, char *s);
@@ -70,12 +77,16 @@ int		hs_error_return(t_info *info, t_cmd *cmd, char *s);
 void	parsing_cmd(t_info *info, char *buf);
 int		check_type(t_cmd *cmd, char *buf);
 int		count_line(char **line);
-void	hs_lexical_parse(t_cmd *cmd, char *buf, int i);
+void	hs_parse_pipe(t_cmd *cmd, char *buf, int i);
+void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag);
 
 void	hs_do_something(t_info *info);
 void	hs_redirect(t_cmd *cmd);
 void	hs_search_tree(t_cmd *cmd, char **envp);
+void	hs_pipeline(t_cmd *cmd, char **envp, int parent_fd[2]);
 char	*pipe_parsing_cmd(char **path, char *cmd);
 char	**pipe_parsing_envp(char **envp);
+
+int		hs_check_builtin(t_cmd *cmd);
 
 #endif

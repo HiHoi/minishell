@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/17 20:09:38 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/19 21:48:07 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,21 @@ void	handle_signal(void)
 {
 	signal(SIGINT, handler);
 	signal(SIGQUIT, SIG_IGN);
+}
+
+void	print_test(t_info *info)
+{
+	t_cmd	*cur = info->cmd;
+
+	while (cur)
+	{
+		printf("cur !  t : %d   s : %s\n", cur->type, cur->str);
+		if (cur->left)
+			printf("left !  t : %d   s : %s\n", cur->right->type, cur->right->str);
+		if (cur->right)
+			printf("rigth !  t : %d   s : %s\n", cur->left->type, cur->left->str);
+		cur = cur->left;
+	}
 }
 
 void	start_shell(t_info *info)
@@ -48,6 +63,7 @@ void	start_shell(t_info *info)
 		{
 			add_history(buf);
 			parsing_cmd(info, buf);
+			//print_test(info);
 			//hs_do_something(info);
 			hs_search_tree(info->cmd, info->en);
 			free(buf);

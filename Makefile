@@ -15,7 +15,8 @@ SRCS = \
 		./srcs/parse.c\
 		./srcs/hs_parse_util.c\
 		./srcs/pipe.c\
-		./srcs/redirection.c
+		./srcs/redirection.c\
+		./srcs/builtin.c
 
 OBJS = $(SRCS:.c=.o)
 HEADER = ./includes/

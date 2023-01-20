@@ -6,11 +6,29 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:35:04 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/17 19:54:40 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/19 21:30:19 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+char	*ft_strchr(const char *str, int c)
+{
+	char	find;
+	int		i;
+
+	i = 0;
+	find = (unsigned char)c;
+	while (str[i])
+	{
+		if (str[i] == find)
+			return ((char *)&str[i]);
+		i++;
+	}
+	if (str[i] == find)
+		return ((char *)&str[i]);
+	return (0);
+}
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
@@ -147,10 +165,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 int	ft_strcmp(char *s1, char *s2)
 {
 	int	i;
-	int	result;
-
+  
 	i = 0;
-	result = 0;
 	if (!s1 || !s2)
 		return (0);
 	while (*(s1 + i) == *(s2 + i))
