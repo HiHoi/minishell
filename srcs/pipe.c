@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/19 21:39:39 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/20 21:31:22 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,14 @@ void	hs_proc_parent(t_cmd *cmd, char **envp, int fd[2])
 	char	**parse_cmd;
 	char	**parse_envp;
 
+	if (cmd->type == T_REDI)
+	{
+		hs_redirect(cmd);
+		parse_cmd = ft_split(cmd->right->str, ' ');
+	}
+	else
+		parse_cmd = ft_split(cmd->str, ' ');
 	parse_envp = pipe_parsing_envp(envp);
-	parse_cmd = ft_split(cmd->str, ' ');
 	path = pipe_parsing_cmd(parse_envp, parse_cmd[0]);
 	dup2(fd[0], STDIN_FILENO);
 	close(fd[1]);
@@ -102,10 +108,10 @@ void	hs_pipeline(t_cmd *cmd, char **envp, int parent_fd[2])
 	pid_t	pid;
 
 	if (pipe(cmd->fd) == -1)
-		hs_error_return(NULL, cmd, "Failed to pipe");
+		error(NULL, "Failed to pipe\n");
 	pid = fork();
 	if (pid == -1)
-		hs_error_return(NULL, NULL, "Failed to fork");
+		error(NULL, "Failed to fork\n");
 	else if (pid == 0)
 	{
 		if (cmd->left->type == T_PIPE)
@@ -186,7 +192,7 @@ void	hs_search_tree(t_cmd *cmd, char **envp)
 		cmd->right->parent_flag = 1;
 	pid = fork();
 	if (pid < 0)
-		hs_error_return(NULL, NULL, "Failed to fork\n");
+		error(NULL, "Failed to fork\n");
 	else if (pid == 0)
 		hs_excute_tree(cmd, envp);
 	else
