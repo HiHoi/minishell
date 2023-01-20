@@ -165,7 +165,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 int	ft_strcmp(char *s1, char *s2)
 {
 	int	i;
-
+  
 	i = 0;
 	if (!s1 || !s2)
 		return (0);

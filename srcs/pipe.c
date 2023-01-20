@@ -52,6 +52,7 @@ char	*pipe_parsing_cmd(char **path, char *cmd)
 	return (NULL);
 }
 
+
 void	hs_proc_child(t_cmd *cmd, char **envp, int parentfd[2], int fd[2])
 {
 	char	*path;
