@@ -6,7 +6,7 @@
 /*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/20 21:31:22 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/25 11:20:48 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,12 @@ void	hs_cmd(t_cmd *cmd, char **envp)
 void	hs_excute_tree(t_cmd *cmd, char **envp)
 {
 	if (cmd->type == T_WORD)
-		hs_cmd(cmd, envp);
+	{
+		if (hs_check_builtin(cmd))
+			hs_exec_builtin(cmd, envp);
+		else
+			hs_cmd(cmd, envp);
+	}
 	else if (cmd->type == T_PIPE)
 		hs_pipeline(cmd, envp, 0);
 	else if (cmd->type == T_REDI)

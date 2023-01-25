@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/19 21:30:40 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/25 11:46:53 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,8 @@ char	*pipe_parsing_cmd(char **path, char *cmd);
 char	**pipe_parsing_envp(char **envp);
 
 int		hs_check_builtin(t_cmd *cmd);
+void    hs_exec_builtin(t_cmd *cmd, char **envp);
+void    ft_env(t_cmd *cmd, char **envp);
+void	ft_pwd(t_cmd *cmd);
 
 #endif

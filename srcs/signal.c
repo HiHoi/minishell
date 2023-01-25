@@ -6,7 +6,7 @@
 /*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/20 21:32:32 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/25 11:14:45 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,8 @@ void	start_shell(t_info *info)
 		{
 			add_history(buf);
 			parsing_cmd(info, buf);
-			print_test(info);
-			//hs_do_something(info);
-			//hs_search_tree(info->cmd, info->en);
+			// print_test(info);
+			hs_search_tree(info->cmd, info->en);
 			free(buf);
 			info->cmd->str = NULL;
 		}

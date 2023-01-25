@@ -16,7 +16,9 @@ SRCS = \
 		./srcs/hs_parse_util.c\
 		./srcs/pipe.c\
 		./srcs/redirection.c\
-		./srcs/builtin.c
+		./srcs/builtin.c\
+		./srcs/builtin/env.c\
+		./srcs/builtin/pwd.c
 
 OBJS = $(SRCS:.c=.o)
 HEADER = ./includes/
@@ -31,6 +33,7 @@ all : $(NAME)
 
 clean :
 	$(RM) srcs/*.o
+	$(RM) srcs/builtin/*.o
 
 fclean : clean
 	$(RM) $(NAME)
