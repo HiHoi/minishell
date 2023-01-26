@@ -9,7 +9,6 @@ SRCS = \
 		./srcs/main.c\
 		./srcs/ft_split.c\
 		./srcs/ft_util.c\
-		./srcs/tokenize.c\
 		./srcs/util.c\
 		./srcs/signal.c\
 		./srcs/parse.c\
@@ -17,8 +16,10 @@ SRCS = \
 		./srcs/pipe.c\
 		./srcs/redirection.c\
 		./srcs/builtin.c\
+		./srcs/pipe_util.c\
 		./srcs/builtin/env.c\
-		./srcs/builtin/pwd.c
+		./srcs/builtin/pwd.c\
+		./srcs/builtin/export.c
 
 OBJS = $(SRCS:.c=.o)
 HEADER = ./includes/

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hs_parse_util.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:42:56 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/20 21:27:22 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/26 16:57:42 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,14 @@ void	hs_parse_pipe(t_cmd *cmd, char *buf, int i)
 	right_str = ft_substr(buf, i + 1, ft_strlen(buf) - i);
 	cmd->left->str = ft_strdup(left_str);
 	cmd->right->str = ft_strdup(right_str);
+	free(left_str);
+	free(right_str);
+}
+
+void	hs_parse_redi_trim(t_cmd *cmd, char	*left, char *right)
+{
+	cmd->left->str = ft_strdup(left);
+	cmd->right->str = ft_strdup(right);
 }
 
 void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag)
@@ -34,10 +42,7 @@ void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag)
 		cmd->right->str = ft_substr(buf, idx + 1, ft_strlen(buf) - idx);
 		cmd_file = ft_split(cmd->right->str, ' ');
 		if (cmd_file[1])
-		{
-			cmd->left->str = ft_strdup(cmd_file[1]);
-			cmd->right->str = ft_strdup(cmd_file[0]);
-		}
+			hs_parse_redi_trim(cmd, cmd_file[1], cmd_file[0]);
 		else
 		{
 			if (idx == 0)

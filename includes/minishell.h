@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/25 11:46:53 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/26 16:23:58 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int		error(t_info *info, char *s);
 int		hs_error_return(t_info *info, t_cmd *cmd, char *s);
 
 void	parsing_cmd(t_info *info, char *buf);
+void	hs_cmd(t_cmd *cmd, char **envp);
+
 int		check_type(t_cmd *cmd, char *buf);
 int		count_line(char **line);
 void	hs_parse_pipe(t_cmd *cmd, char *buf, int i);
@@ -83,13 +85,16 @@ void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag);
 void	hs_do_something(t_info *info);
 void	hs_redirect(t_cmd *cmd);
 void	hs_search_tree(t_cmd *cmd, char **envp);
+
 void	hs_pipeline(t_cmd *cmd, char **envp, int parent_fd[2]);
 char	*pipe_parsing_cmd(char **path, char *cmd);
 char	**pipe_parsing_envp(char **envp);
 
 int		hs_check_builtin(t_cmd *cmd);
-void    hs_exec_builtin(t_cmd *cmd, char **envp);
-void    ft_env(t_cmd *cmd, char **envp);
+void	hs_exec_builtin(t_cmd *cmd, char **envp);
+void	ft_env(t_cmd *cmd, char **envp);
 void	ft_pwd(t_cmd *cmd);
+void	ft_export(t_cmd *cmd, char **envp);
+int		ft_isdigit(int c);
 
 #endif

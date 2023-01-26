@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/25 11:14:45 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/26 17:25:03 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,40 @@ void	print_test(t_info *info)
 	}
 }
 
+//export cd unset 은 메인 프로세스에서 실행하여 제대로된 값이 들어가게끔
+//파이프 실행시가 문제
+
+void	exec_builtin(t_cmd *cmd, char **envp)
+{
+	if (cmd->type == T_WORD)
+	{
+		if (!ft_strncmp(cmd->str, "export", 6))
+		{
+			ft_export(cmd, envp);
+			cmd->exec_flag = 1;
+		}
+		return ;
+	}
+	if (cmd->left != NULL)
+		exec_builtin(cmd->left, envp);
+	if (cmd->right != NULL)
+		exec_builtin(cmd->right, envp);
+}
+
+void	free_cmd(t_cmd *cmd)
+{
+	cmd->exec_flag = 0;
+	cmd->parent_flag = 0;
+	cmd->parse_flag = 0;
+	cmd->type = 0;
+	free(cmd->str);
+	if (cmd->left != NULL)
+		free_cmd(cmd->left);
+	if (cmd->right != NULL)
+		free_cmd(cmd->right);
+	return ;
+}
+
 void	start_shell(t_info *info)
 {
 	char			*buf;
@@ -73,10 +107,11 @@ void	start_shell(t_info *info)
 		{
 			add_history(buf);
 			parsing_cmd(info, buf);
-			// print_test(info);
+			//print_test(info);
+			exec_builtin(info->cmd, info->en);
 			hs_search_tree(info->cmd, info->en);
 			free(buf);
-			info->cmd->str = NULL;
+			free_cmd(info->cmd);
 		}
 	}
 }

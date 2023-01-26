@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:35:04 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/19 21:30:19 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/26 15:11:22 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 int	ft_strcmp(char *s1, char *s2)
 {
 	int	i;
-  
+
 	i = 0;
 	if (!s1 || !s2)
 		return (0);
@@ -178,3 +178,10 @@ int	ft_strcmp(char *s1, char *s2)
 	return (*(s1 + i) - *(s2 + i));
 }
 
+int	ft_isdigit(int c)
+{
+	if ('0' <= c && c <= '9')
+		return (1);
+	else
+		return (0);
+}
