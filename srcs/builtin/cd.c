@@ -6,8 +6,12 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:20 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/26 18:43:53 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/27 14:52:58 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	ft_cd(t_cmd *cmd, char **envp)
+{
+}

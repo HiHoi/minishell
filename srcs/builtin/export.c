@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:37:53 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/27 13:03:42 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/27 15:15:45 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,53 @@ void	export_error(t_cmd *cmd, int flag)
 	}
 }
 
+char	**sort_envp(char **envp)
+{
+	int		i;
+	int		j;
+	int		len;
+	char	*buf;
+	char	**sorted;
+
+	i = -1;
+	len = count_line(envp);
+	while (++i < len - 1)
+	{
+		j = i + 1;
+		if (ft_strcmp(envp[i], envp[j]))
+		{
+			buf = envp[i];
+			envp[i] = envp[j];
+			envp[j] = buf;
+		}
+	}
+	sorted = ft_calloc(len, sizeof(char *));
+	i = -1;
+	while (++i < len)
+		sorted[i] = ft_strdup(envp[i]);
+	sorted[i] = NULL;
+	return (sorted);
+}
+
+void	export_declare(char **envp)
+{
+	int		i;
+	int		len;
+	char	**sorted;
+
+	sorted = sort_envp(envp);
+	len = count_line(sorted);
+	i = -1;
+	while (++i < len)
+	{
+		write(1, "declare -x ", 11);
+		write(1, sorted[i], ft_strlen(sorted[i]));
+		write(1, "\n", 1);
+		free(sorted[i]);
+	}
+	free(sorted);
+}
+
 //expr echo 가 작동되지 않음
 //추가시 대문자는 정렬
 // 소문자는 찾아봐야함
@@ -83,10 +130,13 @@ void	ft_export(t_cmd *cmd, char **envp)
 	int		len;
 	char	**parsed;
 
+	if (ft_strchr(cmd->str, ' ') == 0)
+	{
+		export_declare(envp);
+		return ;
+	}
 	export_error(cmd, check_argc(cmd->str));
 	parsed = ft_split(cmd->str, ' ');
-	// if (parsed[1] == NULL)
-	// 	export_declare(envp);
 	len = count_line(envp);
 	envp[len] = ft_strdup(parsed[1]);
 	envp[len + 1] = NULL;
