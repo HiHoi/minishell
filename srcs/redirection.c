@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:24:23 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/20 21:32:51 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/27 14:42:43 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 void	redi_input(t_cmd *cmd)
 {
 	int		in;
+	char	*path;
 
-	in = open(cmd->right->str, O_RDONLY, 0644);
+	path = ft_strtrim(cmd->right->str, " ");
+	in = open(path, O_RDONLY, 0644);
 	if (in < 0)
 		error(NULL, "Failed to open\n");
 	dup2(in, STDIN_FILENO);
@@ -25,9 +27,11 @@ void	redi_input(t_cmd *cmd)
 
 void	redi_output(t_cmd *cmd)
 {
-	int	out;
+	int		out;
+	char	*path;
 
-	out = open(cmd->right->str, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	path = ft_strtrim(cmd->right->str, " ");
+	out = open(path, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (out < 0)
 		error(NULL, "Failed to open\n");
 	dup2(out, STDOUT_FILENO);
@@ -48,6 +52,7 @@ void	make_temp(char *str)
 		if (!ft_strcmp(line, str))
 			break ;
 		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
 		free(line);
 	}
 	free(line);
@@ -56,9 +61,11 @@ void	make_temp(char *str)
 
 void	redi_heredoc(t_cmd *cmd)
 {
-	int	in;
+	int		in;
+	char	*limiter;
 
-	make_temp(cmd->right->str);
+	limiter = ft_strtrim(cmd->right->str, " ");
+	make_temp(limiter);
 	in = open(".temp_file", O_RDONLY, 0644);
 	if (in < 0)
 		hs_error_return(NULL, NULL, "Failed to open\n");
@@ -68,9 +75,11 @@ void	redi_heredoc(t_cmd *cmd)
 
 void	redi_append(t_cmd *cmd)
 {
-	int	out;
+	int		out;
+	char	*path;
 
-	out = open(cmd->right->str, O_RDWR | O_CREAT | O_APPEND, 0644);
+	path = ft_strtrim(cmd->right->str, " ");
+	out = open(path, O_RDWR | O_CREAT | O_APPEND, 0644);
 	if (out < 0)
 		error(NULL, "Failed to open\n");
 	dup2(out, STDOUT_FILENO);

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/26 16:20:26 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/27 14:48:36 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,6 @@
 
 void	hs_proc_child(t_cmd *cmd, char **envp, int parentfd[2], int fd[2])
 {
-	// char	*path;
-	// char	**parse_cmd;
-	// char	**parse_envp;
-
-	// parse_envp = pipe_parsing_envp(envp);
-	// parse_cmd = ft_split(cmd->str, ' ');
-	// path = pipe_parsing_cmd(parse_envp, parse_cmd[0]);
 	if (parentfd > 0)
 	{
 		dup2(fd[0], STDIN_FILENO);
@@ -44,19 +37,6 @@ void	hs_proc_child(t_cmd *cmd, char **envp, int parentfd[2], int fd[2])
 
 void	hs_proc_parent(t_cmd *cmd, char **envp, int fd[2])
 {
-	// char	*path;
-	// char	**parse_cmd;
-	// char	**parse_envp;
-
-	// if (cmd->type == T_REDI)
-	// {
-	// 	hs_redirect(cmd);
-	// 	parse_cmd = ft_split(cmd->right->str, ' ');
-	// }
-	// else
-	// 	parse_cmd = ft_split(cmd->str, ' ');
-	// parse_envp = pipe_parsing_envp(envp);
-	// path = pipe_parsing_cmd(parse_envp, parse_cmd[0]);
 	dup2(fd[0], STDIN_FILENO);
 	close(fd[1]);
 	close(fd[0]);
@@ -92,29 +72,34 @@ void	hs_cmd(t_cmd *cmd, char **envp)
 	char	*path;
 	char	**parse_cmd;
 
+	if (cmd->str == NULL)
+		return ;
 	if (hs_check_builtin(cmd))
 		hs_exec_builtin(cmd, envp);
 	if (cmd->type == T_REDI)
 	{
 		hs_redirect(cmd);
-		parse_cmd = ft_split(cmd->right->str, ' ');
+		parse_cmd = ft_split(cmd->left->str, ' ');
+		parse_en = pipe_parsing_envp(envp);
+		path = pipe_parsing_cmd(parse_en, parse_cmd[0]);
 	}
 	else
+	{
 		parse_cmd = ft_split(cmd->str, ' ');
-	parse_en = pipe_parsing_envp(envp);
-	path = pipe_parsing_cmd(parse_en, parse_cmd[0]);
+		parse_en = pipe_parsing_envp(envp);
+		path = pipe_parsing_cmd(parse_en, parse_cmd[0]);
+	}
+	unlink(".temp_file");
 	execve(path, parse_cmd, envp);
 	error(NULL, "Failed to execve\n");
 }
 
 void	hs_excute_tree(t_cmd *cmd, char **envp)
 {
-	if (cmd->type == T_WORD)
-		hs_cmd(cmd, envp);
-	else if (cmd->type == T_PIPE)
+	if (cmd->type == T_PIPE)
 		hs_pipeline(cmd, envp, 0);
-	else if (cmd->type == T_REDI)
-		hs_redirect(cmd);
+	else
+		hs_cmd(cmd, envp);
 }
 
 void	hs_search_tree(t_cmd *cmd, char **envp)
@@ -123,7 +108,7 @@ void	hs_search_tree(t_cmd *cmd, char **envp)
 
 	if (cmd->exec_flag == 1)
 		return ;
-	if (cmd->right && cmd->right->type != T_REDI)
+	if (cmd->right)
 		cmd->right->parent_flag = 1;
 	pid = fork();
 	if (pid < 0)

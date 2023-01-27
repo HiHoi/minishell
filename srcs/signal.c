@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/26 17:25:03 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/27 14:41:25 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,26 +65,17 @@ void	exec_builtin(t_cmd *cmd, char **envp)
 			ft_export(cmd, envp);
 			cmd->exec_flag = 1;
 		}
+		else if (!ft_strncmp(cmd->str, "unset", 5))
+		{
+			ft_unset(cmd, envp);
+			cmd->exec_flag = 1;
+		}
 		return ;
 	}
 	if (cmd->left != NULL)
 		exec_builtin(cmd->left, envp);
 	if (cmd->right != NULL)
 		exec_builtin(cmd->right, envp);
-}
-
-void	free_cmd(t_cmd *cmd)
-{
-	cmd->exec_flag = 0;
-	cmd->parent_flag = 0;
-	cmd->parse_flag = 0;
-	cmd->type = 0;
-	free(cmd->str);
-	if (cmd->left != NULL)
-		free_cmd(cmd->left);
-	if (cmd->right != NULL)
-		free_cmd(cmd->right);
-	return ;
 }
 
 void	start_shell(t_info *info)
@@ -107,7 +98,7 @@ void	start_shell(t_info *info)
 		{
 			add_history(buf);
 			parsing_cmd(info, buf);
-			//print_test(info);
+			// print_test(info);
 			exec_builtin(info->cmd, info->en);
 			hs_search_tree(info->cmd, info->en);
 			free(buf);

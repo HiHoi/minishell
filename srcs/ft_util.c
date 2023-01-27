@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:35:04 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/26 15:11:22 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/27 13:32:04 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,4 +184,28 @@ int	ft_isdigit(int c)
 		return (1);
 	else
 		return (0);
+}
+
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	int		start;
+	int		end;
+	char	*tmp;
+
+	tmp = 0;
+	if (s1 != NULL && set != NULL)
+	{
+		start = 0;
+		end = ft_strlen(s1);
+		while (s1[start] && ft_strchr(set, s1[start]))
+			start++;
+		while (s1[end - 1] && ft_strchr(set, s1[end - 1]) && end > start)
+			end--;
+		tmp = malloc(sizeof(char) * end - start + 1);
+		if (tmp == NULL)
+			return (0);
+		if (tmp)
+			ft_strlcpy(tmp, (char *)&s1[start], end - start + 1);
+	}
+	return (tmp);
 }

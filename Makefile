@@ -19,7 +19,8 @@ SRCS = \
 		./srcs/pipe_util.c\
 		./srcs/builtin/env.c\
 		./srcs/builtin/pwd.c\
-		./srcs/builtin/export.c
+		./srcs/builtin/export.c\
+		./srcs/builtin/unset.c
 
 OBJS = $(SRCS:.c=.o)
 HEADER = ./includes/

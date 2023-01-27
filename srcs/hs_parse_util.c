@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:42:56 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/26 16:57:42 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/27 14:39:07 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,22 @@ void	hs_parse_pipe(t_cmd *cmd, char *buf, int i)
 	cmd->right->str = ft_strdup(right_str);
 	free(left_str);
 	free(right_str);
+}
+
+void	hs_parse_redi_double(t_cmd *cmd)
+{
+	char	*parse;
+
+	if (ft_strchr(cmd->left->str, '>'))
+	{
+		parse = ft_strtrim(cmd->left->str, ">");
+		cmd->left->str = parse;
+	}
+	if (ft_strchr(cmd->left->str, '<'))
+	{
+		parse = ft_strtrim(cmd->left->str, "<");
+		cmd->left->str = parse;
+	}
 }
 
 void	hs_parse_redi_trim(t_cmd *cmd, char	*left, char *right)

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 19:23:51 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/19 19:11:55 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/27 14:39:19 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	hs_lexical_redi(t_cmd *cmd, char *buf)
 		hs_parse_redi(i, cmd, buf, 1);
 	if (i == -1 && j != -1)
 		hs_parse_redi(j, cmd, buf, 2);
+	hs_parse_redi_double(cmd);
 }
 
 void	hs_check_lexical(t_cmd *cmd, char *buf)
@@ -75,8 +76,11 @@ void	hs_check_lexical(t_cmd *cmd, char *buf)
 		hs_check_lexical(cmd->right, cmd->right->str);
 }
 
+//여기서 누수 생기는데 나중에 해결 요함
+
 void	parsing_cmd(t_info *info, char *buf)
 {
+	info->cmd = init_cmd();
 	check_type(info->cmd, buf);
 	info->cmd->str = ft_strdup(buf);
 	if (info->cmd->type != T_WORD)

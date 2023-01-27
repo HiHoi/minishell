@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/19 14:28:15 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/26 18:39:47 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,20 @@ t_cmd	*init_cmd(void)
 	new->type = 0;
 	new->str = NULL;
 	return (new);
+}
+
+void	free_cmd(t_cmd *cmd)
+{
+	if (cmd->str)
+		free(cmd->str);
+	cmd->exec_flag = 0;
+	cmd->parent_flag = 0;
+	cmd->parse_flag = 0;
+	cmd->type = 0;
+	if (!cmd->left && !cmd->right && cmd)
+		free(cmd);
+	if (cmd->left != NULL)
+		free_cmd(cmd->left);
+	if (cmd->right != NULL)
+		free_cmd(cmd->right);
 }
