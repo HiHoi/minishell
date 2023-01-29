@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:37:53 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/27 15:15:45 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/29 15:37:18 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	check_argc(char *str)
 	free(temp[0]);
 	free(temp[1]);
 	free(temp);
-	if (i > 2)
+	if (i > 1)
 		return (1);
 	if (ft_isdigit(key[0][0]) == 1 || key[1] == NULL)
 	{
@@ -50,9 +50,7 @@ void	export_error(t_cmd *cmd, int flag)
 {
 	char	**temp;
 	int		i;
-	int		len;
 
-	len = 0;
 	i = 1;
 	if (flag == 0)
 		return ;
@@ -63,7 +61,7 @@ void	export_error(t_cmd *cmd, int flag)
 			write(2, "not a valid identifier\n", 23);
 	}
 	else if (flag == 2)
-		error(NULL, "minishell: export: not a valid indentifer\n");
+		write(2, "minishell: export: not a valid indentifer\n", 42);
 	else if (flag == 3)
 	{
 		write(2, "not a valid identifier\n", 23);
@@ -86,7 +84,7 @@ char	**sort_envp(char **envp)
 	while (++i < len - 1)
 	{
 		j = i + 1;
-		if (ft_strcmp(envp[i], envp[j]))
+		if (ft_strcmp(envp[i], envp[j]) > 0)
 		{
 			buf = envp[i];
 			envp[i] = envp[j];
@@ -97,20 +95,18 @@ char	**sort_envp(char **envp)
 	i = -1;
 	while (++i < len)
 		sorted[i] = ft_strdup(envp[i]);
-	sorted[i] = NULL;
+	sorted[len] = NULL;
 	return (sorted);
 }
 
 void	export_declare(char **envp)
 {
 	int		i;
-	int		len;
 	char	**sorted;
 
 	sorted = sort_envp(envp);
-	len = count_line(sorted);
 	i = -1;
-	while (++i < len)
+	while (envp[++i])
 	{
 		write(1, "declare -x ", 11);
 		write(1, sorted[i], ft_strlen(sorted[i]));
@@ -125,22 +121,26 @@ void	export_declare(char **envp)
 // 소문자는 찾아봐야함
 //declare시 대문자 소문자 순서로 오름차순으로 정렬
 
-void	ft_export(t_cmd *cmd, char **envp)
+void	ft_export(t_cmd *cmd, char ***envp)
 {
 	int		len;
+	int		i;
+	char	**new;
 	char	**parsed;
 
 	if (ft_strchr(cmd->str, ' ') == 0)
 	{
-		export_declare(envp);
+		export_declare(*envp);
 		return ;
 	}
 	export_error(cmd, check_argc(cmd->str));
 	parsed = ft_split(cmd->str, ' ');
-	len = count_line(envp);
-	envp[len] = ft_strdup(parsed[1]);
-	envp[len + 1] = NULL;
-	free(parsed[0]);
-	free(parsed[1]);
-	free(parsed);
+	len = count_line(*envp);
+	new = malloc(sizeof(char *) * (len + 1));
+	i = -1;
+	while ((*envp)[++i])
+		new[i] = ft_strdup((*envp)[i]);
+	new[i] = ft_strdup(parsed[1]);
+	new[i + 1] = NULL;
+	*envp = new;
 }

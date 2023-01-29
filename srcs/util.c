@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/26 18:39:47 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/29 14:58:36 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,16 @@ t_info	*init_info(char **envp)
 {
 	t_info	*info;
 	int		i;
+	int		len;
 
+	len = count_line(envp);
 	info = ft_calloc(1, sizeof(t_info));
 	info->cmd = init_cmd();
-	info->en = ft_calloc(count_line(envp), sizeof(char *));
+	info->en = ft_calloc(len, sizeof(char *));
 	i = -1;
-	while (envp[++i])
+	while (++i < len)
 		info->en[i] = ft_strdup(envp[i]);
-	info->en[i] = NULL;
+	info->en[len] = NULL;
 	return (info);
 }
 

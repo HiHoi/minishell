@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/27 14:48:36 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/29 15:45:23 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 //sleep 커맨드는 waitpid가 0일때 제대로 기다림
 //WNOH 옵션을 어떻게 써야 하는지 생각할 필요가 있음
 
-void	hs_proc_child(t_cmd *cmd, char **envp, int parentfd[2], int fd[2])
+void	hs_proc_child(t_cmd *cmd, char ***envp, int parentfd[2], int fd[2])
 {
 	if (parentfd > 0)
 	{
@@ -35,7 +35,7 @@ void	hs_proc_child(t_cmd *cmd, char **envp, int parentfd[2], int fd[2])
 	hs_cmd(cmd, envp);
 }
 
-void	hs_proc_parent(t_cmd *cmd, char **envp, int fd[2])
+void	hs_proc_parent(t_cmd *cmd, char ***envp, int fd[2])
 {
 	dup2(fd[0], STDIN_FILENO);
 	close(fd[1]);
@@ -43,7 +43,7 @@ void	hs_proc_parent(t_cmd *cmd, char **envp, int fd[2])
 	hs_cmd(cmd, envp);
 }
 
-void	hs_pipeline(t_cmd *cmd, char **envp, int parent_fd[2])
+void	hs_pipeline(t_cmd *cmd, char ***envp, int parent_fd[2])
 {
 	pid_t	pid;
 
@@ -66,7 +66,7 @@ void	hs_pipeline(t_cmd *cmd, char **envp, int parent_fd[2])
 		hs_proc_child(cmd->right, envp, parent_fd, cmd->fd);
 }
 
-void	hs_cmd(t_cmd *cmd, char **envp)
+void	hs_cmd(t_cmd *cmd, char ***envp)
 {
 	char	**parse_en;
 	char	*path;
@@ -90,11 +90,11 @@ void	hs_cmd(t_cmd *cmd, char **envp)
 		path = pipe_parsing_cmd(parse_en, parse_cmd[0]);
 	}
 	unlink(".temp_file");
-	execve(path, parse_cmd, envp);
+	execve(path, parse_cmd, *envp);
 	error(NULL, "Failed to execve\n");
 }
 
-void	hs_excute_tree(t_cmd *cmd, char **envp)
+void	hs_excute_tree(t_cmd *cmd, char ***envp)
 {
 	if (cmd->type == T_PIPE)
 		hs_pipeline(cmd, envp, 0);
@@ -102,7 +102,7 @@ void	hs_excute_tree(t_cmd *cmd, char **envp)
 		hs_cmd(cmd, envp);
 }
 
-void	hs_search_tree(t_cmd *cmd, char **envp)
+void	hs_search_tree(t_cmd *cmd, char ***envp)
 {
 	pid_t	pid;
 

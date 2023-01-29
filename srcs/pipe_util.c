@@ -3,22 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_util.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 12:58:46 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/26 12:59:20 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/29 15:49:02 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	**pipe_parsing_envp(char **envp)
+char	**pipe_parsing_envp(char ***envp)
 {
+	int		i;
 	char	*path;
 
-	while (ft_strncmp("PATH", *envp, 4))
-		envp++;
-	path = *envp + 5;
+	i = 0;
+	while (ft_strncmp("PATH", (*envp)[i], 4))
+		i++;
+	path = (*envp)[i] + 5;
 	return (ft_split(path, ':'));
 }
 

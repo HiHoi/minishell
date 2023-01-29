@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:38:13 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/27 13:25:21 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/29 15:50:33 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	check_key(char *envp, char *src)
 	return (0);
 }
 
-void	ft_unset(t_cmd *cmd, char **envp)
+void	ft_unset(t_cmd *cmd, char ***envp)
 {
 	int		i;
 	int		len;
@@ -41,12 +41,12 @@ void	ft_unset(t_cmd *cmd, char **envp)
 	if (target[1] == NULL)
 		return ;
 	i = -1;
-	len = count_line(envp);
+	len = count_line(*envp);
 	while (++i < len)
 	{
-		if (check_key(envp[i], target[1]) == 1)
+		if (check_key((*envp)[i], target[1]) == 1)
 		{
-			envp[i] = NULL;
+			(*envp)[i] = NULL;
 			break ;
 		}
 	}

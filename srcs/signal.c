@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/27 14:41:25 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/29 15:40:16 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	print_test(t_info *info)
 //export cd unset 은 메인 프로세스에서 실행하여 제대로된 값이 들어가게끔
 //파이프 실행시가 문제
 
-void	exec_builtin(t_cmd *cmd, char **envp)
+void	exec_builtin(t_cmd *cmd, char ***envp)
 {
 	if (cmd->type == T_WORD)
 	{
@@ -99,8 +99,8 @@ void	start_shell(t_info *info)
 			add_history(buf);
 			parsing_cmd(info, buf);
 			// print_test(info);
-			exec_builtin(info->cmd, info->en);
-			hs_search_tree(info->cmd, info->en);
+			exec_builtin(info->cmd, &info->en);
+			hs_search_tree(info->cmd, &info->en);
 			free(buf);
 			free_cmd(info->cmd);
 		}
