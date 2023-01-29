@@ -6,7 +6,7 @@
 /*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 21:00:02 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/29 19:42:43 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/29 21:50:08 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	hs_exec_builtin(t_cmd *cmd, char ***envp)
 		ft_env(cmd, envp);
 	// else if (!ft_strncmp(cmd->str, "exit", 4))
 	//     ft_exit(cmd);
-	// else if (ft_strncmp(cmd->str, "cd", 2))
-	// 	ft_cd(cmd, envp);
+	else if (!ft_strncmp(cmd->str, "cd", 2))
+		ft_cd(cmd, envp);
 	else if (ft_strncmp(cmd->str, "echo", 4) == 0)
 	    ft_echo(cmd, envp);
 	else if (!ft_strncmp(cmd->str, "unset", 5))

@@ -21,7 +21,8 @@ SRCS = \
 		./srcs/builtin/pwd.c\
 		./srcs/builtin/export.c\
 		./srcs/builtin/unset.c\
-		./srcs/builtin/echo.c
+		./srcs/builtin/echo.c\
+		./srcs/builtin/cd.c
 
 OBJS = $(SRCS:.c=.o)
 HEADER = ./includes/
