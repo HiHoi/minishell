@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:36:33 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/26 19:12:36 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/29 18:42:41 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 //6. re-asembled token
 //7. exec
 
-int	exit_code;
+extern int	exit_code;
 //사용시 한번씩 초기화 필요
 
 int	main(int ac, char **av, char **envp)

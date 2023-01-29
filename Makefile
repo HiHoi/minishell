@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-FLAG = -Wall -Werror -Wextra -g
+FLAG = -Wall -Werror -Wextra -fsanitize=undefined -g
 READLINE_LINK = -lreadline -L /$(shell brew --prefix readline)/lib
 READLINE_COM = -I /$(shell brew --prefix readline)/include
 TERMCAP = -lncurses
@@ -20,7 +20,8 @@ SRCS = \
 		./srcs/builtin/env.c\
 		./srcs/builtin/pwd.c\
 		./srcs/builtin/export.c\
-		./srcs/builtin/unset.c
+		./srcs/builtin/unset.c\
+		./srcs/builtin/echo.c
 
 OBJS = $(SRCS:.c=.o)
 HEADER = ./includes/

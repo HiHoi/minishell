@@ -6,7 +6,7 @@
 /*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/29 15:47:01 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/29 19:22:57 by hosunglim        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,5 +100,6 @@ void	ft_env(t_cmd *cmd, char ***envp);
 void	ft_pwd(t_cmd *cmd);
 void	ft_export(t_cmd *cmd, char ***envp);
 void	ft_unset(t_cmd *cmd, char ***envp);
+int		ft_echo(t_cmd *cmd, char ***envp);
 
 #endif
