@@ -6,11 +6,29 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:35:04 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/15 18:35:04 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/27 13:32:04 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+char	*ft_strchr(const char *str, int c)
+{
+	char	find;
+	int		i;
+
+	i = 0;
+	find = (unsigned char)c;
+	while (str[i])
+	{
+		if (str[i] == find)
+			return ((char *)&str[i]);
+		i++;
+	}
+	if (str[i] == find)
+		return ((char *)&str[i]);
+	return (0);
+}
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
@@ -142,4 +160,52 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (0);
 	ft_strlcpy(rlt, (char *)(s + start), len + 1);
 	return (rlt);
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	if (!s1 || !s2)
+		return (0);
+	while (*(s1 + i) == *(s2 + i))
+	{
+		if (*(s1 + i) == '\0')
+			return (0);
+		i++;
+	}
+	return (*(s1 + i) - *(s2 + i));
+}
+
+int	ft_isdigit(int c)
+{
+	if ('0' <= c && c <= '9')
+		return (1);
+	else
+		return (0);
+}
+
+char	*ft_strtrim(char const *s1, char const *set)
+{
+	int		start;
+	int		end;
+	char	*tmp;
+
+	tmp = 0;
+	if (s1 != NULL && set != NULL)
+	{
+		start = 0;
+		end = ft_strlen(s1);
+		while (s1[start] && ft_strchr(set, s1[start]))
+			start++;
+		while (s1[end - 1] && ft_strchr(set, s1[end - 1]) && end > start)
+			end--;
+		tmp = malloc(sizeof(char) * end - start + 1);
+		if (tmp == NULL)
+			return (0);
+		if (tmp)
+			ft_strlcpy(tmp, (char *)&s1[start], end - start + 1);
+	}
+	return (tmp);
 }

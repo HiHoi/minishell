@@ -6,62 +6,83 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 19:23:51 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/16 13:44:26 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/27 14:39:19 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	check_type(t_cmd *cmd, char *buf)
+void	hs_lexical_pipe(t_cmd *cmd, char *buf)
+{
+	int		i;
+	int		idx;
+
+	i = -1;
+	idx = 0;
+	while (buf[++i])
+	{
+		if (buf[i] == '|')
+			idx = i;
+	}
+	hs_parse_pipe(cmd, buf, idx);
+}
+
+int	hs_check_redi(char *buf, char redi)
 {
 	int	i;
 
-	i = 0;
-	while (buf[i])
+	i = -1;
+	while (buf[++i])
 	{
-		if (buf[i] == '|')
+		if (buf[i] == redi)
 		{
-			cmd->type = T_PIPE;
+			if (buf[i + 1] == redi)
+				i++;
 			break ;
 		}
-		else if (buf[i] == '<' || buf[i] == '>')
-		{
-			cmd->type = T_REDI;
-			break ;
-		}
-		else
-			cmd->type = T_WORD;
-		buf++;
 	}
+	if (buf[i] == '\0')
+		return (-1);
+	return (i);
 }
 
-void	split_cmd(t_info **info, char **line)
+void	hs_lexical_redi(t_cmd *cmd, char *buf)
 {
-	t_cmd	*cur;
 	int		i;
+	int		j;
 
-	i = 0;
-	(*info)->cmd->right = ft_calloc(1, sizeof(t_cmd));
-	cur = (*info)->cmd->right;
-	while (line[++i])
-	{
-		cur->str = ft_strdup(line[i]);
-		check_type(cur, line[i]);
-		cur->right = ft_calloc(1, sizeof(t_cmd));
-		cur = cur->right;
-	}
+	cmd->left = init_cmd();
+	cmd->right = init_cmd();
+	i = hs_check_redi(buf, '<');
+	j = hs_check_redi(buf, '>');
+	if (i != -1)
+		hs_parse_redi(i, cmd, buf, 1);
+	if (i == -1 && j != -1)
+		hs_parse_redi(j, cmd, buf, 2);
+	hs_parse_redi_double(cmd);
 }
+
+void	hs_check_lexical(t_cmd *cmd, char *buf)
+{
+	if (buf == NULL || check_type(cmd, buf) == T_WORD)
+		return ;
+	if (check_type(cmd, buf) == T_PIPE)
+		hs_lexical_pipe(cmd, buf);
+	else if (check_type(cmd, buf) == T_REDI)
+		hs_lexical_redi(cmd, buf);
+	if (cmd->left != NULL)
+		hs_check_lexical(cmd->left, cmd->left->str);
+	if (cmd->right != NULL)
+		hs_check_lexical(cmd->right, cmd->right->str);
+}
+
+//여기서 누수 생기는데 나중에 해결 요함
 
 void	parsing_cmd(t_info *info, char *buf)
 {
-	char	**line;
-
-	line = ft_split(buf, '|');
-	info->cmd = ft_calloc(1, sizeof(t_cmd));
-	info->cmd->str = ft_strdup(buf);
+	info->cmd = init_cmd();
 	check_type(info->cmd, buf);
-	info->cmd->left = ft_calloc(1, sizeof(t_cmd));
-	info->cmd->left->str = ft_strdup(line[0]);
-	check_type(info->cmd->left, info->cmd->left->str);
-	split_cmd(&info, line);
+	info->cmd->str = ft_strdup(buf);
+	if (info->cmd->type != T_WORD)
+		hs_check_lexical(info->cmd, buf);
 }
