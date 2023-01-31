@@ -74,6 +74,7 @@ char	*ft_itoa(int n);
 
 t_info	*init_info(char **envp);
 t_cmd	*init_cmd(void);
+
 void	start_shell(t_info *info);
 int		error(t_info *info, char *s);
 int		hs_error_return(t_info *info, t_cmd *cmd, char *s);

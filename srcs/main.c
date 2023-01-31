@@ -22,6 +22,7 @@
 //7. exec
 
 extern int	exit_code;
+
 //사용시 한번씩 초기화 필요
 
 int	main(int ac, char **av, char **envp)
