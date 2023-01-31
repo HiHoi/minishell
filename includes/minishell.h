@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/31 16:32:47 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/31 17:27:56 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,5 +113,6 @@ int		ft_echo(t_cmd *cmd, char ***envp);
 void	ft_cd(t_cmd *cmd, char ***envp);
 
 int		check_key(char *envp, char *src);
+char	*parse_env_value(char *key, char ***envp);
 
 #endif

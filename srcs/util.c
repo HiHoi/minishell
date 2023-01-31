@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/30 13:05:48 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/31 17:26:48 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,4 +101,23 @@ void	free_cmd(t_cmd *cmd, char *buf)
 		free_cmd(cmd->left, NULL);
 	if (cmd->right != NULL)
 		free_cmd(cmd->right, NULL);
+}
+
+char	*parse_env_value(char *key, char ***envp)
+{
+	int		i;
+	char	*parse;
+
+	parse = NULL;
+	i = -1;
+	while ((*envp)[++i])
+	{
+		if (!ft_strncmp(key, (*envp)[i], ft_strlen(key)))
+		{
+			parse = ft_substr((*envp)[i], ft_strlen(key) + 1, \
+			ft_strlen((*envp)[i]));
+			break ;
+		}
+	}
+	return (parse);
 }

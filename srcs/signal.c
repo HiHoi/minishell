@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/30 14:31:26 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/31 17:42:08 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,11 @@ void	exec_builtin(t_cmd *cmd, char ***envp)
 		{
 			ft_echo(cmd, envp);
 			cmd->exec_flag = 1;
+		}
+		else if (!ft_strncmp(cmd->str, "cd", 2))
+		{
+			cmd->exec_flag = 1;
+			ft_cd(cmd, envp);
 		}
 		return ;
 	}
