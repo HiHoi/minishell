@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/29 19:26:16 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/30 14:31:26 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+extern int exit_code;
 
 void	handler(int signum)
 {
@@ -70,12 +72,46 @@ void	exec_builtin(t_cmd *cmd, char ***envp)
 			ft_unset(cmd, envp);
 			cmd->exec_flag = 1;
 		}
+		else if (!ft_strcmp(cmd->str, "$?"))
+		{
+			ft_echo(cmd, envp);
+			cmd->exec_flag = 1;
+		}
 		return ;
 	}
 	if (cmd->left != NULL)
 		exec_builtin(cmd->left, envp);
 	if (cmd->right != NULL)
 		exec_builtin(cmd->right, envp);
+}
+
+int	check_cmd_exec(t_cmd *cmd, char ***envp)
+{
+	char	**cmdline;
+	char	**path;
+	char	*parsed;
+
+	if (hs_check_builtin(cmd) == 1)
+		return (-1);
+	cmdline = ft_split(cmd->str, ' ');
+	path = pipe_parsing_envp(envp);
+	parsed = pipe_parsing_cmd(path, cmdline[0]);
+	if (parsed == NULL)
+	{
+		write(2, "minishell: ", 11);
+		if (cmdline[0] != NULL)
+			write(2, cmdline[0], ft_strlen(cmdline[0]));
+		else
+			write(2, "syntax error", 12);
+		write(2, ": command not found\n", 20);
+		exit_code = 127;
+		return (127);
+	}
+	if (cmd->left != NULL)
+		check_cmd_exec(cmd->left, envp);
+	if (cmd->right != NULL)
+		check_cmd_exec(cmd->right, envp);
+	return (-1);
 }
 
 void	start_shell(t_info *info)
@@ -99,10 +135,12 @@ void	start_shell(t_info *info)
 			add_history(buf);
 			parsing_cmd(info, buf);
 			// print_test(info);
-			exec_builtin(info->cmd, &info->en);
-			hs_search_tree(info->cmd, &info->en);
-			free(buf);
-			free_cmd(info->cmd);
+			if (check_cmd_exec(info->cmd, &info->en) == -1)
+			{
+				exec_builtin(info->cmd, &info->en);
+				hs_search_tree(info->cmd, &info->en);
+			}
+			free_cmd(info->cmd, buf);
 		}
 	}
 }

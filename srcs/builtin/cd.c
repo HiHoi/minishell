@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:20 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/29 21:49:00 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/30 12:59:39 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	ft_cd(t_cmd *cmd, char ***envp)
 		exit_code = 127;
 		return ;
 	}
+	chdir(parse[1]);
 	if (parse[1] != NULL && parse[1][0] != '$' && parse[1][0] != '~')
 	{
 		if (chdir(parse[1]) == -1)

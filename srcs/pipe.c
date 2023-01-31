@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/29 21:09:26 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/30 19:05:29 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,28 +43,29 @@ void	hs_proc_parent(t_cmd *cmd, char ***envp, int fd[2])
 	hs_cmd(cmd, envp);
 }
 
-void	hs_pipeline(t_cmd *cmd, char ***envp, int parent_fd[2])
-{
-	pid_t	pid;
+// void	hs_pipeline(t_cmd *cmd, char ***envp, int parent_fd[2])
+// {
+// 	int		status;
+// 	pid_t	pid;
 
-	if (pipe(cmd->fd) == -1)
-		error(NULL, "Failed to pipe\n");
-	pid = fork();
-	if (pid == -1)
-		error(NULL, "Failed to fork\n");
-	else if (pid == 0)
-	{
-		if (cmd->left->type == T_PIPE)
-			hs_pipeline(cmd->left, envp, cmd->fd);
-		else
-			hs_proc_child(cmd->left, envp, 0, cmd->fd);
-	}
-	waitpid(pid, 0, 0);
-	if (cmd->right->parent_flag == 1)
-		hs_proc_parent(cmd->right, envp, cmd->fd);
-	else
-		hs_proc_child(cmd->right, envp, parent_fd, cmd->fd);
-}
+// 	if (pipe(cmd->fd) == -1)
+// 		error(NULL, "Failed to pipe\n");
+// 	pid = fork();
+// 	if (pid == -1)
+// 		error(NULL, "Failed to fork\n");
+// 	else if (pid == 0)
+// 	{
+// 		if (cmd->left->type == T_PIPE)
+// 			hs_pipeline(cmd->left, envp, cmd->fd);
+// 		else
+// 			hs_proc_child(cmd->left, envp, 0, cmd->fd);
+// 	}
+// 	waitpid(pid, &status, WNOHANG);
+// 	if (cmd->right->parent_flag == 1)
+// 		hs_proc_parent(cmd->right, envp, cmd->fd);
+// 	else
+// 		hs_proc_child(cmd->right, envp, parent_fd, cmd->fd);
+// }
 
 void	hs_cmd(t_cmd *cmd, char ***envp)
 {

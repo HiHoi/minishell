@@ -6,11 +6,13 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 11:31:10 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/27 14:52:19 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/30 17:34:22 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+//(exit)는 종료 되면 안됨
 
 // void	ft_exit(t_cmd *cmd)
 // {

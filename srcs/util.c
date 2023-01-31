@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/29 14:58:36 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/30 13:05:48 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,14 @@ t_cmd	*init_cmd(void)
 	new->parse_flag = 0;
 	new->type = 0;
 	new->str = NULL;
+	new->left = NULL;
+	new->right = NULL;
 	return (new);
 }
 
-void	free_cmd(t_cmd *cmd)
+void	free_cmd(t_cmd *cmd, char *buf)
 {
+	free(buf);
 	if (cmd->str)
 		free(cmd->str);
 	cmd->exec_flag = 0;
@@ -95,7 +98,7 @@ void	free_cmd(t_cmd *cmd)
 	if (!cmd->left && !cmd->right && cmd)
 		free(cmd);
 	if (cmd->left != NULL)
-		free_cmd(cmd->left);
+		free_cmd(cmd->left, NULL);
 	if (cmd->right != NULL)
-		free_cmd(cmd->right);
+		free_cmd(cmd->right, NULL);
 }

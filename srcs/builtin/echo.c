@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:27 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/29 21:11:51 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/30 14:28:00 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,11 @@
 
 extern int	exit_code;
 
-// void	print_exit(void)
-// {
-// 	int	code;
-
-// 	code = ft_itoa(exit_code);
-// 	write(1, code, sizeof(code));
-// }
+void	print_exit(void)
+{
+	printf("%d\n", exit_code);
+	exit_code = 127;
+}
 
 void	echo_print(char *s, int option)
 {
@@ -36,8 +34,11 @@ void	echo_env(char *str, char ***envp, int option)
 	char	**value_parse;
 	char	*value;
 
-	// if (s[0][0] == '$' && s[0][1] = '?')
-	// 	print_exit();
+	if (str[0] == '$' && str[1] == '?')
+	{
+		print_exit();
+		return ;
+	}
 	value = NULL;
 	i = 0;
 	parse = ft_split(str, '$');
@@ -79,10 +80,10 @@ int	ft_echo(t_cmd *cmd, char ***envp)
 	if (ft_strchr(cmd->str, '-') > 0)
 		option = 1;
 	parse = echo_parse(cmd->str);
-	if (ft_strcmp(cmd->str, "echo") == 0)
-		write(1, "\n", 1);
-	else if (ft_strchr(cmd->str, '$') > 0)
+	if (ft_strchr(cmd->str, '$') > 0)
 		echo_env(cmd->str, envp, option);
+	else if (ft_strcmp(parse, "echo") == 0)
+		write(1, "\n", 1);
 	else
 		echo_print(parse, option);
 	return (0);

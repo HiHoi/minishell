@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/29 21:43:45 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/30 13:24:06 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,14 @@ int		ft_strcmp(char *s1, char *s2);
 char	*ft_strchr(const char *str, int c);
 int		ft_isdigit(int c);
 char	*ft_strtrim(char const *s1, char const *set);
+char	*ft_itoa(int n);
 
 t_info	*init_info(char **envp);
 t_cmd	*init_cmd(void);
 void	start_shell(t_info *info);
 int		error(t_info *info, char *s);
 int		hs_error_return(t_info *info, t_cmd *cmd, char *s);
-void	free_cmd(t_cmd *cmd);
+void	free_cmd(t_cmd *cmd, char *buf);
 
 void	parsing_cmd(t_info *info, char *buf);
 void	hs_cmd(t_cmd *cmd, char ***envp);
@@ -103,6 +104,6 @@ void	ft_unset(t_cmd *cmd, char ***envp);
 int		ft_echo(t_cmd *cmd, char ***envp);
 void	ft_cd(t_cmd *cmd, char ***envp);
 
-int	check_key(char *envp, char *src);
+int		check_key(char *envp, char *src);
 
 #endif

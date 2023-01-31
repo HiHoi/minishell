@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 21:00:02 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/29 21:50:08 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/30 14:37:43 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	hs_exec_builtin(t_cmd *cmd, char ***envp)
 	//     ft_exit(cmd);
 	else if (!ft_strncmp(cmd->str, "cd", 2))
 		ft_cd(cmd, envp);
-	else if (ft_strncmp(cmd->str, "echo", 4) == 0)
-	    ft_echo(cmd, envp);
+	else if (!ft_strncmp(cmd->str, "echo", 4) || !ft_strncmp(cmd->str, "$?", 2))
+		ft_echo(cmd, envp);
 	else if (!ft_strncmp(cmd->str, "unset", 5))
 		ft_unset(cmd, envp);
 	else if (!ft_strncmp(cmd->str, "pwd", 3))
@@ -38,6 +38,8 @@ int	hs_check_builtin(t_cmd *cmd)
 	else if (!ft_strncmp(cmd->str, "env", 3))
 		return (1);
 	else if (!ft_strncmp(cmd->str, "echo", 4))
+		return (1);
+	else if (!ft_strncmp(cmd->str, "$?", 2))
 		return (1);
 	else if (!ft_strncmp(cmd->str, "unset", 5))
 		return (1);

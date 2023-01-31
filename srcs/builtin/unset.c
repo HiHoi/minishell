@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:38:13 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/29 15:50:33 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/30 17:33:45 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int	check_key(char *envp, char *src)
 		return (1);
 	return (0);
 }
+
+//여러 개의 밸류가 들어오면 그것도 처리
 
 void	ft_unset(t_cmd *cmd, char ***envp)
 {

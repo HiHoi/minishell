@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:37:53 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/29 15:37:18 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/01/30 17:33:33 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,8 @@ void	export_declare(char **envp)
 //추가시 대문자는 정렬
 // 소문자는 찾아봐야함
 //declare시 대문자 소문자 순서로 오름차순으로 정렬
+//key만 있을때 처리
+//여러 개의 키와 밸류도 같이 실행
 
 void	ft_export(t_cmd *cmd, char ***envp)
 {
