@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/30 19:05:29 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/31 17:08:00 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,16 @@ void	hs_proc_child(t_cmd *cmd, char ***envp, int parentfd[2], int fd[2])
 		close(fd[0]);
 	}
 	hs_cmd(cmd, envp);
+	exit(0);
 }
 
 void	hs_proc_parent(t_cmd *cmd, char ***envp, int fd[2])
 {
 	dup2(fd[0], STDIN_FILENO);
-	close(fd[1]);
 	close(fd[0]);
+	close(fd[1]);
 	hs_cmd(cmd, envp);
+	exit(0);
 }
 
 // void	hs_pipeline(t_cmd *cmd, char ***envp, int parent_fd[2])
@@ -54,18 +56,46 @@ void	hs_proc_parent(t_cmd *cmd, char ***envp, int fd[2])
 // 	if (pid == -1)
 // 		error(NULL, "Failed to fork\n");
 // 	else if (pid == 0)
-// 	{
+// {
 // 		if (cmd->left->type == T_PIPE)
 // 			hs_pipeline(cmd->left, envp, cmd->fd);
 // 		else
 // 			hs_proc_child(cmd->left, envp, 0, cmd->fd);
-// 	}
-// 	waitpid(pid, &status, WNOHANG);
+// }
+// 	waitpid(pid, &status, WUNTRACED);
 // 	if (cmd->right->parent_flag == 1)
 // 		hs_proc_parent(cmd->right, envp, cmd->fd);
 // 	else
 // 		hs_proc_child(cmd->right, envp, parent_fd, cmd->fd);
 // }
+
+void	hs_pipeline(t_cmd *cmd, char ***envp)
+{
+	int		i;
+	int		fd[2][2];
+	t_cmd	*cur;
+	pid_t	pid;
+
+	pipe_open(fd);
+	cur = cmd;
+	i = -1;
+	while (cur && ++i > -1)
+	{
+		pid = fork();
+		if (pid == 0)
+		{
+			if (cur->right == NULL && cur->type == T_WORD)
+				pipe_word(i, fd, cur, envp);
+			else if (cur->right && cur->right->parent_flag == 1)
+				pipe_word_p(fd[1], fd[0], cur->right, envp);
+			else if (cur->right && cur->right->parent_flag == 0)
+				pipe_word(i, fd, cur, envp);
+		}
+		cur = cur->left;
+	}
+	waitpid(pid, 0, WNOHANG);
+	exit(0);
+}
 
 void	hs_cmd(t_cmd *cmd, char ***envp)
 {
@@ -91,14 +121,15 @@ void	hs_cmd(t_cmd *cmd, char ***envp)
 		path = pipe_parsing_cmd(parse_en, parse_cmd[0]);
 	}
 	unlink(".temp_file");
-	execve(path, parse_cmd, *envp);
-	error(NULL, "Failed to execve\n");
+	if (execve(path, parse_cmd, *envp) == -1)
+		error(NULL, "Failed to execve\n");
+	exit(0);
 }
 
 void	hs_excute_tree(t_cmd *cmd, char ***envp)
 {
 	if (cmd->type == T_PIPE)
-		hs_pipeline(cmd, envp, 0);
+		hs_pipeline(cmd, envp);
 	else
 		hs_cmd(cmd, envp);
 }

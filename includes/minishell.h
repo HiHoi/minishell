@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/30 13:24:06 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/01/31 16:32:47 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_cmd
 	int				exec_flag;
 	int				parent_flag;
 	int				parse_flag;
+	int				child_flag;
 	int				fd[2];
 	char			*str;
 	struct s_cmd	*left;
@@ -91,9 +92,15 @@ void	hs_do_something(t_info *info);
 void	hs_redirect(t_cmd *cmd);
 void	hs_search_tree(t_cmd *cmd, char ***envp);
 
-void	hs_pipeline(t_cmd *cmd, char ***envp, int parent_fd[2]);
+void	hs_pipeline(t_cmd *cmd, char ***envp);
 char	*pipe_parsing_cmd(char **path, char *cmd);
 char	**pipe_parsing_envp(char ***envp);
+void	hs_proc_child(t_cmd *cmd, char ***envp, int parentfd[2], int fd[2]);
+void	hs_proc_parent(t_cmd *cmd, char ***envp, int fd[2]);
+void	pipe_word(int i, int fd[2][2], t_cmd *cmd, char ***envp);
+void	pipe_word_c(int i, int fd[2][2], t_cmd *cmd, char ***envp);
+void	pipe_word_p(int close_fd[2], int open_fd[2], t_cmd *cmd, char ***envp);
+void	pipe_open(int fd[2][2]);
 
 int		hs_check_builtin(t_cmd *cmd);
 void	hs_exec_builtin(t_cmd *cmd, char ***envp);
