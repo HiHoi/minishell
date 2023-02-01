@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/31 17:26:48 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/01 19:30:55 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,13 @@ t_info	*init_info(char **envp)
 	int		len;
 
 	len = count_line(envp);
-	info = ft_calloc(1, sizeof(t_info));
+	info = malloc(sizeof(t_info));
 	info->cmd = init_cmd();
 	info->en = ft_calloc(len, sizeof(char *));
 	i = -1;
 	while (++i < len)
 		info->en[i] = ft_strdup(envp[i]);
-	info->en[len] = NULL;
+	info->en[i] = NULL;
 	return (info);
 }
 
@@ -75,7 +75,7 @@ t_cmd	*init_cmd(void)
 {
 	t_cmd	*new;
 
-	new = ft_calloc(1, sizeof(t_cmd));
+	new = malloc(sizeof(t_cmd));
 	new->exec_flag = 0;
 	new->parent_flag = 0;
 	new->parse_flag = 0;
@@ -88,19 +88,20 @@ t_cmd	*init_cmd(void)
 
 void	free_cmd(t_cmd *cmd, char *buf)
 {
-	free(buf);
+	if (buf)
+		free(buf);
 	if (cmd->str)
 		free(cmd->str);
 	cmd->exec_flag = 0;
 	cmd->parent_flag = 0;
 	cmd->parse_flag = 0;
 	cmd->type = 0;
-	if (!cmd->left && !cmd->right && cmd)
-		free(cmd);
 	if (cmd->left != NULL)
 		free_cmd(cmd->left, NULL);
 	if (cmd->right != NULL)
 		free_cmd(cmd->right, NULL);
+	if (cmd != NULL)
+		free(cmd);
 }
 
 char	*parse_env_value(char *key, char ***envp)
@@ -120,4 +121,59 @@ char	*parse_env_value(char *key, char ***envp)
 		}
 	}
 	return (parse);
+}
+
+void	swap_env(char ***envp, char *src, char *key)
+{
+	int		i;
+	char	*buf;
+
+	i = -1;
+	while ((*envp)[++i])
+	{
+		if (!ft_strncmp(key, (*envp)[i], ft_strlen(key)))
+		{
+			buf = (*envp)[i];
+			(*envp)[i] = ft_strdup(src);
+			free(buf);
+			return ;
+		}
+	}
+}
+
+void	free_parse(char **str)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	len = count_line(str);
+	while (i < len)
+	{
+		free(str[i]);
+		i++;
+	}
+	free(str);
+}
+
+char	*hs_parsing_cmd(char ***envp, char *cmdline)
+{
+	char	*parsed;
+	char	**path;
+
+	path = pipe_parsing_envp(envp);
+	parsed = pipe_parsing_cmd(path, cmdline);
+	free_parse(path);
+	return (parsed);
+}
+
+int	check_argc(char *str)
+{
+	int		ret;
+
+	if (str && ft_isalpha(str[0]) == 1)
+		ret = 0;
+	else
+		ret = 2;
+	return (ret);
 }

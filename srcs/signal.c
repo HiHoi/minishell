@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/31 17:42:08 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/01 17:22:11 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	exec_builtin(t_cmd *cmd, char ***envp)
 			ft_export(cmd, envp);
 			cmd->exec_flag = 1;
 		}
-		else if (!ft_strncmp(cmd->str, "unset", 5))
+		if (!ft_strncmp(cmd->str, "unset", 5))
 		{
 			ft_unset(cmd, envp);
 			cmd->exec_flag = 1;
@@ -84,24 +84,16 @@ void	exec_builtin(t_cmd *cmd, char ***envp)
 		}
 		return ;
 	}
-	if (cmd->left != NULL)
-		exec_builtin(cmd->left, envp);
-	if (cmd->right != NULL)
-		exec_builtin(cmd->right, envp);
 }
 
 int	check_cmd_exec(t_cmd *cmd, char ***envp)
 {
 	char	**cmdline;
-	char	**path;
 	char	*parsed;
 
-	if (hs_check_builtin(cmd) == 1)
-		return (-1);
 	cmdline = ft_split(cmd->str, ' ');
-	path = pipe_parsing_envp(envp);
-	parsed = pipe_parsing_cmd(path, cmdline[0]);
-	if (parsed == NULL)
+	parsed = hs_parsing_cmd(envp, cmdline[0]);
+	if (hs_check_builtin(cmd) != 1 && parsed == NULL)
 	{
 		write(2, "minishell: ", 11);
 		if (cmdline[0] != NULL)
@@ -110,8 +102,12 @@ int	check_cmd_exec(t_cmd *cmd, char ***envp)
 			write(2, "syntax error", 12);
 		write(2, ": command not found\n", 20);
 		exit_code = 127;
-		return (127);
+		free_parse(cmdline);
+		free(parsed);
+		return (exit_code);
 	}
+	free_parse(cmdline);
+	free(parsed);
 	if (cmd->left != NULL)
 		check_cmd_exec(cmd->left, envp);
 	if (cmd->right != NULL)

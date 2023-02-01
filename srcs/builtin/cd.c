@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:20 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/31 18:52:31 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/01 16:23:24 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,21 @@
 
 extern int  exit_code;
 
-void	swap_env(char ***envp, char *src, char *key)
+char	*cd_parse_path(char *cmd, char ***envp)
 {
-	int		i;
-	char	*buf;
+	char	*want;
+	char	*pwd;
+	char	*path;
+	char	**parse;
 
-	i = -1;
-	while ((*envp)[++i])
-	{
-		if (!ft_strncmp(key, (*envp)[i], ft_strlen(key)))
-		{
-			buf = (*envp)[i];
-			(*envp)[i] = ft_strdup(src);
-			free(buf);
-			return ;
-		}
-	}
+	parse = ft_split(cmd, ' ');
+	pwd = parse_env_value("PWD", envp);
+	path = ft_strjoin("/", parse[1]);
+	want = ft_strjoin(pwd, path);
+	free_parse(parse);
+	free(pwd);
+	free(path);
+	return (want);
 }
 
 void	cd_oldpwd(char ***envp)
@@ -45,32 +44,45 @@ void	cd_oldpwd(char ***envp)
 	buf = getcwd(NULL, 1024);
 	cur = ft_strjoin("PWD=", buf);
 	swap_env(envp, cur, "PWD");
+	free(buf);
+	free(old);
+	free(cur);
+}
+
+void	cd_home(char ***envp)
+{
+	char	*path;
+
+	path = parse_env_value("HOME", envp);
+	if (chdir(path) == -1)
+	{
+		exit_code = 127;
+		return ;
+	}
 }
 
 void	ft_cd(t_cmd *cmd, char ***envp)
 {
 	char	**parse;
-	char	*pwd;
-	char	*path;
 	char	*want_path;
 
 	parse = ft_split(cmd->str, ' ');
-	pwd = parse_env_value("PWD", envp);
-	path = ft_strjoin("/", parse[1]);
-	want_path = ft_strjoin(pwd, path);
+	want_path = cd_parse_path(cmd->str, envp);
 	if (ft_strcmp(parse[0], "cd"))
 	{
 		exit_code = 127;
 		return ;
 	}
-	if (parse[1] != NULL && parse[1][0] != '$' && parse[1][0] != '~')
+	if (parse[1] != NULL && parse[1][0] != '$' && ft_strcmp(parse[1], "~"))
 	{
 		if (chdir(want_path) == -1)
 			exit_code = hs_error_return(NULL, NULL, "failed to cd\n");
 		cd_oldpwd(envp);
 	}
-	// else if (parse[1][0] == '~')
-	// 	cd_home(cmd->str, envp);
+	else if (!ft_strcmp(parse[1], "~"))
+		cd_home(envp);
 	// else if (parse[1][0] == '$')
 	// 	cd_envp(cmd->str, envp);
+	free(want_path);
+	free_parse(parse);
 }

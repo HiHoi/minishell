@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:37:53 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/30 17:33:33 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/01 19:34:56 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,58 +17,16 @@
 //과연 구조체 내로 복사한 환경변수에 값을 넣어야 하는지
 //그 값을 어떻게 사용해야 하는가
 
-int	check_argc(char *str)
+int	export_error(char *str)
 {
-	char	**temp;
-	char	**key;
-	int		i;
+	int		flag;
 
-	temp = ft_split(str, ' ');
-	key = ft_split(temp[1], '=');
-	i = 0;
-	while (temp[i])
-		i++;
-	free(temp[0]);
-	free(temp[1]);
-	free(temp);
-	if (i > 1)
-		return (1);
-	if (ft_isdigit(key[0][0]) == 1 || key[1] == NULL)
-	{
-		free(key[0]);
-		free(key[1]);
-		free(key);
-		return (2);
-	}
-	free(key[0]);
-	free(key[1]);
-	free(key);
-	return (0);
-}
-
-void	export_error(t_cmd *cmd, int flag)
-{
-	char	**temp;
-	int		i;
-
-	i = 1;
+	flag = check_argc(str);
 	if (flag == 0)
-		return ;
-	if (flag == 1)
-	{
-		temp = ft_split(cmd->str, ' ');
-		while (++i < count_line(temp))
-			write(2, "not a valid identifier\n", 23);
-	}
+		return (flag);
 	else if (flag == 2)
 		write(2, "minishell: export: not a valid indentifer\n", 42);
-	else if (flag == 3)
-	{
-		write(2, "not a valid identifier\n", 23);
-		temp = ft_split(cmd->str, ' ');
-		while (++i < count_line(temp))
-			write(2, "not a valid identifier\n", 23);
-	}
+	return (flag);
 }
 
 char	**sort_envp(char **envp)
@@ -99,6 +57,9 @@ char	**sort_envp(char **envp)
 	return (sorted);
 }
 
+//#
+//$환경변수 파싱
+
 void	export_declare(char **envp)
 {
 	int		i;
@@ -123,10 +84,35 @@ void	export_declare(char **envp)
 //key만 있을때 처리
 //여러 개의 키와 밸류도 같이 실행
 
+char	**export_insert(char **str, char ***envp)
+{
+	int		j;
+	int		i;
+	int		key_len;
+	int		envp_len;
+	char	**new;
+
+	key_len = count_line(str);
+	envp_len = count_line(*envp);
+	new = malloc(sizeof(char *) * (key_len + envp_len + 1));
+	i = -1;
+	j = 1;
+	while (++i < envp_len + key_len - 1)
+	{
+		if (i >= envp_len && export_error(str[j]) == 0 && j < key_len)
+			new[i] = ft_strdup(str[j++]);
+		else if (i < envp_len)
+		{
+			new[i] = ft_strdup((*envp)[i]);
+			free((*envp)[i]);
+		}
+	}
+	new[i] = NULL;
+	return (new);
+}
+
 void	ft_export(t_cmd *cmd, char ***envp)
 {
-	int		len;
-	int		i;
 	char	**new;
 	char	**parsed;
 
@@ -135,14 +121,8 @@ void	ft_export(t_cmd *cmd, char ***envp)
 		export_declare(*envp);
 		return ;
 	}
-	export_error(cmd, check_argc(cmd->str));
 	parsed = ft_split(cmd->str, ' ');
-	len = count_line(*envp);
-	new = malloc(sizeof(char *) * (len + 1));
-	i = -1;
-	while ((*envp)[++i])
-		new[i] = ft_strdup((*envp)[i]);
-	new[i] = ft_strdup(parsed[1]);
-	new[i + 1] = NULL;
+	new = export_insert(parsed, envp);
 	*envp = new;
+	free_parse(parsed);
 }

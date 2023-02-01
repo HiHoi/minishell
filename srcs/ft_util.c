@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:35:04 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/30 13:23:37 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/01 18:49:48 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,9 +178,11 @@ int	ft_strcmp(char *s1, char *s2)
 	return (*(s1 + i) - *(s2 + i));
 }
 
-int	ft_isdigit(int c)
+int	ft_isalpha(int c)
 {
-	if ('0' <= c && c <= '9')
+	if ('a' <= c && c <= 'z')
+		return (1);
+	else if ('A' <= c && c <= 'Z')
 		return (1);
 	else
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/31 17:27:56 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/01 18:50:05 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ typedef struct s_cmd
 	int				parent_flag;
 	int				parse_flag;
 	int				child_flag;
-	int				fd[2];
 	char			*str;
 	struct s_cmd	*left;
 	struct s_cmd	*right;
@@ -68,7 +67,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 void	*ft_calloc(size_t nelem, size_t elsize);
 int		ft_strcmp(char *s1, char *s2);
 char	*ft_strchr(const char *str, int c);
-int		ft_isdigit(int c);
+int		ft_isalpha(int c);
 char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_itoa(int n);
 
@@ -79,6 +78,9 @@ void	start_shell(t_info *info);
 int		error(t_info *info, char *s);
 int		hs_error_return(t_info *info, t_cmd *cmd, char *s);
 void	free_cmd(t_cmd *cmd, char *buf);
+void	free_parse(char **str);
+char	*hs_parsing_cmd(char ***envp, char *cmdline);
+int		check_argc(char *str);
 
 void	parsing_cmd(t_info *info, char *buf);
 void	hs_cmd(t_cmd *cmd, char ***envp);
@@ -114,5 +116,6 @@ void	ft_cd(t_cmd *cmd, char ***envp);
 
 int		check_key(char *envp, char *src);
 char	*parse_env_value(char *key, char ***envp);
+void	swap_env(char ***envp, char *src, char *key);
 
 #endif
