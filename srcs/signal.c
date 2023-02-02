@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/01 17:22:11 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/02 17:06:44 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ void	exec_builtin(t_cmd *cmd, char ***envp)
 		}
 		else if (!ft_strncmp(cmd->str, "cd", 2))
 		{
-			cmd->exec_flag = 1;
 			ft_cd(cmd, envp);
+			cmd->exec_flag = 1;
 		}
 		return ;
 	}
@@ -93,7 +93,7 @@ int	check_cmd_exec(t_cmd *cmd, char ***envp)
 
 	cmdline = ft_split(cmd->str, ' ');
 	parsed = hs_parsing_cmd(envp, cmdline[0]);
-	if (hs_check_builtin(cmd) != 1 && parsed == NULL)
+	if (hs_check_builtin(cmd) != 1 && parsed == NULL && cmd->type == T_WORD)
 	{
 		write(2, "minishell: ", 11);
 		if (cmdline[0] != NULL)
@@ -108,9 +108,9 @@ int	check_cmd_exec(t_cmd *cmd, char ***envp)
 	}
 	free_parse(cmdline);
 	free(parsed);
-	if (cmd->left != NULL)
+	if (cmd->left != NULL && cmd->type == T_WORD)
 		check_cmd_exec(cmd->left, envp);
-	if (cmd->right != NULL)
+	if (cmd->right != NULL && cmd->type == T_WORD)
 		check_cmd_exec(cmd->right, envp);
 	return (-1);
 }

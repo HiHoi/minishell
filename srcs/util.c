@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/01 19:30:55 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/01 21:44:03 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,16 @@ t_info	*init_info(char **envp)
 	int		len;
 
 	len = count_line(envp);
-	info = malloc(sizeof(t_info));
-	info->cmd = init_cmd();
-	info->en = ft_calloc(len, sizeof(char *));
-	i = -1;
-	while (++i < len)
+	info = malloc(sizeof(t_info) * 1);
+	info->cmd = NULL;
+	info->en = malloc(sizeof(char *) * (len + 1));
+	i = 0;
+	while (i < len)
+	{
 		info->en[i] = ft_strdup(envp[i]);
-	info->en[i] = NULL;
+		i++;
+	}
+	info->en[len] = NULL;
 	return (info);
 }
 
@@ -75,7 +78,7 @@ t_cmd	*init_cmd(void)
 {
 	t_cmd	*new;
 
-	new = malloc(sizeof(t_cmd));
+	new = malloc(sizeof(t_cmd) * 1);
 	new->exec_flag = 0;
 	new->parent_flag = 0;
 	new->parse_flag = 0;
@@ -101,7 +104,10 @@ void	free_cmd(t_cmd *cmd, char *buf)
 	if (cmd->right != NULL)
 		free_cmd(cmd->right, NULL);
 	if (cmd != NULL)
+	{
 		free(cmd);
+		return ;
+	}
 }
 
 char	*parse_env_value(char *key, char ***envp)

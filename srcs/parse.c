@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 19:23:51 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/01 15:25:15 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/02 14:00:05 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,13 @@ void	hs_check_lexical(t_cmd *cmd, char *buf)
 {
 	if (buf == NULL || check_type(cmd, buf) == T_WORD)
 		return ;
-	if (check_type(cmd, buf) == T_PIPE)
+	if (cmd->type == T_PIPE)
 		hs_lexical_pipe(cmd, buf);
-	else if (check_type(cmd, buf) == T_REDI)
+	else if (cmd->type == T_REDI)
 		hs_lexical_redi(cmd, buf);
-	if (cmd->left != NULL)
+	if (cmd->left)
 		hs_check_lexical(cmd->left, cmd->left->str);
-	if (cmd->right != NULL)
+	if (cmd->right)
 		hs_check_lexical(cmd->right, cmd->right->str);
 }
 
@@ -81,8 +81,8 @@ void	hs_check_lexical(t_cmd *cmd, char *buf)
 void	parsing_cmd(t_info *info, char *buf)
 {
 	info->cmd = init_cmd();
-	check_type(info->cmd, buf);
 	info->cmd->str = ft_strdup(buf);
+	check_type(info->cmd, info->cmd->str);
 	if (info->cmd->type != T_WORD)
 		hs_check_lexical(info->cmd, buf);
 }

@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-FLAG = -Wall -Werror -Wextra -fsanitize=undefined -g
+FLAG = -Wall -Werror -Wextra -g
 READLINE_LINK = -lreadline -L /$(shell brew --prefix readline)/lib
 READLINE_COM = -I /$(shell brew --prefix readline)/include
 TERMCAP = -lncurses

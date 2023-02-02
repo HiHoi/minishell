@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 21:35:20 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/17 12:18:34 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/02 16:25:53 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ size_t	word_cnt(const char *s, char c)
 	size_t	cnt;
 	size_t	i;
 
+	if (s == NULL)
+		return (0);
 	cnt = 0;
 	i = 0;
 	while (s[i])

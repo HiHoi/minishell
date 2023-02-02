@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:35:04 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/01 18:49:48 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/02 14:29:56 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,8 @@ char	*ft_strdup(const char *src)
 	int		i;
 	char	*tmp;
 
+	if (src == NULL)
+		return (NULL);
 	i = ft_strlen(src) + 1;
 	tmp = (char *)malloc(sizeof(char) * i);
 	if (tmp == NULL)
@@ -203,6 +205,8 @@ char	*ft_strtrim(char const *s1, char const *set)
 			start++;
 		while (s1[end - 1] && ft_strchr(set, s1[end - 1]) && end > start)
 			end--;
+		if (end - start == 0)
+			return (NULL);
 		tmp = malloc(sizeof(char) * end - start + 1);
 		if (tmp == NULL)
 			return (0);

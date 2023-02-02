@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/01 16:00:30 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/02 19:05:17 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,13 @@ void	hs_pipeline(t_cmd *cmd, char ***envp)
 	while (cur && ++i > -1)
 	{
 		pid = fork();
-		if (pid == 0)
+		if (pid == -1)
+			error(NULL, "Failed to fork\n");
+		if (pid == 0 && cur->exec_flag == 0)
 		{
-			if (cur->right == NULL && cur->type == T_WORD)
-				pipe_word(i, fd, cur, envp);
-			else if (cur->right && cur->right->parent_flag == 1)
+			if (cur->right && cur->right->parent_flag == 1)
 				pipe_word_p(fd[1], fd[0], cur->right, envp);
-			else if (cur->right && cur->right->parent_flag == 0)
+			else
 				pipe_word(i, fd, cur, envp);
 		}
 		cur = cur->left;
@@ -96,7 +96,7 @@ void	hs_cmd(t_cmd *cmd, char ***envp)
 	char	*path;
 	char	**parse_cmd;
 
-	if (cmd->str == NULL)
+	if (cmd == NULL && cmd->exec_flag == 1)
 		return ;
 	if (hs_check_builtin(cmd))
 		hs_exec_builtin(cmd, envp);
@@ -107,10 +107,10 @@ void	hs_cmd(t_cmd *cmd, char ***envp)
 	}
 	else
 		parse_cmd = ft_split(cmd->str, ' ');
+	if (parse_cmd == NULL)
+		exit(0);
 	parse_en = pipe_parsing_envp(envp);
 	path = pipe_parsing_cmd(parse_en, parse_cmd[0]);
-	free_parse(parse_en);
-	unlink(".temp_file");
 	if (execve(path, parse_cmd, *envp) == -1)
 		error(NULL, "Failed to execve\n");
 }
@@ -123,13 +123,31 @@ void	hs_excute_tree(t_cmd *cmd, char ***envp)
 		hs_cmd(cmd, envp);
 }
 
+int	hs_check_heredoc(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '<')
+		{
+			if (str[i + 1] == '<')
+				return (i + 1);
+		}
+		i++;
+	}
+	return (0);
+}
+
 void	hs_search_tree(t_cmd *cmd, char ***envp)
 {
 	pid_t	pid;
-	int		status;
 
 	if (cmd->exec_flag == 1)
 		return ;
+	if (hs_check_heredoc(cmd->str) > 0)
+		make_temp(cmd);
 	if (cmd->right)
 		cmd->right->parent_flag = 1;
 	pid = fork();
@@ -137,9 +155,8 @@ void	hs_search_tree(t_cmd *cmd, char ***envp)
 		error(NULL, "Failed to fork\n");
 	else if (pid == 0)
 		hs_excute_tree(cmd, envp);
-	else
-		waitpid(pid, &status, 0);
-	exit_code = WEXITSTATUS(status);
+	waitpid(pid, 0, 0);
+	unlink(".temp_file");
 	if (cmd->type == T_PIPE || cmd->type == T_REDI)
 	{
 		cmd->left->exec_flag = 1;

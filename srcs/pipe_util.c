@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 12:58:46 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/01 14:27:44 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/02 19:05:08 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*pipe_parsing_cmd(char **path, char *cmd)
 	char	*tmp;
 	char	*cmd_path;
 
-	if (access(cmd, X_OK) != -1 || cmd == NULL)
+	if (cmd == NULL || access(cmd, X_OK) != -1)
 		return (cmd);
 	cmd_path = ft_strjoin("/", cmd);
 	i = -1;
@@ -61,7 +61,7 @@ void	pipe_open(int fd[2][2])
 
 void	pipe_word(int i, int fd[2][2], t_cmd *cmd, char ***envp)
 {
-	if (cmd->right == NULL && cmd->type == T_WORD)
+	if ((cmd->right == NULL && cmd->type == T_WORD) || cmd->type == T_REDI)
 	{
 		if (i % 2 == 1)
 		{
@@ -76,7 +76,7 @@ void	pipe_word(int i, int fd[2][2], t_cmd *cmd, char ***envp)
 			hs_proc_child(cmd, envp, 0, fd[1]);
 		}
 	}
-	else if (cmd->right->parent_flag == 0)
+	else if (cmd->right && cmd->right->parent_flag == 0)
 	{
 		if (i % 2 == 1)
 			hs_proc_child(cmd->right, envp, fd[0], fd[1]);

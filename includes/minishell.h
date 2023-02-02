@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/01 18:50:05 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/02 16:49:45 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,9 @@ typedef struct s_info
 typedef struct s_cmd
 {
 	int				type;
-	int				len;
 	int				exec_flag;
 	int				parent_flag;
 	int				parse_flag;
-	int				child_flag;
 	char			*str;
 	struct s_cmd	*left;
 	struct s_cmd	*right;
@@ -90,6 +88,8 @@ int		count_line(char **line);
 void	hs_parse_pipe(t_cmd *cmd, char *buf, int i);
 void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag);
 void	hs_parse_redi_double(t_cmd *cmd);
+int		hs_check_heredoc(char *str);
+void	make_temp(t_cmd *cmd);
 
 void	hs_do_something(t_info *info);
 void	hs_redirect(t_cmd *cmd);
