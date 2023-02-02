@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/02 16:49:45 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/02 20:14:35 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 # include <sys/time.h>
 # include <termios.h>
 # include <term.h>
+# include "../srcs/parsing/test.h"
 
 typedef struct s_info
 {
@@ -73,6 +74,7 @@ t_info	*init_info(char **envp);
 t_cmd	*init_cmd(void);
 
 void	start_shell(t_info *info);
+void	handle_signal(void);
 int		error(t_info *info, char *s);
 int		hs_error_return(t_info *info, t_cmd *cmd, char *s);
 void	free_cmd(t_cmd *cmd, char *buf);
@@ -90,6 +92,8 @@ void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag);
 void	hs_parse_redi_double(t_cmd *cmd);
 int		hs_check_heredoc(char *str);
 void	make_temp(t_cmd *cmd);
+void	exec_builtin(t_cmd *cmd, char ***envp);
+int		check_cmd_exec(t_cmd *cmd, char ***envp);
 
 void	hs_do_something(t_info *info);
 void	hs_redirect(t_cmd *cmd);
@@ -117,5 +121,7 @@ void	ft_cd(t_cmd *cmd, char ***envp);
 int		check_key(char *envp, char *src);
 char	*parse_env_value(char *key, char ***envp);
 void	swap_env(char ***envp, char *src, char *key);
+
+char	**hj_split_cmd(char *str, char **envp);
 
 #endif

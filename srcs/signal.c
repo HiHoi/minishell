@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/02 17:06:44 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/02 20:29:39 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,22 @@
 
 extern int exit_code;
 
+//minishell 많이 키면 컨트롤 c 밀림
+
 void	handler(int signum)
 {
+	char	*str;
+
 	if (signum == SIGINT)
-		printf("minishell$\n");
+	{
+		str = ft_strdup(rl_line_buffer);
+		printf("\033[2K");
+		printf("minishell$ ");
+		printf("%s", str);
+		printf("\n");
+		free(str);
+		str = NULL;
+	}
 	if (rl_on_new_line() == -1)
 		exit(1);
 	rl_replace_line("", 1);
@@ -91,9 +103,10 @@ int	check_cmd_exec(t_cmd *cmd, char ***envp)
 	char	**cmdline;
 	char	*parsed;
 
-	cmdline = ft_split(cmd->str, ' ');
+	cmdline = hj_split_cmd(cmd->str, *envp);
 	parsed = hs_parsing_cmd(envp, cmdline[0]);
-	if (hs_check_builtin(cmd) != 1 && parsed == NULL && cmd->type == T_WORD)
+	if (hs_check_builtin(cmd) != 1 && parsed == NULL && cmd->type == T_WORD \
+	&& ft_strchr(cmd->str, '/') != 0)
 	{
 		write(2, "minishell: ", 11);
 		if (cmdline[0] != NULL)
@@ -106,42 +119,12 @@ int	check_cmd_exec(t_cmd *cmd, char ***envp)
 		free(parsed);
 		return (exit_code);
 	}
+	if (parsed != cmdline[0])
+		free(parsed);
 	free_parse(cmdline);
-	free(parsed);
 	if (cmd->left != NULL && cmd->type == T_WORD)
 		check_cmd_exec(cmd->left, envp);
 	if (cmd->right != NULL && cmd->type == T_WORD)
 		check_cmd_exec(cmd->right, envp);
 	return (-1);
-}
-
-void	start_shell(t_info *info)
-{
-	char			*buf;
-	struct termios	term;
-
-	tcgetattr(0, &term);
-	term.c_cflag &= ~(ECHOCTL);
-	tcsetattr(0, TCSANOW, &term);
-	handle_signal();
-	while (1)
-	{
-		buf = readline("minishell$ ");
-		if (!buf)
-			exit(-1);
-		else if (*buf == '\0')
-			free(buf);
-		else
-		{
-			add_history(buf);
-			parsing_cmd(info, buf);
-			// print_test(info);
-			if (check_cmd_exec(info->cmd, &info->en) == -1)
-			{
-				exec_builtin(info->cmd, &info->en);
-				hs_search_tree(info->cmd, &info->en);
-			}
-			free_cmd(info->cmd, buf);
-		}
-	}
 }

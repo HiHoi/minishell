@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/02 19:05:17 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/02 20:21:18 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,67 +103,15 @@ void	hs_cmd(t_cmd *cmd, char ***envp)
 	if (cmd->type == T_REDI)
 	{
 		hs_redirect(cmd);
-		parse_cmd = ft_split(cmd->left->str, ' ');
+		// parse_cmd = ft_split(cmd->left->str, ' ');
 	}
-	else
-		parse_cmd = ft_split(cmd->str, ' ');
+	// else
+	// 	parse_cmd = ft_split(cmd->str, ' ');
+	parse_cmd = hj_split_cmd(cmd->str, *envp);
 	if (parse_cmd == NULL)
 		exit(0);
 	parse_en = pipe_parsing_envp(envp);
 	path = pipe_parsing_cmd(parse_en, parse_cmd[0]);
 	if (execve(path, parse_cmd, *envp) == -1)
 		error(NULL, "Failed to execve\n");
-}
-
-void	hs_excute_tree(t_cmd *cmd, char ***envp)
-{
-	if (cmd->type == T_PIPE)
-		hs_pipeline(cmd, envp);
-	else
-		hs_cmd(cmd, envp);
-}
-
-int	hs_check_heredoc(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '<')
-		{
-			if (str[i + 1] == '<')
-				return (i + 1);
-		}
-		i++;
-	}
-	return (0);
-}
-
-void	hs_search_tree(t_cmd *cmd, char ***envp)
-{
-	pid_t	pid;
-
-	if (cmd->exec_flag == 1)
-		return ;
-	if (hs_check_heredoc(cmd->str) > 0)
-		make_temp(cmd);
-	if (cmd->right)
-		cmd->right->parent_flag = 1;
-	pid = fork();
-	if (pid < 0)
-		error(NULL, "Failed to fork\n");
-	else if (pid == 0)
-		hs_excute_tree(cmd, envp);
-	waitpid(pid, 0, 0);
-	unlink(".temp_file");
-	if (cmd->type == T_PIPE || cmd->type == T_REDI)
-	{
-		cmd->left->exec_flag = 1;
-		cmd->right->exec_flag = 1;
-	}
-	if (cmd->left != NULL)
-		hs_search_tree(cmd->left, envp);
-	if (cmd->right != NULL)
-		hs_search_tree(cmd->right, envp);
 }

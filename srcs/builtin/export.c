@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:37:53 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/01 19:34:56 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/02 20:58:25 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,13 @@ char	**export_insert(char **str, char ***envp)
 	j = 1;
 	while (++i < envp_len + key_len - 1)
 	{
-		if (i >= envp_len && export_error(str[j]) == 0 && j < key_len)
-			new[i] = ft_strdup(str[j++]);
+		if (i >= envp_len && j < key_len)
+		{
+			if (export_error(str[j]) == 0)
+				new[i] = ft_strdup(str[j++]);
+			else
+				break ;
+		}
 		else if (i < envp_len)
 		{
 			new[i] = ft_strdup((*envp)[i]);
@@ -121,7 +126,7 @@ void	ft_export(t_cmd *cmd, char ***envp)
 		export_declare(*envp);
 		return ;
 	}
-	parsed = ft_split(cmd->str, ' ');
+	parsed = hj_split_cmd(cmd->str, *envp);
 	new = export_insert(parsed, envp);
 	*envp = new;
 	free_parse(parsed);
