@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 21:00:02 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/02 19:37:37 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/03 14:21:45 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ void	hs_exec_builtin(t_cmd *cmd, char ***envp)
 {
 	if (!ft_strncmp(cmd->str, "env", 3))
 		ft_env(cmd, envp);
-	// else if (!ft_strncmp(cmd->str, "exit", 4))
-	//     ft_exit(cmd);
+	else if (!ft_strncmp(cmd->str, "exit", 4))
+		ft_exit(cmd, envp);
 	else if (!ft_strncmp(cmd->str, "cd", 2))
 		ft_cd(cmd, envp);
 	else if (!ft_strncmp(cmd->str, "echo", 4) || !ft_strncmp(cmd->str, "$?", 2))

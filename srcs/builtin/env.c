@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:38:32 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/01 19:31:55 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/03 15:16:19 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@ void	ft_env(t_cmd *cmd, char ***envp)
 	int		i;
 	char	**test;
 
+	cmd->exec_flag = 1;
+	if (*envp == NULL)
+		return ;
 	test = ft_split(cmd->str, ' ');
 	if (test[1])
 		error(NULL, "Invaild option\n");
@@ -30,5 +33,5 @@ void	ft_env(t_cmd *cmd, char ***envp)
 		}
 		i++;
 	}
-	exit(0);
+	return ;
 }

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 15:41:24 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/02 20:17:58 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/03 14:20:26 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	*hj_find_envp_val(char *str, int *i, char **envp)
 	*i = (hj_ft_strlen(find) + 1);
 	while (envp[idx])
 	{
-		if(hj_is_envp(find, envp[idx]))
+		if (hj_is_envp(find, envp[idx]))
 		{
 			result = hj_envp_val(envp[idx]);
 			free(find);
@@ -77,7 +77,7 @@ char	*hj_find_envp_val(char *str, int *i, char **envp)
 	return (0);
 }
 
-char *hj_envp_name(char *str)
+char	*hj_envp_name(char *str)
 {
 	char	*result;
 	int		i;

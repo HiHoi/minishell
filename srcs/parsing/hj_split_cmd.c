@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 16:31:37 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/02 21:02:39 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/03 14:20:06 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ char	**hj_split_cmd(char *str, char **envp)
 	int		j;
 	int		size;
 
+	if (str == NULL || envp == NULL)
+		return (NULL);
 	size = hj_mal_size(str, ' ');
 	spr = malloc(sizeof(char *) * (size + 1));
 	spr[size] = NULL;
@@ -69,7 +71,7 @@ char	*hj_split_join(char *str, char **envp)
 
 int	hj_isseting(int i, int *set, int count)
 {
-	int idx;
+	int	idx;
 
 	idx = 0;
 	while (idx < count)
@@ -89,7 +91,7 @@ void	ft_error(void)
 
 int	hj_ft_strlen(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (str == NULL)

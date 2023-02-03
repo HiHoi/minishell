@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:27 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/02 21:04:33 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/03 15:16:00 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	echo_env(char *str, char ***envp, int option)
 		print_exit();
 		return ;
 	}
+	if (*envp == NULL)
+		return ;
 	value = NULL;
 	i = 0;
 	parse = hj_split_cmd(str, *envp);
@@ -66,6 +68,7 @@ int	ft_echo(t_cmd *cmd, char ***envp)
 	int		option;
 	char	*parse;
 
+	cmd->exec_flag = 1;
 	option = 0;
 	if (ft_strchr(cmd->str, '-') > 0)
 		option = 1;

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:35:04 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/02 20:10:20 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/03 15:12:48 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*ft_strchr(const char *str, int c)
 	char	find;
 	int		i;
 
+	if (str == NULL)
+		return (0);
 	i = 0;
 	find = (unsigned char)c;
 	while (str[i])
@@ -64,6 +66,8 @@ size_t	ft_strlen(const char *str)
 {
 	int	cnt;
 
+	if (str == NULL)
+		return (0);
 	cnt = 0;
 	while (*(str + cnt))
 		cnt++;
@@ -275,4 +279,49 @@ char	*ft_itoa(int n)
 		rlt[i++] = '-';
 	rlt[i] = '\0';
 	return (reverse(rlt, 0, i - 1));
+}
+
+int	nbrcheck(const char *str)
+{
+	int	result;
+	int	i;
+
+	result = 1;
+	i = 0;
+	while (str[i] == ' ' || str[i] == '\n' || str[i] == '\t' \
+		|| str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
+		i++;
+	if (str[i] == '-')
+	{
+		result = -1;
+		i++;
+	}
+	return (result);
+}
+
+int	ft_atoi(const char *str)
+{
+	int	i;
+	int	result;
+	int	ne;
+
+	if (str == NULL)
+		return (0);
+	i = 0;
+	result = 0;
+	ne = nbrcheck(str);
+	while (str[i] == ' ' || str[i] == '\n' || str[i] == '\t'
+		|| str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i])
+	{
+		if (str[i] >= '0' && str[i] <= '9')
+			result = result * 10 + ((str[i] - 48) * ne);
+		else
+			return (result);
+		i++;
+	}
+	return (result);
 }

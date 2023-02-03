@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:20 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/01 16:23:24 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/03 15:15:54 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	ft_cd(t_cmd *cmd, char ***envp)
 	char	**parse;
 	char	*want_path;
 
+	cmd->exec_flag = 1;
 	parse = ft_split(cmd->str, ' ');
 	want_path = cd_parse_path(cmd->str, envp);
 	if (ft_strcmp(parse[0], "cd"))
@@ -81,8 +82,6 @@ void	ft_cd(t_cmd *cmd, char ***envp)
 	}
 	else if (!ft_strcmp(parse[1], "~"))
 		cd_home(envp);
-	// else if (parse[1][0] == '$')
-	// 	cd_envp(cmd->str, envp);
 	free(want_path);
 	free_parse(parse);
 }

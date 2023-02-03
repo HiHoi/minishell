@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/02 20:21:18 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/03 13:55:25 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	pipe_wait(pid_t pid)
 		if (WIFEXITED(status))
 		{
 			exit_code = WEXITSTATUS(status);
-			return ;
+			exit(exit_code);
 		}
 	}
 }
@@ -74,10 +74,12 @@ void	hs_pipeline(t_cmd *cmd, char ***envp)
 	i = -1;
 	while (cur && ++i > -1)
 	{
+		if (cur->right && cur->right->type == T_REDI)
+			cur->left->close_flag = 1;
 		pid = fork();
 		if (pid == -1)
 			error(NULL, "Failed to fork\n");
-		if (pid == 0 && cur->exec_flag == 0)
+		if ((pid == 0 && cur->exec_flag == 0))
 		{
 			if (cur->right && cur->right->parent_flag == 1)
 				pipe_word_p(fd[1], fd[0], cur->right, envp);
@@ -87,8 +89,9 @@ void	hs_pipeline(t_cmd *cmd, char ***envp)
 		cur = cur->left;
 	}
 	pipe_wait(pid);
-	exit(0);
 }
+
+//awk <asd> => 리다이렉션 여부 정정
 
 void	hs_cmd(t_cmd *cmd, char ***envp)
 {
@@ -96,19 +99,18 @@ void	hs_cmd(t_cmd *cmd, char ***envp)
 	char	*path;
 	char	**parse_cmd;
 
-	if (cmd == NULL && cmd->exec_flag == 1)
+	if (cmd == NULL || cmd->exec_flag == 1)
 		return ;
 	if (hs_check_builtin(cmd))
 		hs_exec_builtin(cmd, envp);
 	if (cmd->type == T_REDI)
 	{
 		hs_redirect(cmd);
-		// parse_cmd = ft_split(cmd->left->str, ' ');
+		parse_cmd = hj_split_cmd(cmd->left->str, *envp);
 	}
-	// else
-	// 	parse_cmd = ft_split(cmd->str, ' ');
-	parse_cmd = hj_split_cmd(cmd->str, *envp);
-	if (parse_cmd == NULL)
+	else
+		parse_cmd = hj_split_cmd(cmd->str, *envp);
+	if (parse_cmd == NULL || parse_cmd[0] == NULL)
 		exit(0);
 	parse_en = pipe_parsing_envp(envp);
 	path = pipe_parsing_cmd(parse_en, parse_cmd[0]);

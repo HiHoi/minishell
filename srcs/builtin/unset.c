@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:38:13 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/30 17:33:45 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/03 15:16:36 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,9 @@ void	ft_unset(t_cmd *cmd, char ***envp)
 	int		len;
 	char	**target;
 
+	cmd->exec_flag = 1;
+	if (*envp == NULL)
+		return ;
 	target = ft_split(cmd->str, ' ');
 	if (target[1] == NULL)
 		return ;

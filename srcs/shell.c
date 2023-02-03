@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:09:03 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/02 19:19:30 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/03 14:18:06 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void	hs_search_tree(t_cmd *cmd, char ***envp)
 		error(NULL, "Failed to fork\n");
 	else if (pid == 0)
 		hs_excute_tree(cmd, envp);
-	waitpid(pid, 0, 0);
+	// waitpid(pid, 0, 0);
+	exit_get_code(pid);
 	unlink(".temp_file");
 	if (cmd->type == T_PIPE || cmd->type == T_REDI)
 	{
@@ -65,6 +66,30 @@ void	hs_search_tree(t_cmd *cmd, char ***envp)
 		hs_search_tree(cmd->right, envp);
 }
 
+void	print_test(t_info *info)
+{
+	t_cmd	*cur = info->cmd;
+
+	while (cur)
+	{
+		printf("cur !  t : %d   s : %s\n", cur->type, cur->str);
+		if (cur->left)
+			printf("left !  t : %d   s : %s\n", cur->left->type, cur->left->str);
+		if (cur->right)
+			printf("rigth !  t : %d   s : %s\n", cur->right->type, cur->right->str);
+		cur = cur->left;
+	}
+	cur = info->cmd;
+	while (cur)
+	{
+		printf("cur !  t : %d   s : %s\n", cur->type, cur->str);
+		if (cur->left)
+			printf("left !  t : %d   s : %s\n", cur->left->type, cur->left->str);
+		if (cur->right)
+			printf("rigth !  t : %d   s : %s\n", cur->right->type, cur->right->str);
+		cur = cur->right;
+	}
+}
 
 void	start_shell(t_info *info)
 {

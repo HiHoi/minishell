@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/02 20:14:35 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/03 15:11:28 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_cmd
 {
 	int				type;
 	int				exec_flag;
+	int				close_flag;
 	int				parent_flag;
 	int				parse_flag;
 	char			*str;
@@ -69,6 +70,7 @@ char	*ft_strchr(const char *str, int c);
 int		ft_isalpha(int c);
 char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_itoa(int n);
+int		ft_atoi(const char *str);
 
 t_info	*init_info(char **envp);
 t_cmd	*init_cmd(void);
@@ -117,6 +119,9 @@ void	ft_export(t_cmd *cmd, char ***envp);
 void	ft_unset(t_cmd *cmd, char ***envp);
 int		ft_echo(t_cmd *cmd, char ***envp);
 void	ft_cd(t_cmd *cmd, char ***envp);
+int		ft_exit(t_cmd *cmd, char ***envp);
+
+void	exit_get_code(pid_t pid);
 
 int		check_key(char *envp, char *src);
 char	*parse_env_value(char *key, char ***envp);

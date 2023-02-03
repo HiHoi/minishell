@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/02 19:35:31 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/03 14:59:07 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	count_line(char **line)
 {
 	int	i;
 
+	if (line == NULL)
+		return (0);
 	i = 0;
 	while (line[i])
 		i++;
@@ -39,6 +41,7 @@ int	error(t_info *info, char *s)
 		free_info(info);
 	if (s)
 		write(2, s, ft_strlen(s));
+	exit_code = 1;
 	exit(exit_code);
 }
 

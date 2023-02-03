@@ -25,6 +25,7 @@ SRCS = \
 		./srcs/builtin/unset.c\
 		./srcs/builtin/echo.c\
 		./srcs/builtin/cd.c\
+		./srcs/builtin/exit.c\
 		./srcs/parsing/hj_small_del.c\
 		./srcs/parsing/hj_split_change.c\
 		./srcs/parsing/hj_split_change2.c\
