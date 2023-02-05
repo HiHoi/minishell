@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 14:13:27 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/02 20:34:26 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 13:40:23 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	**hj_save_split(char *str, int size)
 		i++;
 		i2++;
 	}
-	split[i] = NULL;
+	split[i] = 0;
 	free(setpoint);
 	return (split);
 }
@@ -39,22 +39,47 @@ char	**hj_save_split(char *str, int size)
 char	*hj_compare_split(char *str, int *idx, int *setpoint)
 {
 	char	*result;
+	int		size;
 	int		ri;
 	int		i;
+	int		chk;
 
-	if ((setpoint[*idx + 1] - setpoint[*idx] == 1) &&\
-			setpoint[*idx] == '\"')
+	if ((setpoint[*idx + 1] - setpoint[*idx] == 1) && \
+	str[setpoint[*idx]] != '$' && str[setpoint[*idx + 1]] != '\0')
 		*idx += 1;
 	i = setpoint[*idx];
-	if (str[i] == '\"')
+	if (str[i] == '\0')
+		return (0);
+	chk = hj_point_checker(str, setpoint, *idx, str[i]);
+	if (chk % 2 == 0 && str[i] != '$')
 		i++;
-	result = malloc(sizeof(char) * (setpoint[*idx + 1] - i + 1));
-	ri = 0;
-	while (ri < setpoint[*idx + 1] - i)
-	{
+	size = setpoint[*idx + 1];
+	if (str[size] == '\'' && chk % 2 == 0)
+		size++;
+	result = malloc(sizeof(char) * (size - i + 1));
+	ri = -1;
+	while (++ri < size - i)
 		result[ri] = str[i + ri];
-		ri++;
-	}
 	result[ri] = '\0';
+	return (result);
+}
+
+int	hj_point_checker(char *str, int *set, int num, char com)
+{
+	int	result;
+	int	i;
+	int	idx;
+
+	if (com == '$')
+		return (1);
+	i = 0;
+	result = 0;
+	while (i <= num)
+	{
+		idx = set[i];
+		if (str[idx] == com)
+			result++;
+		i++;
+	}
 	return (result);
 }

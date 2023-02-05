@@ -6,11 +6,13 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 15:41:24 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/03 14:20:26 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 13:36:11 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./test.h"
+
+extern int	exit_code;
 
 char	**hj_change_split(char **str, char **envp)
 {
@@ -40,6 +42,8 @@ char	*hj_envp_change(char *str, char **envp)
 
 	if (str[0] != '$')
 		return (str);
+	else if (str[1] == '?')
+		return (hj_ft_atoi(exit_code));
 	else if (!hj_ft_isalpha(str[1]) || str[1] == '\0')
 		return (str);
 	set = hj_find_envp_val(str, &i, envp);
@@ -83,11 +87,11 @@ char	*hj_envp_name(char *str)
 	int		i;
 
 	i = 1;
-	while (ft_isen(str[i]) && str[i])
+	while (hj_ft_isen(str[i]) && str[i])
 		i++;
 	result = malloc(sizeof(char) * i);
 	i = 0;
-	while (ft_isen(str[i + 1]))
+	while (hj_ft_isen(str[i + 1]))
 	{
 		result[i] = str[i + 1];
 		i++;

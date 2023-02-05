@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/03 13:55:25 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 15:02:29 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	hs_pipeline(t_cmd *cmd, char ***envp)
 			cur->left->close_flag = 1;
 		pid = fork();
 		if (pid == -1)
-			error(NULL, "Failed to fork\n");
+			error(NULL, "Failed to fork\n", -1);
 		if ((pid == 0 && cur->exec_flag == 0))
 		{
 			if (cur->right && cur->right->parent_flag == 1)
@@ -115,5 +115,5 @@ void	hs_cmd(t_cmd *cmd, char ***envp)
 	parse_en = pipe_parsing_envp(envp);
 	path = pipe_parsing_cmd(parse_en, parse_cmd[0]);
 	if (execve(path, parse_cmd, *envp) == -1)
-		error(NULL, "Failed to execve\n");
+		error(NULL, parse_cmd[0], 2);
 }

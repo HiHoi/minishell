@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 15:33:12 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/02 20:31:37 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 13:32:31 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,16 @@ int	hj_sp_mal_size(char *str)
 	while (str[i])
 	{
 		if (str[i] == '\'')
-			hj_pashing_push(str, &i, '\'');
+			result += hj_pashing_push(str, &i, '\'');
 		else if (str[i] == '\"')
 			result += hj_pashing_push(str, &i, '\"');
-		if (str[i] != '$' && (str[i + 1] == '$' || str[i + 1] == '\0'))
+		if ((str[i] == '\'' || str[i] == '\"') && str[i + 1] != '\0')
+			result++;
+		if (str[i] != '$' && str[i + 1] == '$')
 			result++;
 		else if (str[i] == '$' && str[i + 1] == '\0')
+			result++;
+		if (str[i + 1] == '\0')
 			result++;
 		i++;
 	}
@@ -52,46 +56,50 @@ int	hj_pashing_push(char *str, int *i, char set)
 			result++;
 		idx++;
 	}
+	if (str[*i * idx + 1] != '\0')
+		result++;
 	*i += idx;
 	return (result);
 }
 
-int	hj_check_small(char *str)
+char	*hj_ft_atoi(int num)
 {
-	int	i;
-	int	result;
+	char	*result;
+	int		size;
+	int		i;
 
-	result = 0;
+	size = hj_set_atoi_size(num);
+	result = malloc(sizeof(char) * size + 1);
+	result[size] = '\0';
 	i = 0;
-	while (str[i])
+	if (num < 0)
 	{
-		if (str[i] == '\'')
-		{
-			while (str[++i] != '\'')
-				result = 1;
-		}
-		else if (str[i] == '\"')
-		{
-			while (str[++i] != '\"')
-				;
-		}
-		i++;
+		num *= -1;
+		i = 1;
 	}
+	while (--size - i >= 0)
+	{
+		result[size] = (num % 10) + '0';
+		num /= 10;
+	}
+	if (i == 1)
+		result[0] = '-';
 	return (result);
 }
 
-char	*hj_del_small(char *str)
+int	hj_set_atoi_size(int num)
 {
-	char	*result;
-	int		*set;
-	int		ri;
-	int		i;
+	int	result;
+	int	renum;
 
-	i = 0;
-	ri = 0;
-	set = hj_set_small_point(str);
-	result = hj_del_small_save(str, set);
-	free(set);
-	free(str);
+	result = 0;
+	renum = num;
+	if (renum <= 0)
+		result++;
+	while (renum != 0)
+	{
+		renum /= 10;
+		result++;
+	}
 	return (result);
 }

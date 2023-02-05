@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:24:23 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/02 19:52:56 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 15:05:50 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void	redi_input(t_cmd *cmd)
 	char	*path;
 
 	path = ft_strtrim(cmd->right->str, " ");
-	in = open(path, O_RDONLY, 0644);
+	in = open(path, O_RDONLY | O_EXCL, 0644);
 	if (in < 0)
-		error(NULL, "Failed to open\n");
+		error(NULL, path, 1);
 	dup2(in, STDIN_FILENO);
 	close(in);
 }
@@ -33,7 +33,7 @@ void	redi_output(t_cmd *cmd)
 	path = ft_strtrim(cmd->right->str, " ");
 	out = open(path, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (out < 0)
-		error(NULL, "Failed to open\n");
+		error(NULL, path, 1);
 	dup2(out, STDOUT_FILENO);
 	close(out);
 }
@@ -46,9 +46,9 @@ void	redi_heredoc(t_cmd *cmd)
 	int		in;
 
 	(void)cmd;
-	in = open(".temp_file", O_RDONLY, 0644);
+	in = open(".temp_file", O_RDONLY | O_EXCL, 0644);
 	if (in < 0)
-		hs_error_return(NULL, NULL, "Failed to open\n");
+		error(NULL, ".temp_file", 1);
 	dup2(in, STDIN_FILENO);
 	close(in);
 }
@@ -61,7 +61,7 @@ void	redi_append(t_cmd *cmd)
 	path = ft_strtrim(cmd->right->str, " ");
 	out = open(path, O_RDWR | O_CREAT | O_APPEND, 0644);
 	if (out < 0)
-		error(NULL, "Failed to open\n");
+		error(NULL, path, 1);
 	dup2(out, STDOUT_FILENO);
 	close(out);
 }

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/03 15:14:43 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 15:14:08 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,6 @@ void	handle_signal(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-//export cd unset 은 메인 프로세스에서 실행하여 제대로된 값이 들어가게끔
-//파이프 실행시가 문제
-
 void	exec_builtin(t_cmd *cmd, char ***envp)
 {
 	if (cmd->type == T_WORD)
@@ -63,33 +60,49 @@ void	exec_builtin(t_cmd *cmd, char ***envp)
 	}
 }
 
+int	syntax_pipe(t_cmd *cmd)
+{
+	if (cmd->right->str && cmd->left->str)
+		return (1);
+	if (cmd->right->str && cmd->left->type == T_PIPE && cmd->left->left->str)
+		return (1);
+	return (-1);
+}
+
+int	syntax_redi(t_cmd *cmd)
+{
+	if (hs_check_heredoc(cmd->str))
+		return (1);
+	if (cmd->right && cmd->right->str == NULL)
+		return (-1);
+	return (1);
+}
+
+int	check_cmd_syntax(t_cmd *cmd, char ***envp)
+{
+	int	ret;
+
+	ret = 1;
+	if (cmd->type == T_PIPE)
+		ret = syntax_pipe(cmd);
+	else if (cmd->type == T_REDI)
+		ret = syntax_redi(cmd);
+	if (cmd->left != NULL && ret == 1)
+		ret = check_cmd_syntax(cmd->left, envp);
+	if (cmd->right != NULL && ret == 1)
+		ret = check_cmd_syntax(cmd->right, envp);
+	return (ret);
+}
+
 int	check_cmd_exec(t_cmd *cmd, char ***envp)
 {
-	char	**cmdline;
-	char	*parsed;
-
-	cmdline = hj_split_cmd(cmd->str, *envp);
-	parsed = hs_parsing_cmd(envp, cmdline[0]);
-	if ((hs_check_builtin(cmd) != 1 && parsed == NULL && cmd->type == T_WORD \
-	&& ft_strchr(cmd->str, '/') != 0) || *envp == NULL)
+	if (check_cmd_syntax(cmd, envp) == -1)
 	{
-		write(2, "minishell: ", 11);
-		if (cmdline[0] != NULL)
-			write(2, cmdline[0], ft_strlen(cmdline[0]));
-		else
-			write(2, "syntax error", 12);
-		write(2, ": command not found\n", 20);
+		write(2, "minishell: ", 12);
+		write(2, cmd->str, ft_strlen(cmd->str));
+		write(2, ": syntax error\n", 16);
 		exit_code = 127;
-		free_parse(cmdline);
-		free(parsed);
 		return (exit_code);
 	}
-	if (parsed != cmdline[0])
-		free(parsed);
-	free_parse(cmdline);
-	if (cmd->left != NULL && cmd->type == T_WORD)
-		check_cmd_exec(cmd->left, envp);
-	if (cmd->right != NULL && cmd->type == T_WORD)
-		check_cmd_exec(cmd->right, envp);
 	return (-1);
 }

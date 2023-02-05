@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:35:04 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/03 15:12:48 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 14:03:05 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,8 +154,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 	if (!s)
 		return (NULL);
-	if ((unsigned int)ft_strlen(s) < start || len == 0)
-		return (ft_strdup(""));
+	if ((unsigned int)ft_strlen(s) < start || len == 0 || s[start] == '\0')
+		return (NULL);
 	s_len = ft_strlen((char *)(s + start));
 	if (ft_strlen(s) < len)
 		len = ft_strlen(s);

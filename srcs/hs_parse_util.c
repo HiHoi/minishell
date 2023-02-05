@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:42:56 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/02 20:49:25 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 14:32:21 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag)
 	{
 		cmd->right->str = ft_substr(buf, idx + 1, ft_strlen(buf) - idx);
 		cmd_file = ft_split(cmd->right->str, ' ');
-		if (cmd_file[1])
+		if (cmd_file && cmd_file[1])
 			hs_parse_redi_trim(cmd, cmd_file[1], cmd_file[0]);
 		else
 		{
@@ -93,6 +93,11 @@ int	check_type(t_cmd *cmd, char *buf)
 
 	i = 0;
 	ret = T_WORD;
+	if (buf == NULL)
+	{
+		cmd->type = ret;
+		return (ret);
+	}
 	while (buf[i])
 	{
 		if (buf[i] == '|')

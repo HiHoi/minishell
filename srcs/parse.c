@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 19:23:51 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/02 14:00:05 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 14:31:31 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	hs_lexical_redi(t_cmd *cmd, char *buf)
 
 void	hs_check_lexical(t_cmd *cmd, char *buf)
 {
-	if (buf == NULL || check_type(cmd, buf) == T_WORD)
+	if (check_type(cmd, buf) == T_WORD)
 		return ;
 	if (cmd->type == T_PIPE)
 		hs_lexical_pipe(cmd, buf);

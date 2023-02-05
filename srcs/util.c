@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/03 14:59:07 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 15:11:26 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,19 @@ void	free_info(t_info *info)
 		free(info);
 }
 
-int	error(t_info *info, char *s)
+int	error(t_info *info, char *s, int flag)
 {
 	if (info)
 		free_info(info);
 	if (s)
+	{
+		write(2, "minishell: ", 11);
 		write(2, s, ft_strlen(s));
+		if (flag == 1)
+			write(2, ": No such file or directory\n", 29);
+		if (flag == 2)
+			write(2, ": command not found\n", 21);
+	}
 	exit_code = 1;
 	exit(exit_code);
 }

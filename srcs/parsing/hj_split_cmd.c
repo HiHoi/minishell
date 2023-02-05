@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 16:31:37 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/03 14:20:06 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 14:05:02 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,36 +16,30 @@ char	**hj_split_cmd(char *str, char **envp)
 {
 	char	**spr;
 	char	*sp;
-	int 	i;
-	int		i2;
-	int		j;
+	int		i[3];
 	int		size;
 
-	if (str == NULL || envp == NULL)
+	if (str == NULL)
 		return (NULL);
 	size = hj_mal_size(str, ' ');
 	spr = malloc(sizeof(char *) * (size + 1));
 	spr[size] = NULL;
-	j = 0;
-	i2 = 0;
-	i = 0;
-	while (str[i])
+	hj_array_zero(&i[0], &i[1], &i[2]);
+	while (str[++i[2]])
 	{
-		if (str[i] == '\'')
-			i += hj_compare_push(str, i, '\'');
-		else if (str[i] == '\"')
-			i += hj_compare_push(str, i, '\"');
-		if (str[i] != ' ' && (str[i + 1] == ' ' || str[i + 1] == '\0'))
+		if (str[i[2]] == '\'')
+			i[2] += hj_compare_push(str, i[2], '\'');
+		else if (str[i[2]] == '\"')
+			i[2] += hj_compare_push(str, i[2], '\"');
+		if (str[i[2]] != ' ' && (str[i[2] + 1] == ' ' || str[i[2] + 1] == '\0'))
 		{
-			sp = hj_str_save(str, i, j);
-			spr[i2] = hj_split_join(sp, envp);
+			sp = hj_str_save(str, i[2], i[0]);
+			spr[i[1]++] = hj_split_join(sp, envp);
 			free(sp);
 			sp = NULL;
-			i2++;
 		}
-		if (str[i] == ' ')
-			j = i + 1;
-		i++;
+		if (str[i[2]] == ' ')
+			i[0] = i[2] + 1;
 	}
 	return (spr);
 }
@@ -54,19 +48,18 @@ char	*hj_split_join(char *str, char **envp)
 {
 	char	**split;
 	char	**split2;
+	char	**split3;
 	char	*result;
 	int		size;
-	int		chk;
 
-	chk = hj_check_small(str);
 	size = hj_sp_mal_size(str);
 	split = hj_save_split(str, size);
 	split2 = hj_change_split(split, envp);
-	result = hj_split_str_join(split2);
+	split3 = hj_del_small(split2);
+	result = hj_split_str_join(split3);
 	all_free(split2);
-	if (chk == 0)
-		return (result);
-	return (hj_del_small(result));
+	all_free(split3);
+	return (result);
 }
 
 int	hj_isseting(int i, int *set, int count)
@@ -83,7 +76,7 @@ int	hj_isseting(int i, int *set, int count)
 	return (1);
 }
 
-void	ft_error(void)
+void	hj_ft_error(void)
 {
 	printf("Error\n");
 	exit(1);

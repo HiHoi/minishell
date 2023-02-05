@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 21:00:02 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/03 14:21:45 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 14:04:37 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	hs_exec_builtin(t_cmd *cmd, char ***envp)
 
 int	hs_check_builtin(t_cmd *cmd)
 {
+	if (cmd->str == NULL)
+		return (0);
 	if (!ft_strncmp(cmd->str, "cd", 2))
 		return (1);
 	else if (!ft_strncmp(cmd->str, "env", 3))

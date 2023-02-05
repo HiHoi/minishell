@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/03 15:11:28 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 15:01:01 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ t_cmd	*init_cmd(void);
 
 void	start_shell(t_info *info);
 void	handle_signal(void);
-int		error(t_info *info, char *s);
+int		error(t_info *info, char *s, int flag);
 int		hs_error_return(t_info *info, t_cmd *cmd, char *s);
 void	free_cmd(t_cmd *cmd, char *buf);
 void	free_parse(char **str);

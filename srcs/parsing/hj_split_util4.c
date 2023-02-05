@@ -6,11 +6,18 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 16:18:18 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/02 20:13:55 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 13:31:19 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./test.h"
+
+void	hj_array_zero(int *first, int *second, int *third)
+{
+	*first = 0;
+	*second = 0;
+	*third = 0;
+}
 
 char	*hj_split_str_join(char **split)
 {

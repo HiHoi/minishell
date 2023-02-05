@@ -102,6 +102,6 @@ int	hj_compare_push(char *str, int i, char set)
 			return (i2);
 		i2++;
 	}
-	ft_error();
+	hj_ft_error();
 	return (0);
 }

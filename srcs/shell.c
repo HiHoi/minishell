@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:09:03 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/03 14:18:06 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/05 15:10:32 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,9 @@ void	hs_search_tree(t_cmd *cmd, char ***envp)
 		cmd->right->parent_flag = 1;
 	pid = fork();
 	if (pid < 0)
-		error(NULL, "Failed to fork\n");
+		error(NULL, "Failed to fork\n", -1);
 	else if (pid == 0)
 		hs_excute_tree(cmd, envp);
-	// waitpid(pid, 0, 0);
 	exit_get_code(pid);
 	unlink(".temp_file");
 	if (cmd->type == T_PIPE || cmd->type == T_REDI)
