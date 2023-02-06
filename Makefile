@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-FLAG = -Wall -Werror -Wextra -g -fsanitize=undefined
+FLAG = -Wall -Werror -Wextra
 READLINE_LINK = -lreadline -L /$(shell brew --prefix readline)/lib
 READLINE_COM = -I /$(shell brew --prefix readline)/include
 TERMCAP = -lncurses
@@ -30,6 +30,7 @@ SRCS = \
 		./srcs/builtin/export.c\
 		./srcs/builtin/unset.c\
 		./srcs/builtin/hj_envp_del.c\
+		./srcs/builtin/hj_envp_bigtaging.c\
 		./srcs/builtin/echo.c\
 		./srcs/builtin/cd.c\
 		./srcs/builtin/exit.c\

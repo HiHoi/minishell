@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:37:53 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/06 13:54:19 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 14:45:38 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	export_declare(char **envp)
 	i = -1;
 	while (envp[++i])
 	{
-		parse = ft_split(sorted[i], '=');
+		parse = hj_envp_bigtaging(envp[i]);
 		printf("declare -x %s=\"%s\"\n", parse[0], parse[1]);
 		free_parse(parse);
 		free(sorted[i]);
