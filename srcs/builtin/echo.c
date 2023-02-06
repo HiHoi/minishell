@@ -6,23 +6,23 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:27 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/06 13:13:37 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 19:29:50 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-extern int	exit_code;
+extern int	g_exit_code;
 
 void	print_exit(void)
 {
 	char	*code;
 
-	code = ft_itoa(exit_code);
+	code = ft_itoa(g_exit_code);
 	write(2, "minishell: ", 12);
 	write(2, code, ft_strlen(code));
 	write(2, ": command not found\n", 21);
-	exit_code = 127;
+	g_exit_code = 127;
 }
 
 void	echo_print(char *s, int option)
@@ -52,7 +52,7 @@ void	echo_env(char *str, char ***envp, int option)
 	echo_print(value, option);
 }
 
-char	*echo_parse(char *s, char ***envp)
+char	*echo_parse(char *s, char ***envp, int option)
 {
 	char	**parse;
 	char	*str;
@@ -60,27 +60,28 @@ char	*echo_parse(char *s, char ***envp)
 	parse = hj_split_cmd(s, *envp);
 	if (parse[1] == NULL)
 		return (NULL);
-	if (ft_strchr(parse[1], '-') > 0)
-		str = ft_strdup(parse[2]);
+	if (option == 1)
+		str = hj_echo_join(parse, 2);
 	else
-		str = ft_strdup(parse[1]);
+		str = hj_echo_join(parse, 1);
 	return (str);
 }
 
-//$?는 echo의 옵션
 int	ft_echo(t_cmd *cmd, char ***envp)
 {
 	int		option;
+	char	**temp;
 	char	*parse;
 
 	cmd->exec_flag = 1;
 	option = 0;
-	if (ft_strchr(cmd->str, '-') > 0)
+	temp = ft_split(cmd->str, ' ');
+	if (!ft_strncmp(temp[1], "-n", 2))
 		option = 1;
-	parse = echo_parse(cmd->str, envp);
+	parse = echo_parse(cmd->str, envp, option);
 	if (ft_strchr(cmd->str, '$') > 0)
 		echo_env(cmd->str, envp, option);
-	else if (ft_strcmp(parse, "echo") == 0)
+	else if (!ft_strncmp(parse, "echo", 4))
 		write(1, "\n", 1);
 	else
 		echo_print(parse, option);

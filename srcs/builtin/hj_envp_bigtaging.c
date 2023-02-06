@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 13:57:56 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/06 14:46:05 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 14:52:50 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,3 @@ char	**hj_envp_bigtaging(char *str)
 	result[2] = NULL;
 	return (result);
 }
-

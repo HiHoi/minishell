@@ -6,13 +6,13 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 12:36:41 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 13:33:10 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 15:27:22 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-extern int	exit_code;
+extern int	g_exit_code;
 
 int	syntax_pipe(t_cmd *cmd)
 {
@@ -48,13 +48,15 @@ int	check_cmd_syntax(t_cmd *cmd, char ***envp)
 
 int	check_cmd_exec(t_cmd *cmd, char ***envp)
 {
+	if (hs_check_builtin(cmd) == 1)
+		return (-1);
 	if (check_cmd_syntax(cmd, envp) == -1)
 	{
 		write(2, "minishell: ", 12);
 		write(2, cmd->str, ft_strlen(cmd->str));
 		write(2, ": syntax error\n", 16);
-		exit_code = 258;
-		return (exit_code);
+		g_exit_code = 258;
+		return (g_exit_code);
 	}
 	return (-1);
 }

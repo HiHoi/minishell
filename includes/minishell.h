@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 14:45:21 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 21:24:49 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,11 +126,12 @@ int		ft_exit(t_cmd *cmd, char ***envp);
 void	exit_get_code(pid_t pid);
 
 int		check_key(char *envp, char *src);
-int		hs_check_path(char ***envp);
+int		hs_check_envp(char ***envp, char *str);
 char	*parse_env_value(char *key, char ***envp);
 void	swap_env(char ***envp, char *src, char *key);
 char	**hj_envp_del(char **envp, char *str);
 char	**hj_envp_bigtaging(char *str);
+char	*hj_echo_join(char **str, int i);
 
 char	**hj_split_cmd(char *str, char **envp);
 

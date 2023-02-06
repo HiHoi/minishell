@@ -6,13 +6,13 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 15:41:24 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/06 13:27:51 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 14:51:32 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./test.h"
 
-extern int	exit_code;
+extern int	g_exit_code;
 
 char	**hj_change_split(char **str, char **envp)
 {
@@ -45,7 +45,7 @@ char	*hj_envp_change(char *str, char **envp)
 	if (str[0] != '$')
 		return (str);
 	else if (str[1] == '?')
-		return (hj_ft_atoi(exit_code));
+		return (hj_ft_atoi(g_exit_code));
 	else if (!hj_ft_isalpha(str[1]) || str[1] == '\0')
 		return (str);
 	set = hj_find_envp_val(str, &i, envp);

@@ -6,13 +6,13 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 13:10:28 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 16:38:01 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	exit_code;
+int	g_exit_code;
 
 int	count_line(char **line)
 {
@@ -28,6 +28,7 @@ int	count_line(char **line)
 
 void	free_info(t_info *info)
 {
+	clear_history();
 	if (info->cmd)
 		free(info->cmd);
 	if (info)
@@ -45,15 +46,15 @@ int	error(t_info *info, char *s, int flag)
 		if (flag == 1)
 		{
 			write(2, ": No such file or directory\n", 29);
-			exit_code = 1;
+			g_exit_code = 1;
 		}
 		if (flag == 2)
 		{
 			write(2, ": command not found\n", 21);
-			exit_code = 127;
+			g_exit_code = 127;
 		}
 	}
-	exit(exit_code);
+	exit(g_exit_code);
 }
 
 int	hs_error_return(t_info *info, t_cmd *cmd, char *s)
@@ -64,8 +65,8 @@ int	hs_error_return(t_info *info, t_cmd *cmd, char *s)
 		free(cmd);
 	if (s)
 		write(2, s, ft_strlen(s));
-	exit_code = 127;
-	return (exit_code);
+	g_exit_code = 127;
+	return (g_exit_code);
 }
 
 t_info	*init_info(char **envp)

@@ -6,13 +6,13 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 13:33:32 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 21:33:46 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-extern int	exit_code;
+extern int	g_exit_code;
 
 void	hs_proc_child(t_cmd *cmd, char ***envp, int parentfd[2], int fd[2])
 {
@@ -46,15 +46,17 @@ void	hs_proc_parent(t_cmd *cmd, char ***envp, int fd[2])
 
 void	pipe_wait(pid_t pid)
 {
-	int	status;
+	int		status;
+	pid_t	a;
 
+	(void)pid;
 	while (1)
 	{
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
+		a = waitpid(0, &status, 0);
+		if (a == 0)
 		{
-			exit_code = WEXITSTATUS(status);
-			exit(exit_code);
+			g_exit_code = WEXITSTATUS(status);
+			exit(g_exit_code);
 		}
 	}
 }

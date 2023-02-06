@@ -6,15 +6,15 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 13:33:23 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 21:25:05 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-extern int	exit_code;
+extern int	g_exit_code;
 
-//minishell 많이 키면 컨트롤 c 밀림
+//cat 상태에서 sigquit 흔적 생김
 
 void	handler(int signum)
 {
@@ -54,7 +54,8 @@ void	exec_builtin(t_cmd *cmd, char ***envp)
 			ft_echo(cmd, envp);
 		else if (!ft_strncmp(cmd->str, "cd", 2))
 			ft_cd(cmd, envp);
-		else if (!ft_strncmp(cmd->str, "exit", 4))
+		else if (!ft_strncmp(cmd->str, "exit", 4) \
+		|| !ft_strncmp(cmd->str, "(exit)", 6))
 			ft_exit(cmd, envp);
 		return ;
 	}

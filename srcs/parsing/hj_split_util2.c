@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hj_split_util2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hojsong <hojsong@student.42seoul.k>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 15:33:12 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/06 12:35:35 by hojsong          ###   ########.fr       */
+/*   Updated: 2023/02/06 18:25:08 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	hj_sp_mal_size(char *str)
 		if ((str[i] == '\'' || str[i] == '\"') && \
 				str[i + 1] != '\0')
 			result++;
-		if (str[i] != '$' && str[i + 1] == '$')
+		if (str[i + 1] == '$')
 			result++;
 		else if (str[i] == '$' && str[i + 1] == '\0')
 			result++;

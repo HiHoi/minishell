@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:09:03 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 13:27:19 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 21:24:57 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int	hs_check_heredoc(char *str)
 	}
 	return (0);
 }
+
+//echo | echo prompt error
 
 void	hs_search_tree(t_cmd *cmd, char ***envp)
 {
@@ -87,7 +89,10 @@ void	start_shell(t_info *info)
 	{
 		buf = readline("minishell$ ");
 		if (!buf)
-			exit(-1);
+		{
+			free(info);
+			exit(0);
+		}
 		else if (*buf == '\0')
 			free(buf);
 		else

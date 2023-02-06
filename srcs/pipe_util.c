@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 12:58:46 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 14:25:34 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 21:15:30 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ char	**pipe_parsing_envp(char ***envp)
 	char	*path;
 	char	**parsed_envp;
 
-	if (*envp == NULL || hs_check_path(envp) == 0)
+	if (*envp == NULL || hs_check_envp(envp, "PATH=") == 0)
 		return (0);
 	i = 0;
-	while (ft_strncmp("PATH", (*envp)[i], 4))
+	while (ft_strncmp("PATH=", (*envp)[i], 5))
 		i++;
 	path = (*envp)[i] + 5;
 	parsed_envp = ft_split(path, ':');

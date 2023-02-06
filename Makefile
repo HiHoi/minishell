@@ -31,6 +31,7 @@ SRCS = \
 		./srcs/builtin/unset.c\
 		./srcs/builtin/hj_envp_del.c\
 		./srcs/builtin/hj_envp_bigtaging.c\
+		./srcs/builtin/hj_echo_join.c\
 		./srcs/builtin/echo.c\
 		./srcs/builtin/cd.c\
 		./srcs/builtin/exit.c\

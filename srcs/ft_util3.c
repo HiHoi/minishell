@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 12:41:42 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 14:32:33 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 15:32:35 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,16 @@ char	*ft_itoa(int n)
 	return (reverse(rlt, 0, i - 1));
 }
 
-int	hs_check_path(char ***envp)
+int	hs_check_envp(char ***envp, char *str)
 {
 	int	i;
 
 	i = 0;
+	if (*envp == NULL)
+		return (0);
 	while ((*envp)[i])
 	{
-		if (!ft_strncmp((*envp)[i], "PATH=", 5))
+		if (!ft_strncmp((*envp)[i], str, ft_strlen(str)))
 			return (1);
 		i++;
 	}

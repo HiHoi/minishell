@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 13:25:32 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 13:26:01 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 15:20:35 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdlib.h>
 # include <stdio.h>
+# include <unistd.h>
 
 int		hj_set_count(char *str);
 int		*hj_set_seting(char *str, int count);

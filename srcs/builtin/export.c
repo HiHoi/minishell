@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:37:53 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/06 14:45:38 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 15:13:17 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ void	ft_export(t_cmd *cmd, char ***envp)
 	char	**parsed;
 
 	cmd->exec_flag = 1;
+	if (ft_strchr(cmd->str, '=') == 0)
+		return ;
 	if (ft_strchr(cmd->str, ' ') == 0)
 	{
 		export_declare(*envp);

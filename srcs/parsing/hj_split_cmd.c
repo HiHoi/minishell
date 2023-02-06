@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hj_split_cmd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hojsong <hojsong@student.42seoul.k>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 16:31:37 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/06 13:22:09 by hojsong          ###   ########.fr       */
+/*   Updated: 2023/02/06 15:20:18 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	hj_isseting(int i, int *set, int count)
 
 void	hj_ft_error(void)
 {
-	printf("Error\n");
+	write(2, "minishell: Not paired string\n", 30);
 	exit(1);
 }
 

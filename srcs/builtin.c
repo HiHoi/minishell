@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 21:00:02 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/05 14:04:37 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 15:46:52 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ void	hs_exec_builtin(t_cmd *cmd, char ***envp)
 {
 	if (!ft_strncmp(cmd->str, "env", 3))
 		ft_env(cmd, envp);
-	else if (!ft_strncmp(cmd->str, "exit", 4))
+	else if (!ft_strncmp(cmd->str, "exit", 4) \
+	&& !ft_strncmp(cmd->str, "(exit)", 6))
 		ft_exit(cmd, envp);
 	else if (!ft_strncmp(cmd->str, "cd", 2))
 		ft_cd(cmd, envp);
@@ -47,7 +48,8 @@ int	hs_check_builtin(t_cmd *cmd)
 		return (1);
 	else if (!ft_strncmp(cmd->str, "pwd", 3))
 		return (1);
-	else if (!ft_strncmp(cmd->str, "exit", 4))
+	else if (!ft_strncmp(cmd->str, "exit", 4) \
+	|| !ft_strncmp(cmd->str, "(exit)", 6))
 		return (1);
 	else if (!ft_strncmp(cmd->str, "export", 6))
 		return (1);
