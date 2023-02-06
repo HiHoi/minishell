@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:27 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/03 15:16:00 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 13:13:37 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,12 @@ extern int	exit_code;
 
 void	print_exit(void)
 {
-	printf("%d\n", exit_code);
+	char	*code;
+
+	code = ft_itoa(exit_code);
+	write(2, "minishell: ", 12);
+	write(2, code, ft_strlen(code));
+	write(2, ": command not found\n", 21);
 	exit_code = 127;
 }
 

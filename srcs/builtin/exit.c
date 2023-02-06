@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 11:31:10 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/03 15:19:29 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 12:18:02 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ void	exit_get_code(pid_t pid)
 	int	status;
 
 	waitpid(pid, &status, 0);
-	exit_code = WEXITSTATUS(status);
+	if (WIFEXITED(status))
+		exit_code = WEXITSTATUS(status);
 }
 
 //(exit)는 종료 되면 안됨

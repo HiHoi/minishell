@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hj_split_util5.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hojsong <hojsong@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 19:38:07 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/05 13:26:10 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 12:54:46 by hojsong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,10 @@ int	*hj_setpoint_seting(char *str)
 	while (str[i])
 	{
 		if (str[i] == '\'')
-		{
-			result[ri++] = i;
-			i += hj_set_compare_push(str, i);
-			result[ri++] = i;
-		}
+			i += hj_set_compare_push(str, i, result, &ri);
 		else if (str[i] == '\"')
 		{
-			result[ri++] = i++;
-			while (str[i] != '\"')
-			{
-				if (str[i] == '$')
-					result[ri++] = i;
-				i++;
-			}
-			result[ri++] = i;
+			i += hj_set_compare_push2(str, i, result, &ri);
 		}
 		else if (str[i] == '$')
 			result[ri++] = i;
@@ -50,13 +39,38 @@ int	*hj_setpoint_seting(char *str)
 	return (result);
 }
 
-int	hj_set_compare_push(char *str, int i)
+int	hj_set_compare_push(char *str, int i, int *result, int *ri)
+{
+	int	idx;
+
+	result[*ri] = i;
+	*ri += 1;
+	idx = 1;
+	while (str[i + idx] != '\'')
+		idx++;
+	result[*ri] = i + idx;
+	*ri += 1;
+	return (idx);
+}
+
+int	hj_set_compare_push2(char *str, int i, int *result, int *ri)
 {
 	int	idx;
 
 	idx = 1;
-	while (str[i + idx] != '\'')
+	result[*ri] = i;
+	*ri += 1;
+	while (str[i + idx] != '\"')
+	{
+		if (str[i] == '$')
+		{
+			result[*ri] = i + idx;
+			*ri += 1;
+		}
 		idx++;
+	}
+	result[*ri] = i + idx;
+	*ri += 1;
 	return (idx);
 }
 

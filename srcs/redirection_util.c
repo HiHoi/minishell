@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:17:52 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/02 19:18:25 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 12:58:54 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ void	make_temp(t_cmd *cmd)
 	char	*limiter;
 
 	limiter = make_limiter(cmd);
-	fd = open(".temp_file", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open("/tmp/.temp_file", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
-		error(NULL, "Failed to open file");
+		error(NULL, "Failed to open file\n", -1);
 	while (1)
 	{
 		line = readline("heredoc>");

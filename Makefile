@@ -11,9 +11,15 @@ SRCS = \
 		./srcs/redirection_util.c\
 		./srcs/ft_split.c\
 		./srcs/ft_util.c\
+		./srcs/ft_util2.c\
+		./srcs/ft_util3.c\
+		./srcs/ft_util4.c\
 		./srcs/util.c\
+		./srcs/util2.c\
+		./srcs/util3.c\
 		./srcs/signal.c\
 		./srcs/parse.c\
+		./srcs/syntax.c\
 		./srcs/hs_parse_util.c\
 		./srcs/pipe.c\
 		./srcs/redirection.c\
@@ -23,6 +29,7 @@ SRCS = \
 		./srcs/builtin/pwd.c\
 		./srcs/builtin/export.c\
 		./srcs/builtin/unset.c\
+		./srcs/builtin/hj_envp_del.c\
 		./srcs/builtin/echo.c\
 		./srcs/builtin/cd.c\
 		./srcs/builtin/exit.c\

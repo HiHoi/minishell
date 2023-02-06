@@ -6,16 +6,13 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/05 15:02:29 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 13:33:32 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-//sleep 커맨드는 waitpid가 0일때 제대로 기다림
-//WNOH 옵션을 어떻게 써야 하는지 생각할 필요가 있음
-
-extern	int	exit_code;
+extern int	exit_code;
 
 void	hs_proc_child(t_cmd *cmd, char ***envp, int parentfd[2], int fd[2])
 {
@@ -90,8 +87,6 @@ void	hs_pipeline(t_cmd *cmd, char ***envp)
 	}
 	pipe_wait(pid);
 }
-
-//awk <asd> => 리다이렉션 여부 정정
 
 void	hs_cmd(t_cmd *cmd, char ***envp)
 {

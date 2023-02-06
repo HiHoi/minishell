@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 15:41:24 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/05 13:36:11 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 13:27:51 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ char	**hj_change_split(char **str, char **envp)
 	while (str[i])
 		i++;
 	result = malloc(sizeof(char *) * (i + 1));
+	if (result == NULL)
+		return (0);
 	i = 0;
 	while (str[i])
 	{
@@ -110,6 +112,8 @@ char	*hj_envp_plus_str(char *set, char *str, int i)
 	set_size = hj_ft_strlen(set);
 	size = set_size + hj_ft_strlen(str) - i;
 	result = malloc(sizeof(char) * (size + 1));
+	if (result == NULL)
+		return (0);
 	idx = 0;
 	while (idx < size)
 	{

@@ -3,21 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   hj_split_util4.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hojsong <hojsong@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 16:18:18 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/05 13:31:19 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/03 16:43:26 by hojsong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./test.h"
-
-void	hj_array_zero(int *first, int *second, int *third)
-{
-	*first = 0;
-	*second = 0;
-	*third = 0;
-}
 
 char	*hj_split_str_join(char **split)
 {

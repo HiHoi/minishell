@@ -1,36 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   util3.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/20 20:38:32 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/06 14:17:52 by hoslim           ###   ########.fr       */
+/*   Created: 2023/02/06 12:46:02 by hoslim            #+#    #+#             */
+/*   Updated: 2023/02/06 12:46:21 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../includes/minishell.h"
 
-void	ft_env(t_cmd *cmd, char ***envp)
+char	*hs_parsing_cmd(char ***envp, char *cmdline)
 {
-	int		i;
-	char	**test;
+	char	*parsed;
+	char	**path;
 
-	cmd->exec_flag = 1;
-	if (*envp == NULL)
-		return ;
-	test = ft_split(cmd->str, ' ');
-	if (test[1])
-		error(NULL, "Invaild option\n", -1);
-	i = 0;
-	while ((*envp)[i])
-	{
-		if ((*envp)[i][0] != '\0')
-		{
-			write(1, (*envp)[i], ft_strlen((*envp)[i]));
-			write(1, "\n", 1);
-		}
-		i++;
-	}
+	path = pipe_parsing_envp(envp);
+	parsed = pipe_parsing_cmd(path, cmdline);
+	free_parse(path);
+	return (parsed);
+}
+
+int	check_argc(char *str)
+{
+	int		ret;
+
+	if (str && ft_isalpha(str[0]) == 1)
+		ret = 0;
+	else
+		ret = 2;
+	return (ret);
 }

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:09:03 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/05 15:10:32 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 13:27:19 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	hs_search_tree(t_cmd *cmd, char ***envp)
 	else if (pid == 0)
 		hs_excute_tree(cmd, envp);
 	exit_get_code(pid);
-	unlink(".temp_file");
+	unlink("/tmp/.temp_file");
 	if (cmd->type == T_PIPE || cmd->type == T_REDI)
 	{
 		cmd->left->exec_flag = 1;
@@ -65,28 +65,12 @@ void	hs_search_tree(t_cmd *cmd, char ***envp)
 		hs_search_tree(cmd->right, envp);
 }
 
-void	print_test(t_info *info)
+void	exec_cmd(t_cmd *cmd, char ***envp)
 {
-	t_cmd	*cur = info->cmd;
-
-	while (cur)
+	if (check_cmd_exec(cmd, envp) == -1)
 	{
-		printf("cur !  t : %d   s : %s\n", cur->type, cur->str);
-		if (cur->left)
-			printf("left !  t : %d   s : %s\n", cur->left->type, cur->left->str);
-		if (cur->right)
-			printf("rigth !  t : %d   s : %s\n", cur->right->type, cur->right->str);
-		cur = cur->left;
-	}
-	cur = info->cmd;
-	while (cur)
-	{
-		printf("cur !  t : %d   s : %s\n", cur->type, cur->str);
-		if (cur->left)
-			printf("left !  t : %d   s : %s\n", cur->left->type, cur->left->str);
-		if (cur->right)
-			printf("rigth !  t : %d   s : %s\n", cur->right->type, cur->right->str);
-		cur = cur->right;
+		exec_builtin(cmd, envp);
+		hs_search_tree(cmd, envp);
 	}
 }
 
@@ -110,14 +94,8 @@ void	start_shell(t_info *info)
 		{
 			add_history(buf);
 			parsing_cmd(info, buf);
-			// print_test(info);
-			if (check_cmd_exec(info->cmd, &info->en) == -1)
-			{
-				exec_builtin(info->cmd, &info->en);
-				hs_search_tree(info->cmd, &info->en);
-			}
+			exec_cmd(info->cmd, &info->en);
 			free_cmd(info->cmd, buf);
 		}
 	}
 }
-

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hj_split_util2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hojsong <hojsong@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 15:33:12 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/05 13:32:31 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 12:35:35 by hojsong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ int	hj_sp_mal_size(char *str)
 			result += hj_pashing_push(str, &i, '\'');
 		else if (str[i] == '\"')
 			result += hj_pashing_push(str, &i, '\"');
-		if ((str[i] == '\'' || str[i] == '\"') && str[i + 1] != '\0')
+		if ((str[i] == '\'' || str[i] == '\"') && \
+				str[i + 1] != '\0')
 			result++;
 		if (str[i] != '$' && str[i + 1] == '$')
 			result++;
@@ -70,6 +71,8 @@ char	*hj_ft_atoi(int num)
 
 	size = hj_set_atoi_size(num);
 	result = malloc(sizeof(char) * size + 1);
+	if (result == NULL)
+		return (0);
 	result[size] = '\0';
 	i = 0;
 	if (num < 0)

@@ -6,13 +6,13 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:20 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/03 15:15:54 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 13:32:52 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-extern int  exit_code;
+extern int	exit_code;
 
 char	*cd_parse_path(char *cmd, char ***envp)
 {

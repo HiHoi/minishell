@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/05 15:01:01 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 14:23:08 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,14 @@ void	handle_signal(void);
 int		error(t_info *info, char *s, int flag);
 int		hs_error_return(t_info *info, t_cmd *cmd, char *s);
 void	free_cmd(t_cmd *cmd, char *buf);
+void	free_info(t_info *info);
 void	free_parse(char **str);
 char	*hs_parsing_cmd(char ***envp, char *cmdline);
 int		check_argc(char *str);
 
 void	parsing_cmd(t_info *info, char *buf);
 void	hs_cmd(t_cmd *cmd, char ***envp);
+int		check_cmd_exec(t_cmd *cmd, char ***envp);
 
 int		check_type(t_cmd *cmd, char *buf);
 int		count_line(char **line);
@@ -124,8 +126,10 @@ int		ft_exit(t_cmd *cmd, char ***envp);
 void	exit_get_code(pid_t pid);
 
 int		check_key(char *envp, char *src);
+int		hs_check_path(char ***envp);
 char	*parse_env_value(char *key, char ***envp);
 void	swap_env(char ***envp, char *src, char *key);
+char	**hj_envp_del(char **envp, char *str);
 
 char	**hj_split_cmd(char *str, char **envp);
 

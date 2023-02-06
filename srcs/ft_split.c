@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 21:35:20 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/02 16:25:53 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 11:54:40 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*ft_calloc(size_t nelem, size_t elsize)
 
 	tmp = malloc(elsize * nelem);
 	if (!tmp)
-		error(NULL, "Failed to malloc\n");
+		error(NULL, "Failed to malloc\n", -1);
 	i = 0;
 	while (i < elsize)
 		tmp[i++] = 0;

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:24:23 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/05 15:05:50 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 12:59:03 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ void	redi_heredoc(t_cmd *cmd)
 	int		in;
 
 	(void)cmd;
-	in = open(".temp_file", O_RDONLY | O_EXCL, 0644);
+	in = open("/tmp/.temp_file", O_RDONLY | O_EXCL, 0644);
 	if (in < 0)
-		error(NULL, ".temp_file", 1);
+		error(NULL, "/tmp/.temp_file", 1);
 	dup2(in, STDIN_FILENO);
 	close(in);
 }

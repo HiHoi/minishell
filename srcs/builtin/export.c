@@ -6,16 +6,11 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:37:53 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/03 15:16:25 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 13:54:19 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-//1. 인자의 갯수를 파악하고 2개 이상이면 나머지 문자열을 받고 에러를 출력
-//2. 인자의 갯수가 맞다면 파싱 후 키값에 숫자가 있는지 파악
-//과연 구조체 내로 복사한 환경변수에 값을 넣어야 하는지
-//그 값을 어떻게 사용해야 하는가
 
 int	export_error(char *str)
 {
@@ -31,69 +26,57 @@ int	export_error(char *str)
 
 char	**sort_envp(char **envp)
 {
-	int		i;
-	int		j;
+	int		i[2];
 	int		len;
 	char	*buf;
 	char	**sorted;
 
-	i = -1;
+	i[0] = -1;
 	len = count_line(envp);
-	while (++i < len - 1)
+	while (++i[0] < len - 1)
 	{
-		j = i + 1;
-		if (ft_strcmp(envp[i], envp[j]) > 0)
+		i[1] = i[0] + 1;
+		if (ft_strcmp(envp[i[0]], envp[i[1]]) > 0)
 		{
-			buf = envp[i];
-			envp[i] = envp[j];
-			envp[j] = buf;
+			buf = envp[i[0]];
+			envp[i[0]] = envp[i[1]];
+			envp[i[1]] = buf;
 		}
 	}
 	sorted = ft_calloc(len, sizeof(char *));
-	i = -1;
-	while (++i < len)
-		sorted[i] = ft_strdup(envp[i]);
+	if (!sorted)
+		return (0);
+	i[0] = -1;
+	while (++i[0] < len)
+		sorted[i[0]] = ft_strdup(envp[i[0]]);
 	sorted[len] = NULL;
 	return (sorted);
 }
-
-//#
-//$환경변수 파싱
 
 void	export_declare(char **envp)
 {
 	int		i;
 	char	**sorted;
+	char	**parse;
 
 	sorted = sort_envp(envp);
 	i = -1;
 	while (envp[++i])
 	{
-		write(1, "declare -x ", 11);
-		write(1, sorted[i], ft_strlen(sorted[i]));
-		write(1, "\n", 1);
+		parse = ft_split(sorted[i], '=');
+		printf("declare -x %s=\"%s\"\n", parse[0], parse[1]);
+		free_parse(parse);
 		free(sorted[i]);
 	}
 	free(sorted);
 }
 
-//expr echo 가 작동되지 않음
-//추가시 대문자는 정렬
-// 소문자는 찾아봐야함
-//declare시 대문자 소문자 순서로 오름차순으로 정렬
-//key만 있을때 처리
-//여러 개의 키와 밸류도 같이 실행
-
-char	**export_insert(char **str, char ***envp)
+char	**export_insert(char **str, char ***envp, int key_len, int envp_len)
 {
 	int		j;
 	int		i;
-	int		key_len;
-	int		envp_len;
 	char	**new;
 
-	key_len = count_line(str);
-	envp_len = count_line(*envp);
 	new = malloc(sizeof(char *) * (key_len + envp_len + 1));
 	i = -1;
 	j = 1;
@@ -118,6 +101,8 @@ char	**export_insert(char **str, char ***envp)
 
 void	ft_export(t_cmd *cmd, char ***envp)
 {
+	int		parsed_len;
+	int		envp_len;
 	char	**new;
 	char	**parsed;
 
@@ -128,7 +113,9 @@ void	ft_export(t_cmd *cmd, char ***envp)
 		return ;
 	}
 	parsed = hj_split_cmd(cmd->str, *envp);
-	new = export_insert(parsed, envp);
+	parsed_len = count_line(parsed);
+	envp_len = count_line(*envp);
+	new = export_insert(parsed, envp, parsed_len, envp_len);
 	*envp = new;
 	free_parse(parsed);
 }

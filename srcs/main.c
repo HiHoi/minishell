@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:36:33 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/01 20:15:50 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 12:56:52 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	info = init_info(envp);
 	if (!info)
-		return (error(NULL, "Failed to initailzie\n"));
+		return (error(NULL, "Failed to initailzie\n", -1));
 	start_shell(info);
+	free_info(info);
 	return (0);
 }
