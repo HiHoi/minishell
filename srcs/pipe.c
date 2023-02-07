@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 21:33:46 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/07 22:25:38 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,24 @@
 
 extern int	g_exit_code;
 
-void	hs_proc_child(t_cmd *cmd, char ***envp, int parentfd[2], int fd[2])
+void	hs_proc_child(t_cmd *cmd, char ***envp, int fd[2], int parentfd[2])
 {
-	if (parentfd > 0)
+	if (fd != 0)
 	{
-		dup2(fd[0], STDIN_FILENO);
-		dup2(parentfd[1], STDOUT_FILENO);
-		close(fd[1]);
-		close(fd[0]);
+		dup2(parentfd[0], STDIN_FILENO);
+		dup2(fd[1], STDOUT_FILENO);
 		close(parentfd[1]);
 		close(parentfd[0]);
+		close(fd[0]);
+		close(fd[1]);
 	}
 	else
 	{
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[1]);
-		close(fd[0]);
+		dup2(parentfd[1], STDOUT_FILENO);
+		close(parentfd[1]);
+		close(parentfd[0]);
 	}
 	hs_cmd(cmd, envp);
-	exit(0);
 }
 
 void	hs_proc_parent(t_cmd *cmd, char ***envp, int fd[2])
@@ -41,19 +40,16 @@ void	hs_proc_parent(t_cmd *cmd, char ***envp, int fd[2])
 	close(fd[0]);
 	close(fd[1]);
 	hs_cmd(cmd, envp);
-	exit(0);
 }
 
 void	pipe_wait(pid_t pid)
 {
 	int		status;
-	pid_t	a;
 
-	(void)pid;
 	while (1)
 	{
-		a = waitpid(0, &status, 0);
-		if (a == 0)
+		waitpid(pid, 0, 0);
+		if (WIFEXITED(status))
 		{
 			g_exit_code = WEXITSTATUS(status);
 			exit(g_exit_code);
@@ -61,33 +57,85 @@ void	pipe_wait(pid_t pid)
 	}
 }
 
+int	count_pipe(t_cmd *cmd)
+{
+	int		i;
+	t_cmd	*cur;
+
+	i = 0;
+	cur = cmd;
+	while (cur->type == T_PIPE)
+	{
+		cur = cur->left;
+		i++;
+	}
+	return (i);
+}
+
+int	**pipe_open(t_cmd *cmd)
+{
+	int	i;
+	int	count;
+	int	**ret;
+
+	count = count_pipe(cmd);
+	ret = malloc(sizeof(int *) * count);
+	if (!ret)
+		error(NULL, "Failed to malloc\n", -1);
+	i = -1;
+	while (++i < count)
+	{
+		ret[i] = malloc(sizeof(int [2]) * 1);
+		if (!ret[i])
+			error(NULL, "Failed to malloc\n", -1);
+		if (pipe(ret[i]) < 0)
+			error(NULL, "Failed to pipe\n", -1);
+	}
+	return (ret);
+}
+
+void	close_all(t_cmd *cmd, int **fd)
+{
+	int	idx;
+	int	count;
+
+	count = count_pipe(cmd);
+	idx = -1;
+	while (++idx < count)
+	{
+		close(fd[idx][0]);
+		close(fd[idx][1]);
+	}
+}
+
 void	hs_pipeline(t_cmd *cmd, char ***envp)
 {
 	int		i;
-	int		fd[2][2];
+	int		**fd;
 	t_cmd	*cur;
 	pid_t	pid;
 
-	pipe_open(fd);
 	cur = cmd;
+	fd = pipe_open(cmd);
 	i = -1;
 	while (cur && ++i > -1)
 	{
-		if (cur->right && cur->right->type == T_REDI)
-			cur->left->close_flag = 1;
 		pid = fork();
 		if (pid == -1)
 			error(NULL, "Failed to fork\n", -1);
-		if ((pid == 0 && cur->exec_flag == 0))
+		else if ((pid == 0 && cur->exec_flag == 0))
 		{
 			if (cur->right && cur->right->parent_flag == 1)
-				pipe_word_p(fd[1], fd[0], cur->right, envp);
+				pipe_word_p(0, fd[i], cur->right, envp);
 			else
-				pipe_word(i, fd, cur, envp);
+				pipe_word(fd[i - 1], fd[i], cur, envp);
 		}
 		cur = cur->left;
 	}
-	pipe_wait(pid);
+	close_all(cmd, fd);
+	waitpid(pid, 0, 0);
+	exit(0);
+	// pipe_wait(pid);
 }
 
 void	hs_cmd(t_cmd *cmd, char ***envp)

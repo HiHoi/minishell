@@ -1,8 +1,8 @@
 NAME = minishell
 CC = cc
 FLAG = -Wall -Werror -Wextra
-READLINE_LINK = -lreadline -L /$(shell brew --prefix readline)/lib
-READLINE_COM = -I /$(shell brew --prefix readline)/include
+READLINE_LINK = -L $(shell brew --prefix readline)/lib -lreadline
+READLINE_COM = -I $(shell brew --prefix readline)/include
 TERMCAP = -lncurses
 RM = rm -rf
 SRCS = \

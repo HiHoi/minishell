@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:09:03 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 21:24:57 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/07 21:19:48 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	hs_excute_tree(t_cmd *cmd, char ***envp)
 {
+	handle_child();
 	if (cmd->type == T_PIPE)
 		hs_pipeline(cmd, envp);
 	else
@@ -49,13 +50,13 @@ void	hs_search_tree(t_cmd *cmd, char ***envp)
 		make_temp(cmd);
 	if (cmd->right)
 		cmd->right->parent_flag = 1;
+	handle_parent();
 	pid = fork();
 	if (pid < 0)
 		error(NULL, "Failed to fork\n", -1);
 	else if (pid == 0)
 		hs_excute_tree(cmd, envp);
 	exit_get_code(pid);
-	unlink("/tmp/.temp_file");
 	if (cmd->type == T_PIPE || cmd->type == T_REDI)
 	{
 		cmd->left->exec_flag = 1;
@@ -82,11 +83,11 @@ void	start_shell(t_info *info)
 	struct termios	term;
 
 	tcgetattr(0, &term);
-	term.c_cflag &= ~(ECHOCTL);
+	term.c_lflag &= ~(ECHOCTL);
 	tcsetattr(0, TCSANOW, &term);
-	handle_signal();
 	while (1)
 	{
+		handle_signal();
 		buf = readline("minishell$ ");
 		if (!buf)
 		{

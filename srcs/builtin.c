@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 21:00:02 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/06 15:46:52 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/07 11:56:32 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,23 @@ int	hs_check_builtin(t_cmd *cmd)
 		return (1);
 	else
 		return (0);
+}
+
+void	exec_builtin(t_cmd *cmd, char ***envp)
+{
+	if (cmd->type == T_WORD)
+	{
+		if (!ft_strncmp(cmd->str, "export", 6))
+			ft_export(cmd, envp);
+		else if (!ft_strncmp(cmd->str, "unset", 5))
+			ft_unset(cmd, envp);
+		else if (!ft_strcmp(cmd->str, "$?"))
+			ft_echo(cmd, envp);
+		else if (!ft_strncmp(cmd->str, "cd", 2))
+			ft_cd(cmd, envp);
+		else if (!ft_strncmp(cmd->str, "exit", 4) \
+		|| !ft_strncmp(cmd->str, "(exit)", 6))
+			ft_exit(cmd, envp);
+		return ;
+	}
 }

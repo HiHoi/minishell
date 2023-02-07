@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:20 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/06 18:30:51 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/07 15:01:27 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	cd_oldpwd(char ***envp)
 	char	*buf;
 
 	if (envp == NULL || hs_check_envp(envp, "PWD=") == 0 \
-	|| hs_check_envp(envp, "OLDPWD="))
+	|| hs_check_envp(envp, "OLDPWD=") == 0)
 		return ;
 	buf = parse_env_value("PWD", envp);
 	old = ft_strjoin("OLDPWD=", buf);

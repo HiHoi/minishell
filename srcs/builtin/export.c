@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:37:53 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/06 15:13:17 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/07 21:14:58 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ void	export_declare(char **envp)
 	}
 	free(sorted);
 }
+
+//중복처리
 
 char	**export_insert(char **str, char ***envp, int key_len, int envp_len)
 {

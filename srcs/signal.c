@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 21:25:05 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/07 19:31:35 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,27 +36,30 @@ void	handler(int signum)
 	rl_redisplay();
 }
 
+void	signal_pipe(int sig)
+{
+	if (sig == SIGINT)
+		printf("\n");
+	if (sig == SIGQUIT)
+		printf("Quit: 3\n");
+	if (sig == SIGPIPE)
+		printf("");
+}
+
+void	handle_parent(void)
+{
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+}
+
+void	handle_child(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
+
 void	handle_signal(void)
 {
 	signal(SIGINT, handler);
 	signal(SIGQUIT, SIG_IGN);
-}
-
-void	exec_builtin(t_cmd *cmd, char ***envp)
-{
-	if (cmd->type == T_WORD)
-	{
-		if (!ft_strncmp(cmd->str, "export", 6))
-			ft_export(cmd, envp);
-		else if (!ft_strncmp(cmd->str, "unset", 5))
-			ft_unset(cmd, envp);
-		else if (!ft_strcmp(cmd->str, "$?"))
-			ft_echo(cmd, envp);
-		else if (!ft_strncmp(cmd->str, "cd", 2))
-			ft_cd(cmd, envp);
-		else if (!ft_strncmp(cmd->str, "exit", 4) \
-		|| !ft_strncmp(cmd->str, "(exit)", 6))
-			ft_exit(cmd, envp);
-		return ;
-	}
 }
