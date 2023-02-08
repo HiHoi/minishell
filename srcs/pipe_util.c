@@ -55,6 +55,24 @@ char	*pipe_parsing_cmd(char **path, char *cmd)
 	return (NULL);
 }
 
+/*
+void	pipe_word(int prev[2], int now[2], t_cmd *cmd, char ***envp)
+{
+	if (cmd->left->type == T_PIPE)
+	{
+		if (prev == 0)
+			hs_proc_child(cmd->left, envp, 0, now);
+		else
+			hs_proc_child(cmd->left, envp, prev, now);
+	}
+	if else (cmd->left->type == T_WORD)
+	{
+		hs_proc_child(cmd->left, envp, prev, now);
+		hs_proc_child(cmd->left, envp, prev, 0);
+	}
+}
+*/
+
 void	pipe_word(int parent[2], int child[2], t_cmd *cmd, char ***envp)
 {
 	if ((cmd->right == NULL && cmd->type == T_WORD) || cmd->type == T_REDI)
