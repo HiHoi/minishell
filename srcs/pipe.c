@@ -108,6 +108,42 @@ void	close_all(t_cmd *cmd, int **fd)
 	}
 }
 
+/*
+void	hs_pipeline(t_cmd *cmd, char ***envp)
+{
+	int		i;
+	int		count;
+	int		**fd;
+	t_cmd	*cur;
+	pid_t	pid;
+
+	cur = cmd;
+	fd = pipe_open(cmd);
+	count = count_pipe(cmd);
+	i = -1;
+	while (cur && ++i < count)
+	{
+		pid = fork();
+		if (pid == -1)
+			error(NULL, "Failed to fork\n", -1);
+		else if (pid == 0 && cur->exec_flag == 0)
+		{
+			if (i == 0)
+				pipe_word(0, fd[i], cur, envp);
+			if else (i == count - 1)
+				pipe_word(fd[i], 0, cur, envp);
+			else
+				pipe_word(fd[i - 1], fd[i], cur, envp);
+		}
+		cur = cur->left;
+	}
+	close_all(cmd, fd);
+	waitpid(pid, 0, 0);
+	exit(0);
+	// pipe_wait(pid);
+}
+*/
+
 void	hs_pipeline(t_cmd *cmd, char ***envp)
 {
 	int		i;
