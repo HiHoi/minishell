@@ -14,6 +14,26 @@
 
 extern int	g_exit_code;
 
+/*
+void	hs_proc_child(t_cmd *cmd, char ***envp, int prev[2], int now[2])
+{
+	if (prev != 0)
+	{
+		dup2(prev[0], STDIN_FILENO);
+		close(prev[0]);
+		close(prev[1]);
+	}
+	if (now != 0)
+	{
+		dup2(now[1], STDOUT_FILENO);
+		close(now[1]);
+		close(now[0]);
+	}
+	hs_cmd(cmd, envp);
+}
+
+*/
+
 void	hs_proc_child(t_cmd *cmd, char ***envp, int fd[2], int parentfd[2])
 {
 	if (fd != 0)
@@ -129,9 +149,7 @@ void	hs_pipeline(t_cmd *cmd, char ***envp)
 		else if (pid == 0 && cur->exec_flag == 0)
 		{
 			if (i == 0)
-				pipe_word(0, fd[i], cur, envp);
-			if else (i == count - 1)
-				pipe_word(fd[i], 0, cur, envp);
+				pipe_word(0, fd[i], cur->left, envp);
 			else
 				pipe_word(fd[i - 1], fd[i], cur, envp);
 		}
