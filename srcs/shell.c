@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:09:03 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/07 21:19:48 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/09 21:45:29 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,18 @@
 
 void	hs_excute_tree(t_cmd *cmd, char ***envp)
 {
-	handle_child();
 	if (cmd->type == T_PIPE)
 		hs_pipeline(cmd, envp);
 	else
 		hs_cmd(cmd, envp);
+	if (cmd->type != T_WORD && cmd->left->type == T_WORD)
+		cmd->left->exec_flag = 1;
+	if (cmd->type != T_WORD && cmd->right->type == T_WORD)
+		cmd->right->exec_flag = 1;
+	if (cmd->left && cmd->left->exec_flag != 1)
+		hs_excute_tree(cmd->left, envp);
+	if (cmd->right && cmd->right->exec_flag != 1)
+		hs_excute_tree(cmd->right, envp);
 }
 
 int	hs_check_heredoc(char *str)
@@ -44,36 +51,26 @@ void	hs_search_tree(t_cmd *cmd, char ***envp)
 {
 	pid_t	pid;
 
-	if (cmd->exec_flag == 1)
-		return ;
 	if (hs_check_heredoc(cmd->str) > 0)
 		make_temp(cmd);
-	if (cmd->right)
-		cmd->right->parent_flag = 1;
 	handle_parent();
 	pid = fork();
 	if (pid < 0)
 		error(NULL, "Failed to fork\n", -1);
 	else if (pid == 0)
-		hs_excute_tree(cmd, envp);
-	exit_get_code(pid);
-	if (cmd->type == T_PIPE || cmd->type == T_REDI)
 	{
-		cmd->left->exec_flag = 1;
-		cmd->right->exec_flag = 1;
+		handle_child(pid);
+		hs_excute_tree(cmd, envp);
 	}
-	if (cmd->left != NULL)
-		hs_search_tree(cmd->left, envp);
-	if (cmd->right != NULL)
-		hs_search_tree(cmd->right, envp);
+	exit_get_code(pid);
 }
 
 void	exec_cmd(t_cmd *cmd, char ***envp)
 {
 	if (check_cmd_exec(cmd, envp) == -1)
 	{
-		exec_builtin(cmd, envp);
-		hs_search_tree(cmd, envp);
+		if (exec_builtin(cmd, envp) == 1)
+			hs_search_tree(cmd, envp);
 	}
 }
 

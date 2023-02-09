@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:37:53 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/07 21:14:58 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/09 16:31:14 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,23 +79,23 @@ char	**export_insert(char **str, char ***envp, int key_len, int envp_len)
 	int		i;
 	char	**new;
 
-	new = malloc(sizeof(char *) * (key_len + envp_len + 1));
+	new = malloc(sizeof(char *) * (key_len + envp_len));
+	if (!new)
+		return (NULL);
 	i = -1;
 	j = 1;
-	while (++i < envp_len + key_len - 1)
+	while (++i < envp_len + key_len)
 	{
 		if (i >= envp_len && j < key_len)
 		{
 			if (export_error(str[j]) == 0)
-				new[i] = ft_strdup(str[j++]);
+				new[i] = ft_strdup(str[j]);
 			else
-				break ;
+				i--;
+			j++;
 		}
 		else if (i < envp_len)
-		{
 			new[i] = ft_strdup((*envp)[i]);
-			free((*envp)[i]);
-		}
 	}
 	new[i] = NULL;
 	return (new);
@@ -109,17 +109,18 @@ void	ft_export(t_cmd *cmd, char ***envp)
 	char	**parsed;
 
 	cmd->exec_flag = 1;
-	if (ft_strchr(cmd->str, '=') == 0)
-		return ;
-	if (ft_strchr(cmd->str, ' ') == 0)
+	if (ft_strcmp(cmd->str, "export") == 0)
 	{
 		export_declare(*envp);
 		return ;
 	}
+	else if (ft_strchr(cmd->str, '=') == 0)
+		return ;
 	parsed = hj_split_cmd(cmd->str, *envp);
 	parsed_len = count_line(parsed);
 	envp_len = count_line(*envp);
 	new = export_insert(parsed, envp, parsed_len, envp_len);
+	free_parse(*envp);
 	*envp = new;
 	free_parse(parsed);
 }

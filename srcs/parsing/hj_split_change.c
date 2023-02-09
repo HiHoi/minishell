@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 15:41:24 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/06 14:51:32 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/09 15:55:53 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,7 @@ char	*hj_envp_change(char *str, char **envp)
 
 	if (str[0] != '$')
 		return (str);
-	else if (str[1] == '?')
-		return (hj_ft_atoi(g_exit_code));
-	else if (!hj_ft_isalpha(str[1]) || str[1] == '\0')
+	else if ((!hj_ft_isalpha(str[1]) || str[1] == '\0') && str[1] != '?')
 		return (str);
 	set = hj_find_envp_val(str, &i, envp);
 	if (i == hj_ft_strlen(str))
@@ -67,6 +65,11 @@ char	*hj_find_envp_val(char *str, int *i, char **envp)
 	int		idx;
 
 	idx = 0;
+	if (str[1] == '?')
+	{
+		*i += 2;
+		return (hj_ft_atoi(g_exit_code));
+	}
 	find = hj_envp_name(str);
 	*i = (hj_ft_strlen(find) + 1);
 	while (envp[idx])

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/07 19:31:35 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/09 21:14:44 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,10 @@ void	handler(int signum)
 void	signal_pipe(int sig)
 {
 	if (sig == SIGINT)
-		printf("\n");
+		printf("^C\n");
 	if (sig == SIGQUIT)
 		printf("Quit: 3\n");
-	if (sig == SIGPIPE)
-		printf("");
+	exit(1);
 }
 
 void	handle_parent(void)
@@ -52,10 +51,15 @@ void	handle_parent(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	handle_child(void)
+void	handle_child(pid_t pid)
 {
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	if (pid == 0)
+	{
+		signal(SIGINT, signal_pipe);
+		signal(SIGQUIT, signal_pipe);
+	}
+	else
+		signal(SIGINT, SIG_IGN);
 }
 
 void	handle_signal(void)

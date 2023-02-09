@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/07 22:03:08 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/09 21:35:17 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_cmd
 	char			*str;
 	struct s_cmd	*left;
 	struct s_cmd	*right;
+	pid_t			pid;
 }	t_cmd;
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t size);
@@ -77,7 +78,7 @@ t_cmd	*init_cmd(void);
 
 void	start_shell(t_info *info);
 void	handle_signal(void);
-void	handle_child(void);
+void	handle_child(pid_t pid);
 void	handle_parent(void);
 
 int		error(t_info *info, char *s, int flag);
@@ -96,10 +97,11 @@ int		check_type(t_cmd *cmd, char *buf);
 int		count_line(char **line);
 void	hs_parse_pipe(t_cmd *cmd, char *buf, int i);
 void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag);
+void	parse_redi(t_cmd *cmd);
 void	hs_parse_redi_double(t_cmd *cmd);
 int		hs_check_heredoc(char *str);
 void	make_temp(t_cmd *cmd);
-void	exec_builtin(t_cmd *cmd, char ***envp);
+int		exec_builtin(t_cmd *cmd, char ***envp);
 int		check_cmd_exec(t_cmd *cmd, char ***envp);
 
 void	hs_do_something(t_info *info);
@@ -109,11 +111,11 @@ void	hs_search_tree(t_cmd *cmd, char ***envp);
 void	hs_pipeline(t_cmd *cmd, char ***envp);
 char	*pipe_parsing_cmd(char **path, char *cmd);
 char	**pipe_parsing_envp(char ***envp);
-void	hs_proc_child(t_cmd *cmd, char ***envp, int fd[2], int parentfd[2]);
-void	hs_proc_parent(t_cmd *cmd, char ***envp, int fd[2]);
+void	hs_proc_child(t_cmd *cmd, char ***envp, int prev[2], int now[2]);
 void	pipe_word(int parent[2], int child[2], t_cmd *cmd, char ***envp);
-void	pipe_word_p(int close_fd[2], int open_fd[2], t_cmd *cmd, char ***envp);
 int		**pipe_open(t_cmd *cmd);
+void	close_other(int **fd, int cur, int count);
+void	close_all(int **fd, int cur);
 
 int		hs_check_builtin(t_cmd *cmd);
 void	hs_exec_builtin(t_cmd *cmd, char ***envp);
@@ -136,5 +138,7 @@ char	**hj_envp_bigtaging(char *str);
 char	*hj_echo_join(char **str, int i);
 
 char	**hj_split_cmd(char *str, char **envp);
+char	**hj_redc_spilit(char *str);
+char	**hj_export_insert(char **str, char **envp);
 
 #endif

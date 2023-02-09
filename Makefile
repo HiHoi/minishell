@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-FLAG = -Wall -Werror -Wextra
+FLAG = -Wall -Werror -Wextra -fsanitize=undefined -g
 READLINE_LINK = -L $(shell brew --prefix readline)/lib -lreadline
 READLINE_COM = -I $(shell brew --prefix readline)/include
 TERMCAP = -lncurses
@@ -19,6 +19,8 @@ SRCS = \
 		./srcs/util3.c\
 		./srcs/signal.c\
 		./srcs/parse.c\
+		./srcs/hj_redirection_split.c\
+		./srcs/hj_export_insert.c\
 		./srcs/syntax.c\
 		./srcs/hs_parse_util.c\
 		./srcs/pipe.c\

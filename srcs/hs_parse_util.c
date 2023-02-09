@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:42:56 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/05 14:32:21 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/09 21:34:55 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ void	hs_parse_redi_double(t_cmd *cmd)
 	}
 }
 
-void	hs_parse_redi_trim(t_cmd *cmd, char	*left, char *right)
+void	hs_parse_redi_trim(t_cmd *cmd, char	**cmd_file)
 {
-	cmd->left->str = ft_strdup(left);
-	cmd->right->str = ft_strdup(right);
+	cmd->left->str = ft_strdup(cmd_file[1]);
+	cmd->right->str = ft_strdup(cmd_file[0]);
 }
 
 void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag)
@@ -66,7 +66,7 @@ void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag)
 		cmd->right->str = ft_substr(buf, idx + 1, ft_strlen(buf) - idx);
 		cmd_file = ft_split(cmd->right->str, ' ');
 		if (cmd_file && cmd_file[1])
-			hs_parse_redi_trim(cmd, cmd_file[1], cmd_file[0]);
+			hs_parse_redi_trim(cmd, cmd_file);
 		else
 		{
 			if (idx == 0)

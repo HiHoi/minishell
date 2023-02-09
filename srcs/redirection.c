@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:24:23 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 12:59:03 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/09 21:47:34 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	redi_input(t_cmd *cmd)
 	int		in;
 	char	*path;
 
-	path = ft_strtrim(cmd->right->str, " ");
+	path = ft_strtrim(cmd->left->right->str, " ");
 	in = open(path, O_RDONLY | O_EXCL, 0644);
 	if (in < 0)
 		error(NULL, path, 1);
@@ -30,7 +30,7 @@ void	redi_output(t_cmd *cmd)
 	int		out;
 	char	*path;
 
-	path = ft_strtrim(cmd->right->str, " ");
+	path = ft_strtrim(cmd->left->right->str, " ");
 	out = open(path, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (out < 0)
 		error(NULL, path, 1);
@@ -58,7 +58,7 @@ void	redi_append(t_cmd *cmd)
 	int		out;
 	char	*path;
 
-	path = ft_strtrim(cmd->right->str, " ");
+	path = ft_strtrim(cmd->left->right->str, " ");
 	out = open(path, O_RDWR | O_CREAT | O_APPEND, 0644);
 	if (out < 0)
 		error(NULL, path, 1);

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:27 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/06 19:29:50 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/09 20:21:43 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	print_exit(void)
 	write(2, code, ft_strlen(code));
 	write(2, ": command not found\n", 21);
 	g_exit_code = 127;
+	free(code);
 }
 
 void	echo_print(char *s, int option)
@@ -50,6 +51,8 @@ void	echo_env(char *str, char ***envp, int option)
 	parse = hj_split_cmd(str, *envp);
 	value = ft_strdup(parse[1]);
 	echo_print(value, option);
+	free_parse(parse);
+	free(value);
 }
 
 char	*echo_parse(char *s, char ***envp, int option)
@@ -59,7 +62,10 @@ char	*echo_parse(char *s, char ***envp, int option)
 
 	parse = hj_split_cmd(s, *envp);
 	if (parse[1] == NULL)
+	{
+		free_parse(parse);
 		return (NULL);
+	}
 	if (option == 1)
 		str = hj_echo_join(parse, 2);
 	else
@@ -85,5 +91,7 @@ int	ft_echo(t_cmd *cmd, char ***envp)
 		write(1, "\n", 1);
 	else
 		echo_print(parse, option);
+	free(parse);
+	free_parse(temp);
 	return (0);
 }

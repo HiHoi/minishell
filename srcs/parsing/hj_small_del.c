@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hj_small_del.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hojsong <hojsong@student.42seoul.k>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:09:18 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/03 17:24:55 by hojsong          ###   ########.fr       */
+/*   Updated: 2023/02/09 16:15:22 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	**hj_del_small(char **str)
 	i = 0;
 	while (str[i])
 		i++;
-	result = malloc(sizeof(char *) * i + 1);
+	result = malloc(sizeof(char *) * (i + 1));
 	result[i] = 0;
 	i = 0;
 	while (str[i])
