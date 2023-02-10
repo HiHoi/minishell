@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:24:23 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/10 19:14:43 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 23:27:40 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,6 @@ void	redi_output(t_cmd *cmd)
 	dup2(out, STDOUT_FILENO);
 	close(out);
 }
-
-//ls -l|cat |  cat << end | wc -l => 2
-//ls -l|cat |  << end | wc -l => 0
 
 void	redi_heredoc(t_cmd *cmd)
 {

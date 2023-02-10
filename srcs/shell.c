@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:09:03 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/10 19:40:57 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 23:30:16 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	hs_excute_tree(t_cmd *cmd, char ***envp)
 {
+	handle_child();
 	if (cmd->type == T_PIPE)
 		hs_pipeline(cmd, envp);
 	else
@@ -97,8 +98,8 @@ void	exec_cmd(t_cmd *cmd, char ***envp)
 }
 
 //cat < a > b => 0
-// <a cat > b => X
-// cat < a>b => X
+// <a cat > b => 현재 : <a // cat > b 원하는 파싱: <a cat // >b
+// cat < a>b => 현재 : cat < // a>b 원하는 파싱: cat < a // >b
 
 void	start_shell(t_info *info)
 {
@@ -123,6 +124,7 @@ void	start_shell(t_info *info)
 		{
 			add_history(buf);
 			parsing_cmd(info, buf);
+			//파싱 테스트시 print_test 주석 풀고 넣으면 프린트
 			// print_test(info);
 			exec_cmd(info->cmd, &info->en);
 			free_cmd(info->cmd, buf);

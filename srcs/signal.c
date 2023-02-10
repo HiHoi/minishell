@@ -3,30 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/10 19:38:42 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 23:20:35 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 extern int	g_exit_code;
-
-//cat 상태에서 sigquit 흔적 생김
-/*
-
-			str = ft_strdup(rl_line_buffer);
-			printf("\033[2K");
-			printf("minishell$ ");
-			printf("%s", str);
-			printf("\n");
-			free(str);
-			str = NULL;
-			if (rl_on_new_line() == -1)
-				exit(1);
-*/
 
 void	print_prompt(void)
 {
@@ -43,6 +29,21 @@ void	handler(int signum)
 {
 	if (signum == SIGINT)
 		print_prompt();
+}
+
+void	signal_child(int signum)
+{
+	if (signum == SIGINT)
+		printf("^C\n");
+	if (signum == SIGQUIT)
+		printf("Quit :3\n");
+	exit(0);
+}
+
+void	handle_child(void)
+{
+	signal(SIGINT, signal_child);
+	signal(SIGQUIT, signal_child);
 }
 
 void	handle_parent(void)

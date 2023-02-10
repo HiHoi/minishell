@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/10 19:15:38 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 23:18:39 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ t_cmd	*init_cmd(void);
 void	start_shell(t_info *info);
 void	handle_parent(void);
 void	handle_signal(void);
+void	handle_child(void);
 
 int		error(t_info *info, char *s, int flag);
 int		hs_error_return(t_info *info, t_cmd *cmd, char *s);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/10 15:44:51 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 23:25:03 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	pipe_wait(int **fd, int count, t_cmd *cmd)
 	cur = cmd;
 	while (cur)
 	{
-		waitpid(cur->pid, &status, WNOHANG);
+		waitpid(cur->pid, &status, 0);
 		if (WIFEXITED(status))
 			g_exit_code = WEXITSTATUS(status);
 		cur = cur->right;

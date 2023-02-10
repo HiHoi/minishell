@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 11:31:10 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/10 19:40:02 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 23:21:17 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	exit_get_code(pid_t pid)
 				printf("^C\n");
 			else if (status == SIGQUIT)
 				printf("Quit : 3\n");
+			break ;
 		}
 		else
 			break ;

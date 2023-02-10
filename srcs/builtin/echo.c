@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:27 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/09 20:21:43 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 23:11:45 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	echo_print(char *s, int option)
 
 void	echo_env(char *str, char ***envp, int option)
 {
-	int		i;
 	char	**parse;
 	char	*value;
 
@@ -47,7 +46,6 @@ void	echo_env(char *str, char ***envp, int option)
 	if (*envp == NULL)
 		return ;
 	value = NULL;
-	i = 0;
 	parse = hj_split_cmd(str, *envp);
 	value = ft_strdup(parse[1]);
 	echo_print(value, option);
