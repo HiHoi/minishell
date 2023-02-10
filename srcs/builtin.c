@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 21:00:02 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/09 21:47:00 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 18:58:07 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int	exec_builtin(t_cmd *cmd, char ***envp)
 			ft_exit(cmd, envp);
 		else
 			return (1);
+		return (0);
 	}
 	return (1);
 }
@@ -90,7 +91,7 @@ void	hs_cmd(t_cmd *cmd, char ***envp)
 		hs_exec_builtin(cmd, envp);
 	if (cmd->type == T_REDI)
 	{
-		hs_redirect(cmd);
+		hs_redirect(cmd, envp);
 		parse_cmd = hj_split_cmd(cmd->left->left->str, *envp);
 	}
 	else

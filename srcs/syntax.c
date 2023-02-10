@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 12:36:41 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/09 20:26:26 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 13:15:30 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	check_cmd_syntax(t_cmd *cmd, char ***envp)
 	if (cmd->type == T_PIPE)
 		ret = syntax_pipe(cmd);
 	else if (cmd->type == T_REDI)
-		ret = syntax_redi(cmd);
+		ret = syntax_redi(cmd->left);
 	if (cmd->left != NULL && ret == 1)
 		ret = check_cmd_syntax(cmd->left, envp);
 	if (cmd->right != NULL && ret == 1)

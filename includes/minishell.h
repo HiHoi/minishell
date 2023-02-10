@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/09 21:35:17 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 19:15:38 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,8 @@ t_info	*init_info(char **envp);
 t_cmd	*init_cmd(void);
 
 void	start_shell(t_info *info);
-void	handle_signal(void);
-void	handle_child(pid_t pid);
 void	handle_parent(void);
+void	handle_signal(void);
 
 int		error(t_info *info, char *s, int flag);
 int		hs_error_return(t_info *info, t_cmd *cmd, char *s);
@@ -104,9 +103,11 @@ void	make_temp(t_cmd *cmd);
 int		exec_builtin(t_cmd *cmd, char ***envp);
 int		check_cmd_exec(t_cmd *cmd, char ***envp);
 
-void	hs_do_something(t_info *info);
-void	hs_redirect(t_cmd *cmd);
 void	hs_search_tree(t_cmd *cmd, char ***envp);
+
+void	hs_redirect(t_cmd *cmd, char ***envp);
+int		count_redi(t_cmd *cmd);
+void	redi_pipe(t_cmd *cmd, char ***envp);
 
 void	hs_pipeline(t_cmd *cmd, char ***envp);
 char	*pipe_parsing_cmd(char **path, char *cmd);
@@ -116,6 +117,7 @@ void	pipe_word(int parent[2], int child[2], t_cmd *cmd, char ***envp);
 int		**pipe_open(t_cmd *cmd);
 void	close_other(int **fd, int cur, int count);
 void	close_all(int **fd, int cur);
+void	free_fd(int **fd, int count);
 
 int		hs_check_builtin(t_cmd *cmd);
 void	hs_exec_builtin(t_cmd *cmd, char ***envp);

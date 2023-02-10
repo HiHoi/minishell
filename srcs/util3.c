@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 12:46:02 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 12:46:21 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 15:43:25 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,14 @@ int	check_argc(char *str)
 	else
 		ret = 2;
 	return (ret);
+}
+
+void	free_fd(int **fd, int count)
+{
+	int	idx;
+
+	idx = 0;
+	while (++idx < count)
+		free(fd[idx]);
+	free(fd);
 }

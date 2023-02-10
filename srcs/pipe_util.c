@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 12:58:46 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/09 14:54:03 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 15:31:06 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,7 @@ void	pipe_word(int prev[2], int now[2], t_cmd *cmd, char ***envp)
 	t_cmd	*cur;
 
 	cur = cmd;
-	if (cmd->type == T_WORD)
-		cur = cmd;
-	else if (cmd->type == T_PIPE)
+	if (cmd->type == T_PIPE || prev == NULL)
 		cur = cmd->left;
 	hs_proc_child(cur, envp, prev, now);
 }

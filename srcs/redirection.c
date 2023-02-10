@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:24:23 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/09 21:47:34 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 19:14:43 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ void	redi_input(t_cmd *cmd)
 	int		in;
 	char	*path;
 
-	path = ft_strtrim(cmd->left->right->str, " ");
+	if (cmd->left->right)
+		path = ft_strtrim(cmd->left->right->str, " ");
+	else
+		path = ft_strtrim(cmd->right->str, " ");
 	in = open(path, O_RDONLY | O_EXCL, 0644);
 	if (in < 0)
 		error(NULL, path, 1);
@@ -66,24 +69,29 @@ void	redi_append(t_cmd *cmd)
 	close(out);
 }
 
-void	hs_redirect(t_cmd *cmd)
+void	hs_redirect(t_cmd *cmd, char ***envp)
 {
 	int	i;
 
-	i = -1;
-	while (cmd->str[++i])
+	if (count_redi(cmd) == 1)
 	{
-		if (cmd->str[i] == '<')
+		i = -1;
+		while (cmd->str[++i])
 		{
-			if (cmd->str[i + 1] == '<')
-				return (redi_heredoc(cmd));
-			return (redi_input(cmd));
-		}
-		else if (cmd->str[i] == '>')
-		{
-			if (cmd->str[i + 1] == '>')
-				return (redi_append(cmd));
-			return (redi_output(cmd));
+			if (cmd->str[i] == '<')
+			{
+				if (cmd->str[i + 1] == '<')
+					return (redi_heredoc(cmd));
+				return (redi_input(cmd));
+			}
+			else if (cmd->str[i] == '>')
+			{
+				if (cmd->str[i + 1] == '>')
+					return (redi_append(cmd));
+				return (redi_output(cmd));
+			}
 		}
 	}
+	else
+		redi_pipe(cmd, envp);
 }

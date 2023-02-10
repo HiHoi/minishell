@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:09:03 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/09 21:45:29 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 18:39:37 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,8 @@ void	hs_excute_tree(t_cmd *cmd, char ***envp)
 		hs_pipeline(cmd, envp);
 	else
 		hs_cmd(cmd, envp);
-	if (cmd->type != T_WORD && cmd->left->type == T_WORD)
+	if (cmd->type == T_REDI)
 		cmd->left->exec_flag = 1;
-	if (cmd->type != T_WORD && cmd->right->type == T_WORD)
-		cmd->right->exec_flag = 1;
 	if (cmd->left && cmd->left->exec_flag != 1)
 		hs_excute_tree(cmd->left, envp);
 	if (cmd->right && cmd->right->exec_flag != 1)
@@ -33,6 +31,8 @@ int	hs_check_heredoc(char *str)
 	int	i;
 
 	i = 0;
+	if (str == NULL)
+		return (0);
 	while (str[i])
 	{
 		if (str[i] == '<')
@@ -45,6 +45,31 @@ int	hs_check_heredoc(char *str)
 	return (0);
 }
 
+void	print_test(t_info *info)
+{
+	t_cmd	*cur = info->cmd;
+
+	while (cur)
+	{
+		printf("cur !  t : %d   s : %s\n", cur->type, cur->str);
+		if (cur->left)
+			printf("left !  t : %d   s : %s\n", cur->left->type, cur->left->str);
+		if (cur->right)
+			printf("rigth !  t : %d   s : %s\n", cur->right->type, cur->right->str);
+		cur = cur->left;
+	}
+	cur = info->cmd;
+	while (cur)
+	{
+		printf("cur !  t : %d   s : %s\n", cur->type, cur->str);
+		if (cur->left)
+			printf("left !  t : %d   s : %s\n", cur->left->type, cur->left->str);
+		if (cur->right)
+			printf("rigth !  t : %d   s : %s\n", cur->right->type, cur->right->str);
+		cur = cur->right;
+	}
+}
+
 //echo | echo prompt error
 
 void	hs_search_tree(t_cmd *cmd, char ***envp)
@@ -53,15 +78,12 @@ void	hs_search_tree(t_cmd *cmd, char ***envp)
 
 	if (hs_check_heredoc(cmd->str) > 0)
 		make_temp(cmd);
-	handle_parent();
 	pid = fork();
+	// handle_signal();
 	if (pid < 0)
 		error(NULL, "Failed to fork\n", -1);
 	else if (pid == 0)
-	{
-		handle_child(pid);
 		hs_excute_tree(cmd, envp);
-	}
 	exit_get_code(pid);
 }
 
@@ -73,6 +95,10 @@ void	exec_cmd(t_cmd *cmd, char ***envp)
 			hs_search_tree(cmd, envp);
 	}
 }
+
+//cat < a > b => 0
+// <a cat > b => X
+// cat < a>b => X
 
 void	start_shell(t_info *info)
 {
@@ -97,6 +123,7 @@ void	start_shell(t_info *info)
 		{
 			add_history(buf);
 			parsing_cmd(info, buf);
+			// print_test(info);
 			exec_cmd(info->cmd, &info->en);
 			free_cmd(info->cmd, buf);
 		}

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 11:31:10 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/09 20:18:43 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 16:45:35 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,17 +20,14 @@ void	exit_get_code(pid_t pid)
 
 	while (1)
 	{
-		pid = wait(&status);
-		if (pid == 0)
-		{
-			g_exit_code = WEXITSTATUS(status);
-			exit(g_exit_code);
-		}
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			break ;
 		else
 			break ;
 	}
 	unlink("/tmp/.temp_file");
-	return ;
+	g_exit_code = WEXITSTATUS(status);
 }
 
 int	ft_exit(t_cmd *cmd, char ***envp)

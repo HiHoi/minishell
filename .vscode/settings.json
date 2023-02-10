@@ -3,6 +3,7 @@
         "minishell.h": "c",
         "sstream": "c",
         "stdlib.h": "c",
-        "ios": "c"
+        "ios": "c",
+        "locale": "c"
     }
 }

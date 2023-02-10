@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/09 20:19:54 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 15:44:51 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	hs_proc_child(t_cmd *cmd, char ***envp, int prev[2], int now[2])
 	hs_cmd(cmd, envp);
 }
 
-void	pipe_wait(t_cmd	*cmd)
+void	pipe_wait(int **fd, int count, t_cmd *cmd)
 {
 	int		status;
 	t_cmd	*cur;
@@ -39,11 +39,12 @@ void	pipe_wait(t_cmd	*cmd)
 	cur = cmd;
 	while (cur)
 	{
-		waitpid(cur->pid, &status, 0);
+		waitpid(cur->pid, &status, WNOHANG);
 		if (WIFEXITED(status))
 			g_exit_code = WEXITSTATUS(status);
 		cur = cur->right;
 	}
+	free_fd(fd, count + 1);
 	exit(g_exit_code);
 }
 
@@ -110,5 +111,5 @@ void	hs_pipeline(t_cmd *cmd, char ***envp)
 		cur = cur->right;
 	}
 	close_all(fd, count + 1);
-	pipe_wait(cmd);
+	pipe_wait(fd, count, cmd);
 }

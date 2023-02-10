@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:17:52 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/09 21:49:00 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 19:14:42 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,27 @@ void	make_temp(t_cmd *cmd)
 	if (line)
 		free(line);
 	close(fd);
+}
+
+int	count_redi(t_cmd *cmd)
+{
+	t_cmd	*cur;
+	int		count;
+
+	cur = cmd;
+	count = 0;
+	while (cur)
+	{
+		if (cur->type == T_REDI)
+			count++;
+		cur = cur->right;
+	}
+	return (count);
+}
+
+void	redi_pipe(t_cmd *cmd, char ***envp)
+{
+	hs_redirect(cmd->left, envp);
+	hs_redirect(cmd->right, envp);
+	hs_cmd(cmd->left->left, envp);
 }
