@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/10 18:11:58 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 19:38:42 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,27 +41,8 @@ void	print_prompt(void)
 
 void	handler(int signum)
 {
-	pid_t	pid;
-
-	pid = waitpid(-1, 0, WNOHANG);
 	if (signum == SIGINT)
-	{
-		if (pid < 0)
-			print_prompt();
-		else
-			printf("^C\n");
-	}
-	else if (signum == SIGQUIT)
-	{
-		if (pid < 0)
-		{
-			rl_on_new_line();
-			rl_redisplay();
-			printf("  \b\b");
-		}
-		else
-			printf("Quit: 3\n");
-	}
+		print_prompt();
 }
 
 void	handle_parent(void)
@@ -73,5 +54,5 @@ void	handle_parent(void)
 void	handle_signal(void)
 {
 	signal(SIGINT, handler);
-	signal(SIGQUIT, handler);
+	signal(SIGQUIT, SIG_IGN);
 }

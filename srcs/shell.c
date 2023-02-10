@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:09:03 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/10 18:39:37 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 19:40:57 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ void	hs_search_tree(t_cmd *cmd, char ***envp)
 
 	if (hs_check_heredoc(cmd->str) > 0)
 		make_temp(cmd);
+	handle_parent();
 	pid = fork();
-	// handle_signal();
 	if (pid < 0)
 		error(NULL, "Failed to fork\n", -1);
 	else if (pid == 0)

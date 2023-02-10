@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 11:31:10 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/10 16:45:35 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/10 19:40:02 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,13 @@ void	exit_get_code(pid_t pid)
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			break ;
+		if (WIFSIGNALED(status))
+		{
+			if (status == SIGINT)
+				printf("^C\n");
+			else if (status == SIGQUIT)
+				printf("Quit : 3\n");
+		}
 		else
 			break ;
 	}
