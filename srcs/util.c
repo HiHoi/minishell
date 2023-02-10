@@ -3,21 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/29 14:58:36 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/02/06 16:38:01 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	exit_code;
+int	g_exit_code;
 
 int	count_line(char **line)
 {
 	int	i;
 
+	if (line == NULL)
+		return (0);
 	i = 0;
 	while (line[i])
 		i++;
@@ -26,20 +28,33 @@ int	count_line(char **line)
 
 void	free_info(t_info *info)
 {
-	//글자 프리 필요
+	clear_history();
 	if (info->cmd)
 		free(info->cmd);
 	if (info)
 		free(info);
 }
 
-int	error(t_info *info, char *s)
+int	error(t_info *info, char *s, int flag)
 {
 	if (info)
 		free_info(info);
 	if (s)
+	{
+		write(2, "minishell: ", 11);
 		write(2, s, ft_strlen(s));
-	exit(exit_code);
+		if (flag == 1)
+		{
+			write(2, ": No such file or directory\n", 29);
+			g_exit_code = 1;
+		}
+		if (flag == 2)
+		{
+			write(2, ": command not found\n", 21);
+			g_exit_code = 127;
+		}
+	}
+	exit(g_exit_code);
 }
 
 int	hs_error_return(t_info *info, t_cmd *cmd, char *s)
@@ -50,8 +65,8 @@ int	hs_error_return(t_info *info, t_cmd *cmd, char *s)
 		free(cmd);
 	if (s)
 		write(2, s, ft_strlen(s));
-	exit_code = 127;
-	return (exit_code);
+	g_exit_code = 127;
+	return (g_exit_code);
 }
 
 t_info	*init_info(char **envp)
@@ -61,41 +76,15 @@ t_info	*init_info(char **envp)
 	int		len;
 
 	len = count_line(envp);
-	info = ft_calloc(1, sizeof(t_info));
-	info->cmd = init_cmd();
-	info->en = ft_calloc(len, sizeof(char *));
-	i = -1;
-	while (++i < len)
+	info = malloc(sizeof(t_info) * 1);
+	info->cmd = NULL;
+	info->en = malloc(sizeof(char *) * (len + 1));
+	i = 0;
+	while (i < len)
+	{
 		info->en[i] = ft_strdup(envp[i]);
+		i++;
+	}
 	info->en[len] = NULL;
 	return (info);
-}
-
-t_cmd	*init_cmd(void)
-{
-	t_cmd	*new;
-
-	new = ft_calloc(1, sizeof(t_cmd));
-	new->exec_flag = 0;
-	new->parent_flag = 0;
-	new->parse_flag = 0;
-	new->type = 0;
-	new->str = NULL;
-	return (new);
-}
-
-void	free_cmd(t_cmd *cmd)
-{
-	if (cmd->str)
-		free(cmd->str);
-	cmd->exec_flag = 0;
-	cmd->parent_flag = 0;
-	cmd->parse_flag = 0;
-	cmd->type = 0;
-	if (!cmd->left && !cmd->right && cmd)
-		free(cmd);
-	if (cmd->left != NULL)
-		free_cmd(cmd->left);
-	if (cmd->right != NULL)
-		free_cmd(cmd->right);
 }

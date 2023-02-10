@@ -3,24 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:27 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/29 21:11:51 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/02/10 23:11:45 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-extern int	exit_code;
+extern int	g_exit_code;
 
-// void	print_exit(void)
-// {
-// 	int	code;
+void	print_exit(void)
+{
+	char	*code;
 
-// 	code = ft_itoa(exit_code);
-// 	write(1, code, sizeof(code));
-// }
+	code = ft_itoa(g_exit_code);
+	write(2, "minishell: ", 12);
+	write(2, code, ft_strlen(code));
+	write(2, ": command not found\n", 21);
+	g_exit_code = 127;
+	free(code);
+}
 
 void	echo_print(char *s, int option)
 {
@@ -31,59 +35,61 @@ void	echo_print(char *s, int option)
 
 void	echo_env(char *str, char ***envp, int option)
 {
-	int		i;
 	char	**parse;
-	char	**value_parse;
 	char	*value;
 
-	// if (s[0][0] == '$' && s[0][1] = '?')
-	// 	print_exit();
-	value = NULL;
-	i = 0;
-	parse = ft_split(str, '$');
-	while ((*envp)[i])
+	if (str[0] == '$' && str[1] == '?')
 	{
-		if (!ft_strncmp(parse[1], (*envp)[i], ft_strlen(parse[1])))
-		{
-			value_parse = ft_split((*envp)[i], '=');
-			value = ft_strdup(value_parse[1]);
-			break ;
-		}
-		i++;
+		print_exit();
+		return ;
 	}
+	if (*envp == NULL)
+		return ;
+	value = NULL;
+	parse = hj_split_cmd(str, *envp);
+	value = ft_strdup(parse[1]);
 	echo_print(value, option);
+	free_parse(parse);
+	free(value);
 }
 
-char	*echo_parse(char *s)
+char	*echo_parse(char *s, char ***envp, int option)
 {
 	char	**parse;
 	char	*str;
 
-	parse = ft_split(s, ' ');
+	parse = hj_split_cmd(s, *envp);
 	if (parse[1] == NULL)
+	{
+		free_parse(parse);
 		return (NULL);
-	if (ft_strchr(parse[1], '-') > 0)
-		str = ft_strdup(parse[2]);
+	}
+	if (option == 1)
+		str = hj_echo_join(parse, 2);
 	else
-		str = ft_strdup(parse[1]);
+		str = hj_echo_join(parse, 1);
 	return (str);
 }
 
-//$?는 echo의 옵션
 int	ft_echo(t_cmd *cmd, char ***envp)
 {
 	int		option;
+	char	**temp;
 	char	*parse;
 
+	cmd->exec_flag = 1;
 	option = 0;
-	if (ft_strchr(cmd->str, '-') > 0)
+	temp = ft_split(cmd->str, ' ');
+	if (!ft_strncmp(temp[1], "-n", 2))
 		option = 1;
-	parse = echo_parse(cmd->str);
-	if (ft_strcmp(cmd->str, "echo") == 0)
-		write(1, "\n", 1);
-	else if (ft_strchr(cmd->str, '$') > 0)
+	parse = echo_parse(cmd->str, envp, option);
+	if (ft_strchr(cmd->str, '$') > 0)
 		echo_env(cmd->str, envp, option);
+	else if (!ft_strncmp(parse, "echo", 4))
+		write(1, "\n", 1);
 	else
 		echo_print(parse, option);
+	free(parse);
+	free_parse(temp);
 	return (0);
 }

@@ -3,127 +3,113 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:48:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/29 21:09:26 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/02/10 23:25:03 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-//sleep 커맨드는 waitpid가 0일때 제대로 기다림
-//WNOH 옵션을 어떻게 써야 하는지 생각할 필요가 있음
+extern int	g_exit_code;
 
-void	hs_proc_child(t_cmd *cmd, char ***envp, int parentfd[2], int fd[2])
+void	hs_proc_child(t_cmd *cmd, char ***envp, int prev[2], int now[2])
 {
-	if (parentfd > 0)
+	if (prev != 0)
 	{
-		dup2(fd[0], STDIN_FILENO);
-		dup2(parentfd[1], STDOUT_FILENO);
-		close(fd[1]);
-		close(fd[0]);
-		close(parentfd[1]);
-		close(parentfd[0]);
+		close(prev[1]);
+		dup2(prev[0], STDIN_FILENO);
+		close(prev[0]);
 	}
-	else
+	if (now != 0)
 	{
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[1]);
-		close(fd[0]);
+		close(now[0]);
+		dup2(now[1], STDOUT_FILENO);
+		close(now[1]);
 	}
 	hs_cmd(cmd, envp);
 }
 
-void	hs_proc_parent(t_cmd *cmd, char ***envp, int fd[2])
+void	pipe_wait(int **fd, int count, t_cmd *cmd)
 {
-	dup2(fd[0], STDIN_FILENO);
-	close(fd[1]);
-	close(fd[0]);
-	hs_cmd(cmd, envp);
+	int		status;
+	t_cmd	*cur;
+
+	cur = cmd;
+	while (cur)
+	{
+		waitpid(cur->pid, &status, 0);
+		if (WIFEXITED(status))
+			g_exit_code = WEXITSTATUS(status);
+		cur = cur->right;
+	}
+	free_fd(fd, count + 1);
+	exit(g_exit_code);
 }
 
-void	hs_pipeline(t_cmd *cmd, char ***envp, int parent_fd[2])
+int	count_pipe(t_cmd *cmd)
 {
-	pid_t	pid;
+	int		i;
+	t_cmd	*cur;
 
-	if (pipe(cmd->fd) == -1)
-		error(NULL, "Failed to pipe\n");
-	pid = fork();
-	if (pid == -1)
-		error(NULL, "Failed to fork\n");
-	else if (pid == 0)
+	i = 0;
+	cur = cmd;
+	while (cur->type == T_PIPE)
 	{
-		if (cmd->left->type == T_PIPE)
-			hs_pipeline(cmd->left, envp, cmd->fd);
-		else
-			hs_proc_child(cmd->left, envp, 0, cmd->fd);
+		cur = cur->right;
+		i++;
 	}
-	waitpid(pid, 0, 0);
-	if (cmd->right->parent_flag == 1)
-		hs_proc_parent(cmd->right, envp, cmd->fd);
-	else
-		hs_proc_child(cmd->right, envp, parent_fd, cmd->fd);
+	return (i);
 }
 
-void	hs_cmd(t_cmd *cmd, char ***envp)
+int	**pipe_open(t_cmd *cmd)
 {
-	char	**parse_en;
-	char	*path;
-	char	**parse_cmd;
+	int	i;
+	int	count;
+	int	**ret;
 
-	if (cmd->str == NULL)
-		return ;
-	if (hs_check_builtin(cmd))
-		hs_exec_builtin(cmd, envp);
-	if (cmd->type == T_REDI)
+	count = count_pipe(cmd);
+	ret = malloc(sizeof(int *) * (count + 2));
+	if (!ret)
+		error(NULL, "Failed to malloc\n", -1);
+	ret[0] = NULL;
+	ret[count + 1] = NULL;
+	i = 0;
+	while (++i < count + 1)
 	{
-		hs_redirect(cmd);
-		parse_cmd = ft_split(cmd->left->str, ' ');
-		parse_en = pipe_parsing_envp(envp);
-		path = pipe_parsing_cmd(parse_en, parse_cmd[0]);
+		ret[i] = malloc(sizeof(int [2]) * 1);
+		if (!ret[i])
+			error(NULL, "Failed to malloc\n", -1);
+		if (pipe(ret[i]) < 0)
+			error(NULL, "Failed to pipe\n", -1);
 	}
-	else
-	{
-		parse_cmd = ft_split(cmd->str, ' ');
-		parse_en = pipe_parsing_envp(envp);
-		path = pipe_parsing_cmd(parse_en, parse_cmd[0]);
-	}
-	unlink(".temp_file");
-	execve(path, parse_cmd, *envp);
-	error(NULL, "Failed to execve\n");
+	return (ret);
 }
 
-void	hs_excute_tree(t_cmd *cmd, char ***envp)
+void	hs_pipeline(t_cmd *cmd, char ***envp)
 {
-	if (cmd->type == T_PIPE)
-		hs_pipeline(cmd, envp, 0);
-	else
-		hs_cmd(cmd, envp);
-}
+	int		i;
+	int		count;
+	int		**fd;
+	t_cmd	*cur;
 
-void	hs_search_tree(t_cmd *cmd, char ***envp)
-{
-	pid_t	pid;
-
-	if (cmd->exec_flag == 1)
-		return ;
-	if (cmd->right)
-		cmd->right->parent_flag = 1;
-	pid = fork();
-	if (pid < 0)
-		error(NULL, "Failed to fork\n");
-	else if (pid == 0)
-		hs_excute_tree(cmd, envp);
-	else
-		waitpid(pid, 0, 0);
-	if (cmd->type == T_PIPE || cmd->type == T_REDI)
+	cur = cmd;
+	fd = pipe_open(cmd);
+	count = count_pipe(cmd);
+	i = 0;
+	while (cur && ++i < count + 2)
 	{
-		cmd->left->exec_flag = 1;
-		cmd->right->exec_flag = 1;
+		cur->pid = fork();
+		if (cur->pid == -1)
+			error(NULL, "Failed to fork\n", -1);
+		else if (cur->pid == 0)
+		{
+			close_other(fd, i, count);
+			pipe_word(fd[i - 1], fd[i], cur, envp);
+		}
+		cur = cur->right;
 	}
-	if (cmd->left != NULL)
-		hs_search_tree(cmd->left, envp);
-	if (cmd->right != NULL)
-		hs_search_tree(cmd->right, envp);
+	close_all(fd, count + 1);
+	pipe_wait(fd, count, cmd);
 }

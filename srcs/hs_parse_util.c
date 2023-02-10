@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:42:56 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/27 14:39:07 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/09 21:34:55 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,31 @@ void	hs_parse_pipe(t_cmd *cmd, char *buf, int i)
 void	hs_parse_redi_double(t_cmd *cmd)
 {
 	char	*parse;
+	char	*tmp;
 
 	if (ft_strchr(cmd->left->str, '>'))
 	{
 		parse = ft_strtrim(cmd->left->str, ">");
-		cmd->left->str = parse;
+		tmp = cmd->left->str;
+		cmd->left->str = ft_strdup(parse);
+		free(parse);
+		free(tmp);
 	}
 	if (ft_strchr(cmd->left->str, '<'))
 	{
 		parse = ft_strtrim(cmd->left->str, "<");
-		cmd->left->str = parse;
+		tmp = cmd->left->str;
+		cmd->left->str = ft_strdup(parse);
+		cmd->left->exec_flag = 1;
+		free(parse);
+		free(tmp);
 	}
 }
 
-void	hs_parse_redi_trim(t_cmd *cmd, char	*left, char *right)
+void	hs_parse_redi_trim(t_cmd *cmd, char	**cmd_file)
 {
-	cmd->left->str = ft_strdup(left);
-	cmd->right->str = ft_strdup(right);
+	cmd->left->str = ft_strdup(cmd_file[1]);
+	cmd->right->str = ft_strdup(cmd_file[0]);
 }
 
 void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag)
@@ -57,8 +65,8 @@ void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag)
 	{
 		cmd->right->str = ft_substr(buf, idx + 1, ft_strlen(buf) - idx);
 		cmd_file = ft_split(cmd->right->str, ' ');
-		if (cmd_file[1])
-			hs_parse_redi_trim(cmd, cmd_file[1], cmd_file[0]);
+		if (cmd_file && cmd_file[1])
+			hs_parse_redi_trim(cmd, cmd_file);
 		else
 		{
 			if (idx == 0)
@@ -66,6 +74,7 @@ void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag)
 			else
 				cmd->left->str = ft_substr(buf, 0, idx);
 		}
+		free_parse(cmd_file);
 	}
 	else if (flag == 2)
 	{
@@ -84,6 +93,11 @@ int	check_type(t_cmd *cmd, char *buf)
 
 	i = 0;
 	ret = T_WORD;
+	if (buf == NULL)
+	{
+		cmd->type = ret;
+		return (ret);
+	}
 	while (buf[i])
 	{
 		if (buf[i] == '|')

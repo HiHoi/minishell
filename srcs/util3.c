@@ -1,32 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   util3.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/30 20:36:33 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 18:29:44 by hoslim           ###   ########.fr       */
+/*   Created: 2023/02/06 12:46:02 by hoslim            #+#    #+#             */
+/*   Updated: 2023/02/10 15:43:25 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-//heredoc 환경변수
-//자식 프로세스의 sigign
-
-extern int	g_exit_code;
-
-int	main(int ac, char **av, char **envp)
+char	*hs_parsing_cmd(char ***envp, char *cmdline)
 {
-	t_info	*info;
+	char	*parsed;
+	char	**path;
 
-	(void)ac;
-	(void)av;
-	info = init_info(envp);
-	if (!info)
-		return (error(NULL, "Failed to initailzie\n", -1));
-	start_shell(info);
-	free_info(info);
-	return (0);
+	path = pipe_parsing_envp(envp);
+	parsed = pipe_parsing_cmd(path, cmdline);
+	free_parse(path);
+	return (parsed);
+}
+
+int	check_argc(char *str)
+{
+	int		ret;
+
+	if (str && ft_isalpha(str[0]) == 1)
+		ret = 0;
+	else
+		ret = 2;
+	return (ret);
+}
+
+void	free_fd(int **fd, int count)
+{
+	int	idx;
+
+	idx = 0;
+	while (++idx < count)
+		free(fd[idx]);
+	free(fd);
 }

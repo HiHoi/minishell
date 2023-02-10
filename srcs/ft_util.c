@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:35:04 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/27 13:32:04 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 14:30:22 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*ft_strchr(const char *str, int c)
 	char	find;
 	int		i;
 
+	if (str == NULL)
+		return (0);
 	i = 0;
 	find = (unsigned char)c;
 	while (str[i])
@@ -37,6 +39,8 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	i = 0;
 	if (n == 0)
 		return (0);
+	if (s1 == NULL || s2 == NULL)
+		return (1);
 	while (i < n && *(s1 + i) == *(s2 + i))
 	{
 		if (*(s1 + i) == '\0')
@@ -64,6 +68,8 @@ size_t	ft_strlen(const char *str)
 {
 	int	cnt;
 
+	if (str == NULL)
+		return (0);
 	cnt = 0;
 	while (*(str + cnt))
 		cnt++;
@@ -87,125 +93,4 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 	if (size > 0)
 		*(dest + i) = '\0';
 	return (len);
-}
-
-char	*ft_strcpy(char *dest, const char *src)
-{
-	int	i;
-
-	i = 0;
-	while (*(src + i))
-	{
-		*(dest + i) = *(src + i);
-		i++;
-	}
-	*(dest + i) = '\0';
-	return (dest);
-}
-
-char	*ft_strdup(const char *src)
-{
-	int		i;
-	char	*tmp;
-
-	i = ft_strlen(src) + 1;
-	tmp = (char *)malloc(sizeof(char) * i);
-	if (tmp == NULL)
-		return (0);
-	ft_strcpy(tmp, src);
-	return (tmp);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	int		i;
-	int		j;
-	int		s1_len;
-	int		s2_len;
-	char	*tmp;
-
-	i = -1;
-	j = -1;
-	if (s1 == NULL)
-		return (0);
-	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
-	tmp = malloc(sizeof(char) * (s1_len + s2_len + 1));
-	if (tmp == NULL)
-		return (0);
-	while (s1[++i])
-		tmp[i] = s1[i];
-	while (s2[++j])
-		tmp[i + j] = s2[j];
-	tmp[i + j] = '\0';
-	return (tmp);
-}
-
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	size_t	s_len;
-	char	*rlt;
-
-	if (!s)
-		return (NULL);
-	if ((unsigned int)ft_strlen(s) < start || len == 0)
-		return (ft_strdup(""));
-	s_len = ft_strlen((char *)(s + start));
-	if (ft_strlen(s) < len)
-		len = ft_strlen(s);
-	if (len > s_len)
-		len = s_len;
-	rlt = (char *)malloc(sizeof(char) * (len + 1));
-	if (rlt == NULL)
-		return (0);
-	ft_strlcpy(rlt, (char *)(s + start), len + 1);
-	return (rlt);
-}
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	int	i;
-
-	i = 0;
-	if (!s1 || !s2)
-		return (0);
-	while (*(s1 + i) == *(s2 + i))
-	{
-		if (*(s1 + i) == '\0')
-			return (0);
-		i++;
-	}
-	return (*(s1 + i) - *(s2 + i));
-}
-
-int	ft_isdigit(int c)
-{
-	if ('0' <= c && c <= '9')
-		return (1);
-	else
-		return (0);
-}
-
-char	*ft_strtrim(char const *s1, char const *set)
-{
-	int		start;
-	int		end;
-	char	*tmp;
-
-	tmp = 0;
-	if (s1 != NULL && set != NULL)
-	{
-		start = 0;
-		end = ft_strlen(s1);
-		while (s1[start] && ft_strchr(set, s1[start]))
-			start++;
-		while (s1[end - 1] && ft_strchr(set, s1[end - 1]) && end > start)
-			end--;
-		tmp = malloc(sizeof(char) * end - start + 1);
-		if (tmp == NULL)
-			return (0);
-		if (tmp)
-			ft_strlcpy(tmp, (char *)&s1[start], end - start + 1);
-	}
-	return (tmp);
 }

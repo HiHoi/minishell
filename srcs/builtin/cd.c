@@ -3,54 +3,99 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:20 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/29 21:49:00 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/02/07 15:01:27 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-extern int  exit_code;
+extern int	g_exit_code;
+
+char	*cd_parse_path(char *cmd, char ***envp)
+{
+	char	*want;
+	char	*pwd;
+	char	*path;
+	char	**parse;
+
+	if (envp == NULL || hs_check_envp(envp, "PWD=") == 0)
+		return (0);
+	parse = ft_split(cmd, ' ');
+	pwd = parse_env_value("PWD", envp);
+	path = ft_strjoin("/", parse[1]);
+	want = ft_strjoin(pwd, path);
+	free_parse(parse);
+	free(pwd);
+	free(path);
+	return (want);
+}
 
 void	cd_oldpwd(char ***envp)
 {
-	int		i;
 	char	*cur;
 	char	*old;
-	// char	*pwd;
 	char	*buf;
 
-	i = -1;
-	while ((*envp)[++i])
-		if (check_key((*envp)[i], "PWD") > 0)
-			break ;
+	if (envp == NULL || hs_check_envp(envp, "PWD=") == 0 \
+	|| hs_check_envp(envp, "OLDPWD=") == 0)
+		return ;
+	buf = parse_env_value("PWD", envp);
+	old = ft_strjoin("OLDPWD=", buf);
+	swap_env(envp, old, "OLDPWD");
+	free(buf);
 	buf = getcwd(NULL, 1024);
 	cur = ft_strjoin("PWD=", buf);
-	old = ft_strdup((*envp)[i]);
-	(void)old;
-	(void)cur;
+	swap_env(envp, cur, "PWD");
+	free(buf);
+	free(old);
+	free(cur);
+}
+
+void	cd_home(char ***envp)
+{
+	char	*path;
+
+	if (envp == NULL || hs_check_envp(envp, "HOME=") == 0)
+	{
+		write(2, "minishell: cd: HOME not set\n", 29);
+		g_exit_code = 1;
+		return ;
+	}
+	path = parse_env_value("HOME", envp);
+	if (chdir(path) == -1)
+	{
+		free(path);
+		g_exit_code = 127;
+		return ;
+	}
+	free(path);
 }
 
 void	ft_cd(t_cmd *cmd, char ***envp)
 {
-	char    **parse;
+	char	**parse;
+	char	*want_path;
 
+	cmd->exec_flag = 1;
 	parse = ft_split(cmd->str, ' ');
-	if (ft_strcmp(parse[0], "cd"))
+	if (!ft_strcmp(cmd->str, "cd"))
 	{
-		exit_code = 127;
+		free_parse(parse);
+		g_exit_code = 127;
 		return ;
 	}
-	if (parse[1] != NULL && parse[1][0] != '$' && parse[1][0] != '~')
+	want_path = cd_parse_path(cmd->str, envp);
+	if (parse[1] != NULL && parse[1][0] != '$' && ft_strcmp(parse[1], "~"))
 	{
-		if (chdir(parse[1]) == -1)
-			exit_code = hs_error_return(NULL, NULL, "failed to cd\n");
+		if (chdir(want_path) == -1)
+			g_exit_code = hs_error_return(NULL, NULL, "failed to cd\n");
 		cd_oldpwd(envp);
 	}
-	// else if (parse[1][0] == '~')
-	// 	cd_home(cmd->str, envp);
-	// else if (parse[1][0] == '$')
-	// 	cd_envp(cmd->str, envp);
+	else if (!ft_strcmp(parse[1], "~"))
+		cd_home(envp);
+	free(want_path);
+	free_parse(parse);
 }

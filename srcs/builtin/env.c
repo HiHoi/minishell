@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosunglim <hosunglim@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:38:32 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/01/29 15:46:52 by hosunglim        ###   ########.fr       */
+/*   Updated: 2023/02/06 14:17:52 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,12 @@ void	ft_env(t_cmd *cmd, char ***envp)
 	int		i;
 	char	**test;
 
+	cmd->exec_flag = 1;
+	if (*envp == NULL)
+		return ;
 	test = ft_split(cmd->str, ' ');
 	if (test[1])
-		error(NULL, "Invaild option\n");
+		error(NULL, "Invaild option\n", -1);
 	i = 0;
 	while ((*envp)[i])
 	{
@@ -30,5 +33,4 @@ void	ft_env(t_cmd *cmd, char ***envp)
 		}
 		i++;
 	}
-	exit(0);
 }
