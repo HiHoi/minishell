@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hj_redirection_split.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 20:25:39 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/10 15:50:33 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/11 15:02:05 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,17 @@ char	*hj_redc_string(char *str, int *idx)
 		return (NULL);
 	while (str[*idx + i])
 	{
-		if (hj_is_redc(str[*idx + i + 1]) && count == 0)
+		if (hj_is_redc(str[*idx + i]) && count == 0)
 		{
-			if (hj_is_redc(str[*idx + i + 2]))
+			if (hj_is_redc(str[*idx + i + 1]))
 				i++;
 			count++;
 		}
-		else if (hj_is_redc(str[*idx + i + 1]) && count == 1)
+		else if (hj_is_redc(str[*idx + i]) && count == 1)
 			break ;
 		i++;
 	}
-	result = hj_save_redc_str(str, idx, i);
+	result = hj_save_redc_str(str, idx, i - 1);
 	*idx += i;
 	return (result);
 }
