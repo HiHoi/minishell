@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection_util.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:17:52 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/10 19:14:42 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/11 13:26:46 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,18 @@ char	*make_limiter(t_cmd *cmd)
 
 	idx = hs_check_heredoc(cmd->str) + 1;
 	len = 0;
-	while (cmd->str[idx + len] != '|' && cmd->str[idx + len] != '>' \
-	&& cmd->str[idx + len] != '<' && cmd->str[idx + len])
+	// if (cmd->str[idx + len] == '\"' && cmd->str[idx + len] == '\0')
+	while (cmd->str[idx + len] && cmd->str[idx + len] != '|' \
+	&& cmd->str[idx + len] != '>' && cmd->str[idx + len] != '<' \
+	&& cmd->str[idx + len] != '\"')
 		len++;
 	tmp = ft_substr(cmd->str, idx, len);
 	buf = ft_strtrim(tmp, " ");
 	free(tmp);
 	return (buf);
 }
+
+//heredoc 도중 들어오는 시그널 처리
 
 void	make_temp(t_cmd *cmd)
 {
@@ -43,7 +47,7 @@ void	make_temp(t_cmd *cmd)
 	while (1)
 	{
 		line = readline("heredoc>");
-		if (line == NULL || !ft_strcmp(line, limiter))
+		if (line == NULL || !ft_strcmp(line, limiter) || *line == '\0')
 		{
 			free(limiter);
 			break ;

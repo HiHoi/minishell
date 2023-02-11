@@ -11,23 +11,17 @@ SRCS = \
 		./srcs/redirection_util.c\
 		./srcs/ft_split.c\
 		./srcs/ft_util.c\
-<<<<<<< HEAD
-=======
 		./srcs/ft_util2.c\
 		./srcs/ft_util3.c\
 		./srcs/ft_util4.c\
->>>>>>> 8a91a9f6330523d6e8436db677b1fdd33d84e91c
 		./srcs/util.c\
 		./srcs/util2.c\
 		./srcs/util3.c\
 		./srcs/signal.c\
 		./srcs/parse.c\
-<<<<<<< HEAD
-=======
 		./srcs/hj_redirection_split.c\
 		./srcs/hj_export_insert.c\
 		./srcs/syntax.c\
->>>>>>> 8a91a9f6330523d6e8436db677b1fdd33d84e91c
 		./srcs/hs_parse_util.c\
 		./srcs/pipe.c\
 		./srcs/redirection.c\
@@ -37,10 +31,6 @@ SRCS = \
 		./srcs/builtin/pwd.c\
 		./srcs/builtin/export.c\
 		./srcs/builtin/unset.c\
-<<<<<<< HEAD
-		./srcs/builtin/echo.c\
-		./srcs/builtin/cd.c
-=======
 		./srcs/builtin/hj_envp_del.c\
 		./srcs/builtin/hj_envp_bigtaging.c\
 		./srcs/builtin/hj_echo_join.c\
@@ -56,7 +46,6 @@ SRCS = \
 		./srcs/parsing/hj_split_util3.c\
 		./srcs/parsing/hj_split_util4.c\
 		./srcs/parsing/hj_split_util5.c
->>>>>>> 8a91a9f6330523d6e8436db677b1fdd33d84e91c
 
 OBJS = $(SRCS:.c=.o)
 HEADER = ./includes/
@@ -72,10 +61,7 @@ all : $(NAME)
 clean :
 	$(RM) srcs/*.o
 	$(RM) srcs/builtin/*.o
-<<<<<<< HEAD
-=======
 	$(RM) srcs/parsing/*.o
->>>>>>> 8a91a9f6330523d6e8436db677b1fdd33d84e91c
 
 fclean : clean
 	$(RM) $(NAME)

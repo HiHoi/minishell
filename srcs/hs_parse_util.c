@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hs_parse_util.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:42:56 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/09 21:34:55 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/11 13:06:09 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,19 +86,32 @@ void	hs_parse_redi(int idx, t_cmd *cmd, char *buf, int flag)
 	}
 }
 
+int	check_queto(int *i, int ret, char *buf, char queto)
+{
+	int	idx;
+
+	idx = 1;
+	while (buf[*i + idx] != '\0' && buf[*i + idx] != queto)
+		idx++;
+	*i += idx;
+	if (ret == T_WORD)
+		ret = T_WORD;
+	return (ret);
+}
+
 int	check_type(t_cmd *cmd, char *buf)
 {
 	int	i;
 	int	ret;
 
-	i = 0;
+	i = -1;
 	ret = T_WORD;
 	if (buf == NULL)
 	{
 		cmd->type = ret;
 		return (ret);
 	}
-	while (buf[i])
+	while (buf[++i] != '\0')
 	{
 		if (buf[i] == '|')
 		{
@@ -107,7 +120,10 @@ int	check_type(t_cmd *cmd, char *buf)
 		}
 		else if (buf[i] == '<' || buf[i] == '>')
 			ret = T_REDI;
-		i++;
+		else if (buf[i] == '\"')
+			ret = check_queto(&i, ret, buf, '\"');
+		else if (buf[i] == '\'')
+			ret = check_queto(&i, ret, buf, '\'');
 	}
 	cmd->type = ret;
 	return (ret);
