@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:38:32 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/12 17:23:00 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 19:38:53 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	env_option(char *str, char ***envp)
 	char	**test;
 
 	test = hj_split_cmd(str, *envp);
-	if (ft_strchr(str, '$') == 0)
+	if (test[1] != NULL && ft_strchr(str, '$') == 0)
 	{
 		printf("env: %s: No such file or dir\n", test[1]);
 		g_exit_code = 127;
@@ -51,4 +51,5 @@ void	ft_env(t_cmd *cmd, char ***envp)
 		}
 		i++;
 	}
+	g_exit_code = 0;
 }

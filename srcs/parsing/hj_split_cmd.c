@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hj_split_cmd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hojsong <hojsong@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 16:31:37 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/06 15:20:18 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 20:19:31 by hojsong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ char	*hj_split_join(char *str, char **envp)
 	size = hj_sp_mal_size(str);
 	split = hj_save_split(str, size);
 	split2 = hj_change_split(split, envp);
-	split3 = hj_del_small(split2);
-	result = hj_split_str_join(split3);
-	all_free(split2);
-	all_free(split3);
+	split3 = hj_del_small(split2, size);
+	result = hj_split_str_join(split3, size);
+	all_free(split2, size);
+	all_free(split3, size);
 	return (result);
 }
 
@@ -75,7 +75,7 @@ int	hj_isseting(int i, int *set, int count)
 
 void	hj_ft_error(void)
 {
-	write(2, "minishell: Not paired string\n", 30);
+	write(2, "minishell: not paired queto\n", 29);
 	exit(1);
 }
 

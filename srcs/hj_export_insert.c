@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 16:31:59 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/09 20:49:48 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 19:58:45 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,20 @@ char	**hj_export_insert(char **str, char **envp)
 	if (result == NULL)
 		return (0);
 	i = 0;
+	i2 = 0;
 	while (envp[i])
 	{
-		if (!hj_envp_check(envp[i], str))
-			result[i] = envp[i];
+		if (hj_envp_check(envp[i], str))
+			result[i - i2] = ft_strdup(envp[i]);
+		else
+			i2++;
 		i++;
 	}
+	i -= i2;
 	i2 = 0;
-	while (str[i2])
-	{
-		result[i + i2] = str[i2];
-		i2++;
-	}
-	result[i + i2] = NULL;
+	while (str[++i2])
+		result[i + i2 - 1] = ft_strdup(str[i2]);
+	result[i + i2 - 1] = 0;
 	return (result);
 }
 
@@ -51,7 +52,7 @@ int	hj_envp_last_size(char **str, char **envp)
 	size = 0;
 	while (envp[size])
 		size++;
-	i = 0;
+	i = 1;
 	while (str[i])
 	{
 		size += hj_envp_check(str[i], envp);

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 11:31:10 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/12 16:07:25 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 19:40:13 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	ft_exit(t_cmd *cmd, char ***envp)
 		return (g_exit_code);
 	}
 	g_exit_code = ft_atoi(parse[1]);
+	free_parse(parse);
 	write(1, "exit\n", 5);
 	exit(g_exit_code);
 }

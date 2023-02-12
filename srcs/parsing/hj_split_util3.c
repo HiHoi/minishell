@@ -6,7 +6,7 @@
 /*   By: hojsong <hojsong@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 14:13:27 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/06 13:17:59 by hojsong          ###   ########.fr       */
+/*   Updated: 2023/02/12 17:53:51 by hojsong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,14 @@ char	**hj_save_split(char *str, int size)
 		return (0);
 	i = 0;
 	i2 = 0;
-	while (i < size)
+	while (i < size && setpoint[i2] < hj_ft_strlen(str))
 	{
 		split[i] = hj_compare_split(str, &i2, setpoint);
 		i++;
 		i2++;
 	}
+	while (i < size)
+		split[i++] = hj_ft_strdup("");
 	split[i] = 0;
 	free(setpoint);
 	return (split);
@@ -46,9 +48,9 @@ char	*hj_compare_split(char *str, int *idx, int *setpoint)
 
 	hj_is_set(str, idx, setpoint);
 	i = setpoint[*idx];
-	if (str[i] == '\0')
+	if (i >= hj_ft_strlen(str) || setpoint[*idx + 1] > hj_ft_strlen(str))
 		return (0);
-	chk = hj_point_checker(str, setpoint, *idx, str[i]);
+	chk = hj_point_checker(str, setpoint, idx, str[i]);
 	if (chk % 2 == 0 && str[i] != '$')
 		i++;
 	size = setpoint[*idx + 1];
@@ -91,17 +93,19 @@ char	**hj_set_int(char *str, int *i)
 	return (spr);
 }
 
-int	hj_point_checker(char *str, int *set, int num, char com)
+int	hj_point_checker(char *str, int *set, int *num, char com)
 {
-	int	result;
-	int	i;
-	int	idx;
+	int		result;
+	int		i;
+	int		idx;
 
-	if (com == '$')
+	if (com != '\'' && com != '\"')
 		return (1);
+	else if (*num >= hj_ft_strlen(str))
+		return (0);
 	i = 0;
 	result = 0;
-	while (i <= num)
+	while (i <= *num)
 	{
 		idx = set[i];
 		if (str[idx] == com)

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:38:13 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/06 14:27:44 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 19:31:49 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	check_key(char *envp, char *src)
 		else
 			return (0);
 	}
-	if (envp[i] == '=')
+	if (src[i] == '\0')
 		return (1);
 	return (0);
 }
@@ -41,8 +41,8 @@ void	ft_unset(t_cmd *cmd, char ***envp)
 	cmd->exec_flag = 1;
 	if (*envp == NULL)
 		return ;
-	target = ft_split(cmd->str, ' ');
-	if (target[1] == NULL)
+	target = hj_split_cmd(cmd->str, *envp);
+	if (target[1] == NULL || hs_check_envp(envp, target[1]) == 0)
 	{
 		free_parse(target);
 		return ;

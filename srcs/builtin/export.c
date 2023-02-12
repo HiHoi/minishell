@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:37:53 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/09 16:31:14 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 20:04:26 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	**sort_envp(char **envp)
 			envp[i[1]] = buf;
 		}
 	}
-	sorted = ft_calloc(len, sizeof(char *));
+	sorted = malloc(sizeof(char *) * (len + 1));
 	if (!sorted)
 		return (0);
 	i[0] = -1;
@@ -70,8 +70,6 @@ void	export_declare(char **envp)
 	}
 	free(sorted);
 }
-
-//중복처리
 
 char	**export_insert(char **str, char ***envp, int key_len, int envp_len)
 {
@@ -119,7 +117,7 @@ void	ft_export(t_cmd *cmd, char ***envp)
 	parsed = hj_split_cmd(cmd->str, *envp);
 	parsed_len = count_line(parsed);
 	envp_len = count_line(*envp);
-	new = export_insert(parsed, envp, parsed_len, envp_len);
+	new = hj_export_insert(parsed, *envp);
 	free_parse(*envp);
 	*envp = new;
 	free_parse(parsed);

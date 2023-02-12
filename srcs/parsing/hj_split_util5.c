@@ -6,7 +6,7 @@
 /*   By: hojsong <hojsong@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 19:38:07 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/06 12:54:46 by hojsong          ###   ########.fr       */
+/*   Updated: 2023/02/12 15:48:08 by hojsong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,14 @@ int	*hj_setpoint_seting(char *str)
 	int	*result;
 	int	i;
 	int	ri;
+	int	size;
 
-	result = malloc(sizeof(int) * (hj_set_mal_size(str) + 2));
+	size = 1;
 	ri = 0;
 	if (str[0] != '\"' && str[0] != '$' && str[0] != '\'')
+		size = 2;
+	result = malloc(sizeof(int) * (hj_set_mal_size(str) + 1 + size));
+	if (size == 2)
 		result[ri++] = 0;
 	i = 0;
 	while (str[i])
@@ -28,14 +32,12 @@ int	*hj_setpoint_seting(char *str)
 		if (str[i] == '\'')
 			i += hj_set_compare_push(str, i, result, &ri);
 		else if (str[i] == '\"')
-		{
 			i += hj_set_compare_push2(str, i, result, &ri);
-		}
 		else if (str[i] == '$')
 			result[ri++] = i;
 		i++;
 	}
-	result[ri] = i;
+	result[ri++] = i;
 	return (result);
 }
 
@@ -62,7 +64,7 @@ int	hj_set_compare_push2(char *str, int i, int *result, int *ri)
 	*ri += 1;
 	while (str[i + idx] != '\"')
 	{
-		if (str[i] == '$')
+		if (str[i + idx] == '$')
 		{
 			result[*ri] = i + idx;
 			*ri += 1;

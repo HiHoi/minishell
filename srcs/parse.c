@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 19:23:51 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/12 16:19:52 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 20:34:35 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	hs_lexical_redi(t_cmd *cmd, char *buf)
 	else
 		hs_parse_redi(j, cmd->left, cmd->left->str, 2);
 	hs_parse_redi_double(cmd->left);
+	free_parse(parse);
 }
 
 void	hs_check_lexical(t_cmd *cmd, char *buf)

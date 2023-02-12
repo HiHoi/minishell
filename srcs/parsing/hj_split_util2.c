@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hj_split_util2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hojsong <hojsong@student.42seoul.k>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/30 15:33:12 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/06 18:25:08 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 17:54:09 by hojsong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ int	hj_sp_mal_size(char *str)
 			result++;
 		if (str[i + 1] == '$')
 			result++;
-		else if (str[i] == '$' && str[i + 1] == '\0')
+		else if (str[i] == '$' && str[i + 1] == '$')
 			result++;
-		if (str[i + 1] == '\0')
+		if (str[i] != '\'' && str[i] != '\"' && str[i + 1] == '\0')
 			result++;
 		i++;
 	}
@@ -45,19 +45,19 @@ int	hj_pashing_push(char *str, int *i, char set)
 	int	idx;
 
 	idx = 1;
-	result = 1;
-	if (str[*i + idx] == set)
+	result = 2;
+	if (str[*i + 1] == set)
 	{
 		*i += idx;
-		return (0);
+		return (result);
 	}
 	while (str[*i + idx] != set)
 	{
-		if (str[*i + idx] != '$' && str[*i + idx + 1] == '$' && set != '\'')
+		if (str[*i + idx] == '$' && set != '\'')
 			result++;
 		idx++;
 	}
-	if (str[*i * idx + 1] != '\0')
+	if (str[*i + idx + 1] != '\0')
 		result++;
 	*i += idx;
 	return (result);

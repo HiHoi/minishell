@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:20 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/07 15:01:27 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 19:38:47 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,15 @@ char	*cd_parse_path(char *cmd, char ***envp)
 	char	*path;
 	char	**parse;
 
-	if (envp == NULL || hs_check_envp(envp, "PWD=") == 0)
-		return (0);
-	parse = ft_split(cmd, ' ');
-	pwd = parse_env_value("PWD", envp);
+	if (envp == NULL || hs_check_envp(envp, "PWD=") == 0 || cmd == NULL)
+		return (NULL);
+	parse = hj_split_cmd(cmd, *envp);
 	path = ft_strjoin("/", parse[1]);
-	want = ft_strjoin(pwd, path);
+	pwd = parse_env_value("PWD", envp);
+	if (parse[1][0] != '/')
+		want = ft_strjoin(pwd, path);
+	else
+		want = ft_strjoin("", path);
 	free_parse(parse);
 	free(pwd);
 	free(path);
@@ -72,30 +75,36 @@ void	cd_home(char ***envp)
 		return ;
 	}
 	free(path);
+	cd_oldpwd(envp);
+	g_exit_code = 0;
+}
+
+void	cd_error(char *str)
+{
+	write(2, "minishell: cd: ", 16);
+	write(2, str, ft_strlen(str));
+	write(2, ": No such file or direc\n", 25);
+	g_exit_code = 1;
 }
 
 void	ft_cd(t_cmd *cmd, char ***envp)
 {
 	char	**parse;
-	char	*want_path;
 
 	cmd->exec_flag = 1;
-	parse = ft_split(cmd->str, ' ');
-	if (!ft_strcmp(cmd->str, "cd"))
+	parse = hj_split_cmd(cmd->str, *envp);
+	if (parse[1] == NULL || !ft_strcmp(parse[1], "~"))
 	{
+		cd_home(envp);
 		free_parse(parse);
-		g_exit_code = 127;
 		return ;
 	}
-	want_path = cd_parse_path(cmd->str, envp);
 	if (parse[1] != NULL && parse[1][0] != '$' && ft_strcmp(parse[1], "~"))
 	{
-		if (chdir(want_path) == -1)
-			g_exit_code = hs_error_return(NULL, NULL, "failed to cd\n");
+		if (chdir(parse[1]) == -1)
+			cd_error(parse[1]);
 		cd_oldpwd(envp);
 	}
-	else if (!ft_strcmp(parse[1], "~"))
-		cd_home(envp);
-	free(want_path);
 	free_parse(parse);
+	g_exit_code = 0;
 }

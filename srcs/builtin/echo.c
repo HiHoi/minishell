@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:27 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/12 16:23:32 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 20:24:34 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,11 @@ void	print_exit(char *str, char ***envp)
 	char	**code;
 
 	code = hj_split_cmd(str, *envp);
-	printf("%s %s\n", code[0], str);
 	write(2, "minishell: ", 12);
 	write(2, code[0], ft_strlen(code[0]));
 	write(2, ": command not found\n", 21);
 	g_exit_code = 127;
-	free(code);
+	free_parse(code);
 }
 
 void	echo_print(char *s, int option)
@@ -32,6 +31,7 @@ void	echo_print(char *s, int option)
 	write(1, s, ft_strlen(s));
 	if (option == 0)
 		write(1, "\n", 1);
+	g_exit_code = 0;
 }
 
 void	echo_env(char *str, char ***envp, int option)
@@ -92,5 +92,5 @@ int	ft_echo(t_cmd *cmd, char ***envp)
 		echo_print(parse, option);
 	free(parse);
 	free_parse(temp);
-	return (0);
+	return (g_exit_code);
 }
