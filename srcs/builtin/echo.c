@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:27 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/10 23:11:45 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 16:23:32 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 
 extern int	g_exit_code;
 
-void	print_exit(void)
+void	print_exit(char *str, char ***envp)
 {
-	char	*code;
+	char	**code;
 
-	code = ft_itoa(g_exit_code);
+	code = hj_split_cmd(str, *envp);
+	printf("%s %s\n", code[0], str);
 	write(2, "minishell: ", 12);
-	write(2, code, ft_strlen(code));
+	write(2, code[0], ft_strlen(code[0]));
 	write(2, ": command not found\n", 21);
 	g_exit_code = 127;
 	free(code);
@@ -40,7 +41,7 @@ void	echo_env(char *str, char ***envp, int option)
 
 	if (str[0] == '$' && str[1] == '?')
 	{
-		print_exit();
+		print_exit(str, envp);
 		return ;
 	}
 	if (*envp == NULL)

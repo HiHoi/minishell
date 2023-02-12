@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/18 21:00:02 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/10 18:58:07 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 16:22:54 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	exec_builtin(t_cmd *cmd, char ***envp)
 			ft_export(cmd, envp);
 		else if (!ft_strncmp(cmd->str, "unset", 5))
 			ft_unset(cmd, envp);
-		else if (!ft_strcmp(cmd->str, "$?"))
+		else if (!ft_strncmp(cmd->str, "$?", 2))
 			ft_echo(cmd, envp);
 		else if (!ft_strncmp(cmd->str, "cd", 2))
 			ft_cd(cmd, envp);

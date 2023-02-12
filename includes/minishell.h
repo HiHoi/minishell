@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/11 12:38:34 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 15:15:30 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,13 @@ int		ft_atoi(const char *str);
 
 t_info	*init_info(char **envp);
 t_cmd	*init_cmd(void);
+void	shell_exit(t_info *info);
 
 void	start_shell(t_info *info);
 void	handle_parent(void);
 void	handle_signal(void);
 void	handle_child(void);
+void	print_prompt(void);
 
 int		error(t_info *info, char *s, int flag);
 int		hs_error_return(t_info *info, t_cmd *cmd, char *s);

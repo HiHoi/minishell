@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   shell.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:09:03 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/11 12:55:52 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 16:17:34 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+extern int	g_exit_code;
 
 void	hs_excute_tree(t_cmd *cmd, char ***envp)
 {
@@ -46,39 +48,16 @@ int	hs_check_heredoc(char *str)
 	return (0);
 }
 
-void	print_test(t_info *info)
-{
-	t_cmd	*cur = info->cmd;
-
-	while (cur)
-	{
-		printf("cur !  t : %d   s : %s\n", cur->type, cur->str);
-		if (cur->left)
-			printf("left !  t : %d   s : %s\n", cur->left->type, cur->left->str);
-		if (cur->right)
-			printf("rigth !  t : %d   s : %s\n", cur->right->type, cur->right->str);
-		cur = cur->left;
-	}
-	cur = info->cmd;
-	while (cur)
-	{
-		printf("cur !  t : %d   s : %s\n", cur->type, cur->str);
-		if (cur->left)
-			printf("left !  t : %d   s : %s\n", cur->left->type, cur->left->str);
-		if (cur->right)
-			printf("rigth !  t : %d   s : %s\n", cur->right->type, cur->right->str);
-		cur = cur->right;
-	}
-}
-
-//echo | echo prompt error
-
 void	hs_search_tree(t_cmd *cmd, char ***envp)
 {
 	pid_t	pid;
 
 	if (hs_check_heredoc(cmd->str) > 0)
+	{
 		make_temp(cmd);
+		if (g_exit_code == 1)
+			return ;
+	}
 	handle_parent();
 	pid = fork();
 	if (pid < 0)
@@ -97,10 +76,6 @@ void	exec_cmd(t_cmd *cmd, char ***envp)
 	}
 }
 
-//cat < a > b => 0
-// <a cat > b => 현재 : <a // cat > b 원하는 파싱: <a cat // >b
-// cat < a>b => 현재 : cat < // a>b 원하는 파싱: cat < a // >b
-
 void	start_shell(t_info *info)
 {
 	char			*buf;
@@ -114,18 +89,13 @@ void	start_shell(t_info *info)
 		handle_signal();
 		buf = readline("minishell$ ");
 		if (!buf)
-		{
-			free(info);
-			exit(0);
-		}
+			shell_exit(info);
 		else if (*buf == '\0')
 			free(buf);
 		else
 		{
 			add_history(buf);
 			parsing_cmd(info, buf);
-			//파싱 테스트시 print_test 주석 풀고 넣으면 프린트
-			// print_test(info);
 			exec_cmd(info->cmd, &info->en);
 			free_cmd(info->cmd, buf);
 		}

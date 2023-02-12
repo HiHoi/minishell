@@ -3,29 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   hs_parse_util.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 12:42:56 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/11 13:06:09 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 16:21:25 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	hs_parse_pipe(t_cmd *cmd, char *buf, int i)
-{
-	char	*left_str;
-	char	*right_str;
-
-	cmd->left = init_cmd();
-	cmd->right = init_cmd();
-	left_str = ft_substr(buf, 0, i);
-	right_str = ft_substr(buf, i + 1, ft_strlen(buf) - i);
-	cmd->left->str = ft_strdup(left_str);
-	cmd->right->str = ft_strdup(right_str);
-	free(left_str);
-	free(right_str);
-}
 
 void	hs_parse_redi_double(t_cmd *cmd)
 {
@@ -101,30 +86,29 @@ int	check_queto(int *i, int ret, char *buf, char queto)
 
 int	check_type(t_cmd *cmd, char *buf)
 {
-	int	i;
-	int	ret;
+	int	i[2];
 
-	i = -1;
-	ret = T_WORD;
+	i[1] = T_WORD;
 	if (buf == NULL)
 	{
-		cmd->type = ret;
-		return (ret);
+		cmd->type = T_WORD;
+		return (T_WORD);
 	}
-	while (buf[++i] != '\0')
+	i[0] = -1;
+	while (buf[++i[0]] != '\0')
 	{
-		if (buf[i] == '|')
+		if (buf[i[0]] == '|')
 		{
 			cmd->type = T_PIPE;
 			return (T_PIPE);
 		}
-		else if (buf[i] == '<' || buf[i] == '>')
-			ret = T_REDI;
-		else if (buf[i] == '\"')
-			ret = check_queto(&i, ret, buf, '\"');
-		else if (buf[i] == '\'')
-			ret = check_queto(&i, ret, buf, '\'');
+		else if (buf[i[0]] == '<' || buf[i[0]] == '>')
+			i[1] = T_REDI;
+		else if (buf[i[0]] == '\"')
+			i[1] = check_queto(&i[0], i[1], buf, '\"');
+		else if (buf[i[0]] == '\'')
+			i[1] = check_queto(&i[0], i[1], buf, '\'');
 	}
-	cmd->type = ret;
-	return (ret);
+	cmd->type = i[1];
+	return (i[1]);
 }

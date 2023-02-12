@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 11:31:10 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/10 23:21:17 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 16:07:25 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,23 @@ void	exit_get_code(pid_t pid)
 	{
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
+		{
+			g_exit_code = WEXITSTATUS(status);
 			break ;
+		}
 		if (WIFSIGNALED(status))
 		{
 			if (status == SIGINT)
 				printf("^C\n");
 			else if (status == SIGQUIT)
 				printf("Quit : 3\n");
+			g_exit_code = 128 + status;
 			break ;
 		}
 		else
 			break ;
 	}
 	unlink("/tmp/.temp_file");
-	g_exit_code = WEXITSTATUS(status);
 }
 
 int	ft_exit(t_cmd *cmd, char ***envp)

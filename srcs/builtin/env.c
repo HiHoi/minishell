@@ -6,23 +6,41 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:38:32 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/06 14:17:52 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 17:23:00 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+extern int	g_exit_code;
+
+void	env_option(char *str, char ***envp)
+{
+	char	**test;
+
+	test = hj_split_cmd(str, *envp);
+	if (ft_strchr(str, '$') == 0)
+	{
+		printf("env: %s: No such file or dir\n", test[1]);
+		g_exit_code = 127;
+		exit(g_exit_code);
+	}
+	if (test[1] != NULL && test[1][0] != '\0')
+	{
+		printf("minishell: %s\n", test[1]);
+		g_exit_code = 127;
+		exit(g_exit_code);
+	}
+}
+
 void	ft_env(t_cmd *cmd, char ***envp)
 {
 	int		i;
-	char	**test;
 
 	cmd->exec_flag = 1;
 	if (*envp == NULL)
 		return ;
-	test = ft_split(cmd->str, ' ');
-	if (test[1])
-		error(NULL, "Invaild option\n", -1);
+	env_option(cmd->str, envp);
 	i = 0;
 	while ((*envp)[i])
 	{

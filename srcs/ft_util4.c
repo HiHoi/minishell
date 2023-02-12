@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 12:42:27 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 13:48:00 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 15:23:00 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,4 +91,13 @@ char	*ft_strtrim(char const *s1, char const *set)
 			ft_strlcpy(tmp, (char *)&s1[start], end - start + 1);
 	}
 	return (tmp);
+}
+
+void	shell_exit(t_info *info)
+{
+	free(info);
+	rl_on_new_line();
+	rl_redisplay();
+	printf("exit\n");
+	exit(1);
 }

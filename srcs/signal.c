@@ -3,27 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 18:49:57 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/10 23:20:35 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/12 15:20:13 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 extern int	g_exit_code;
-
-void	print_prompt(void)
-{
-	rl_on_new_line();
-	rl_redisplay();
-	printf("	\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-	g_exit_code = 1;
-}
 
 void	handler(int signum)
 {
@@ -37,7 +26,7 @@ void	signal_child(int signum)
 		printf("^C\n");
 	if (signum == SIGQUIT)
 		printf("Quit :3\n");
-	exit(0);
+	exit(1);
 }
 
 void	handle_child(void)
