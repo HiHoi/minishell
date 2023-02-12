@@ -1,32 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/30 20:36:33 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 18:29:44 by hoslim           ###   ########.fr       */
+/*   Created: 2023/01/20 20:37:17 by hosunglim         #+#    #+#             */
+/*   Updated: 2023/02/06 11:55:21 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-//heredoc 환경변수
-//자식 프로세스의 sigign
-
-extern int	g_exit_code;
-
-int	main(int ac, char **av, char **envp)
+void	ft_pwd(t_cmd *cmd)
 {
-	t_info	*info;
+	char	*path;
+	char	**test;
 
-	(void)ac;
-	(void)av;
-	info = init_info(envp);
-	if (!info)
-		return (error(NULL, "Failed to initailzie\n", -1));
-	start_shell(info);
-	free_info(info);
-	return (0);
+	cmd->exec_flag = 1;
+	test = ft_split(cmd->str, ' ');
+	if (test[1])
+		error(NULL, "Invalid option\n", -1);
+	path = getcwd(NULL, 1024);
+	write(1, path, ft_strlen(path));
+	write(1, "\n", 1);
+	free(path);
+	exit(0);
 }

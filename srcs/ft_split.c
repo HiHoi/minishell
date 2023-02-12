@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 21:35:20 by hoslim            #+#    #+#             */
-/*   Updated: 2023/01/16 13:45:29 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/06 11:54:40 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*ft_calloc(size_t nelem, size_t elsize)
 
 	tmp = malloc(elsize * nelem);
 	if (!tmp)
-		error(NULL, "Failed to malloc\n");
+		error(NULL, "Failed to malloc\n", -1);
 	i = 0;
 	while (i < elsize)
 		tmp[i++] = 0;
@@ -45,6 +45,8 @@ size_t	word_cnt(const char *s, char c)
 	size_t	cnt;
 	size_t	i;
 
+	if (s == NULL)
+		return (0);
 	cnt = 0;
 	i = 0;
 	while (s[i])
@@ -67,7 +69,7 @@ char	*worddup(const char *s, char c)
 	char	*ptr;
 
 	len = 0;
-	while (s[len] && s[len] != c && s[len] != '"' && s[len] != '\'')
+	while (s[len] && s[len] != c)
 		len++;
 	ptr = ft_calloc(len + 1, sizeof(char));
 	if (!ptr)
@@ -89,12 +91,12 @@ char	**ft_split(char const *s, char c)
 		return (NULL);
 	while (i < (size_t)word_cnt(s, c) && s[j])
 	{
-		if (s[j] != c && s[j] != '"' && s[j] != '\'')
+		if (s[j] != c)
 		{
 			tmp[i] = worddup(&s[j], c);
 			if (!tmp[i++])
 				return (freeall(tmp));
-			while (s[j] && s[j] != c && s[j] != '"' && s[j] != '\'')
+			while (s[j] && s[j] != c)
 				j++;
 		}
 		else
