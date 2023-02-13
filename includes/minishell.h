@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/12 15:15:30 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/13 19:41:22 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ int		ft_isalpha(int c);
 char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_itoa(int n);
 int		ft_atoi(const char *str);
+int		ft_isdigit(int c);
 
 t_info	*init_info(char **envp);
 t_cmd	*init_cmd(void);
@@ -105,6 +106,7 @@ int		hs_check_heredoc(char *str);
 void	make_temp(t_cmd *cmd);
 int		exec_builtin(t_cmd *cmd, char ***envp);
 int		check_cmd_exec(t_cmd *cmd, char ***envp);
+int		hj_envp_name_chk(char *str);
 
 void	hs_search_tree(t_cmd *cmd, char ***envp);
 
@@ -124,6 +126,7 @@ void	free_fd(int **fd, int count);
 
 int		hs_check_builtin(t_cmd *cmd);
 void	hs_exec_builtin(t_cmd *cmd, char ***envp);
+int		check_option(char **str, int *option);
 void	ft_env(t_cmd *cmd, char ***envp);
 void	ft_pwd(t_cmd *cmd);
 void	ft_export(t_cmd *cmd, char ***envp);

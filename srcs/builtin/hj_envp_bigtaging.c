@@ -6,11 +6,31 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 13:57:56 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/06 14:52:50 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/13 20:05:15 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	hj_envp_name_chk(char *str)
+{
+	int	i;
+
+	if (!ft_isalpha(str[0]) && str[0] != '_')
+		return (1);
+	i = 1;
+	while (str[i])
+	{
+		if (ft_isalpha(str[i]) || ft_isdigit(str[i]) || \
+			str[i] == '_')
+			i++;
+		else
+			break ;
+	}
+	if (str[i] != '=' && str[i])
+		return (1);
+	return (0);
+}
 
 void	hj_resultinit(char **result, char *str)
 {
@@ -18,7 +38,7 @@ void	hj_resultinit(char **result, char *str)
 	int	i2;
 
 	i = 0;
-	while (str[i] != '=')
+	while (str[i] != '=' && str[i])
 		i++;
 	i2 = 0;
 	while (str[i + i2])
@@ -41,14 +61,17 @@ char	**hj_envp_bigtaging(char *str)
 	if (result == NULL)
 		return (0);
 	hj_resultinit(result, str);
-	i = -1;
+	i = 0;
 	i2 = 0;
-	while (str[++i] != '=')
-		result[0][i2++] = str[i];
+	while (str[i] != '=' && str[i])
+		result[0][i2++] = str[i++];
 	result[0][i2] = '\0';
 	i2 = 0;
-	while (str[++i])
-		result[1][i2++] = str[i];
+	if (str[i] != '\0')
+	{
+		while (str[++i])
+			result[1][i2++] = str[i];
+	}
 	result[1][i2] = '\0';
 	result[2] = NULL;
 	return (result);

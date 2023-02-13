@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:38:32 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/12 19:38:53 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/13 14:40:41 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_env(t_cmd *cmd, char ***envp)
 	i = 0;
 	while ((*envp)[i])
 	{
-		if ((*envp)[i][0] != '\0')
+		if ((*envp)[i][0] != '\0' && ft_strchr((*envp)[i], '='))
 		{
 			write(1, (*envp)[i], ft_strlen((*envp)[i]));
 			write(1, "\n", 1);

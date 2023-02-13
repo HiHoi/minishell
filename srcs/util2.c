@@ -6,26 +6,11 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 12:44:18 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 12:45:32 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/13 15:14:23 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-t_cmd	*init_cmd(void)
-{
-	t_cmd	*new;
-
-	new = malloc(sizeof(t_cmd) * 1);
-	new->exec_flag = 0;
-	new->parent_flag = 0;
-	new->parse_flag = 0;
-	new->type = 0;
-	new->str = NULL;
-	new->left = NULL;
-	new->right = NULL;
-	return (new);
-}
 
 void	free_cmd(t_cmd *cmd, char *buf)
 {

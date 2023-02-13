@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hj_split_change2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hojsong <hojsong@student.42seoul.k>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 16:14:13 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/03 15:21:38 by hojsong          ###   ########.fr       */
+/*   Updated: 2023/02/13 16:47:33 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	hj_ft_isen(char c)
 		return (1);
 	if (c >= '0' && c <= '9')
 		return (1);
-	if (c >= '_')
+	if (c == '_')
 		return (1);
 	return (0);
 }

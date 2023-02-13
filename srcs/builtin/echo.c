@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:36:27 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/12 20:24:34 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/13 19:09:25 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,21 +56,27 @@ void	echo_env(char *str, char ***envp, int option)
 
 char	*echo_parse(char *s, char ***envp, int option)
 {
+	int		idx;
 	char	**parse;
 	char	*str;
+	int		dest;
 
+	dest = 0;
 	parse = hj_split_cmd(s, *envp);
 	if (parse[1] == NULL)
 	{
 		free_parse(parse);
 		return (NULL);
 	}
+	idx = check_option(parse, &dest);
 	if (option == 1)
-		str = hj_echo_join(parse, 2);
+		str = hj_echo_join(parse, idx);
 	else
 		str = hj_echo_join(parse, 1);
 	return (str);
 }
+
+//echo -n -n -n -n asd
 
 int	ft_echo(t_cmd *cmd, char ***envp)
 {
@@ -80,9 +86,8 @@ int	ft_echo(t_cmd *cmd, char ***envp)
 
 	cmd->exec_flag = 1;
 	option = 0;
-	temp = ft_split(cmd->str, ' ');
-	if (!ft_strncmp(temp[1], "-n", 2))
-		option = 1;
+	temp = hj_split_cmd(cmd->str, *envp);
+	check_option(temp, &option);
 	parse = echo_parse(cmd->str, envp, option);
 	if (ft_strchr(cmd->str, '$') > 0)
 		echo_env(cmd->str, envp, option);

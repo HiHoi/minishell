@@ -3,42 +3,48 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 18:24:23 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/10 23:27:40 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/13 17:21:31 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	redi_input(t_cmd *cmd)
+void	redi_input(t_cmd *cmd, char ***envp)
 {
 	int		in;
 	char	*path;
+	char	**parse;
 
 	if (cmd->left->right)
 		path = ft_strtrim(cmd->left->right->str, " ");
 	else
 		path = ft_strtrim(cmd->right->str, " ");
-	in = open(path, O_RDONLY | O_EXCL, 0644);
+	parse = hj_split_cmd(path, *envp);
+	in = open(parse[0], O_RDONLY | O_EXCL, 0644);
 	if (in < 0)
 		error(NULL, path, 1);
 	dup2(in, STDIN_FILENO);
 	close(in);
+	free_parse(parse);
 }
 
-void	redi_output(t_cmd *cmd)
+void	redi_output(t_cmd *cmd, char ***envp)
 {
 	int		out;
 	char	*path;
+	char	**parse;
 
 	path = ft_strtrim(cmd->left->right->str, " ");
-	out = open(path, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	parse = hj_split_cmd(path, *envp);
+	out = open(parse[0], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (out < 0)
 		error(NULL, path, 1);
 	dup2(out, STDOUT_FILENO);
 	close(out);
+	free_parse(parse);
 }
 
 void	redi_heredoc(t_cmd *cmd)
@@ -53,17 +59,20 @@ void	redi_heredoc(t_cmd *cmd)
 	close(in);
 }
 
-void	redi_append(t_cmd *cmd)
+void	redi_append(t_cmd *cmd, char ***envp)
 {
 	int		out;
 	char	*path;
+	char	**parse;
 
 	path = ft_strtrim(cmd->left->right->str, " ");
-	out = open(path, O_RDWR | O_CREAT | O_APPEND, 0644);
+	parse = hj_split_cmd(path, *envp);
+	out = open(parse[0], O_RDWR | O_CREAT | O_APPEND, 0644);
 	if (out < 0)
 		error(NULL, path, 1);
 	dup2(out, STDOUT_FILENO);
 	close(out);
+	free_parse(parse);
 }
 
 void	hs_redirect(t_cmd *cmd, char ***envp)
@@ -79,13 +88,13 @@ void	hs_redirect(t_cmd *cmd, char ***envp)
 			{
 				if (cmd->str[i + 1] == '<')
 					return (redi_heredoc(cmd));
-				return (redi_input(cmd));
+				return (redi_input(cmd, envp));
 			}
 			else if (cmd->str[i] == '>')
 			{
 				if (cmd->str[i + 1] == '>')
-					return (redi_append(cmd));
-				return (redi_output(cmd));
+					return (redi_append(cmd, envp));
+				return (redi_output(cmd, envp));
 			}
 		}
 	}

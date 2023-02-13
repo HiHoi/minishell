@@ -6,13 +6,21 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 11:31:10 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/12 19:40:13 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/13 18:10:00 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 extern int	g_exit_code;
+
+int	ft_isdigit(int c)
+{
+	if ('0' <= c && c <= '9')
+		return (1);
+	else
+		return (0);
+}
 
 void	exit_get_code(pid_t pid)
 {
@@ -41,6 +49,27 @@ void	exit_get_code(pid_t pid)
 	unlink("/tmp/.temp_file");
 }
 
+int	set_exit_code(char *str)
+{
+	int	idx;
+
+	idx = -1;
+	if (str[0] == '-')
+		idx = 0;
+	while (str[++idx])
+	{
+		if (ft_isdigit(str[idx]) == 0)
+		{
+			write(2, "minishell: exit: ", 18);
+			write(2, str, ft_strlen(str));
+			write(2, ": numeric argument required\n", 29);
+			return (255);
+		}
+	}
+	g_exit_code = ft_atoi(str);
+	return (g_exit_code);
+}
+
 int	ft_exit(t_cmd *cmd, char ***envp)
 {
 	int		en_len;
@@ -62,7 +91,7 @@ int	ft_exit(t_cmd *cmd, char ***envp)
 		free_parse(parse);
 		return (g_exit_code);
 	}
-	g_exit_code = ft_atoi(parse[1]);
+	g_exit_code = set_exit_code(parse[1]);
 	free_parse(parse);
 	write(1, "exit\n", 5);
 	exit(g_exit_code);

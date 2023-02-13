@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 16:01:39 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/06 19:33:19 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/13 19:09:06 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ char	*hj_echo_join(char **str, int i)
 	int		idx;
 
 	idx = 1;
+	if (str[i] == NULL)
+		return (NULL);
 	result = ft_strdup(str[i]);
 	while (str[i + idx])
 	{
@@ -51,4 +53,28 @@ char	*hj_echo_join(char **str, int i)
 		idx++;
 	}
 	return (result);
+}
+
+int	check_option(char **str, int *option)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (str[++i])
+	{
+		if (str[i][0] != '-')
+			break ;
+		j = 0;
+		while (str[i][++j])
+		{
+			if (str[i][j] != 'n')
+				break ;
+		}
+		if (str[i][j])
+			break ;
+	}
+	if (i > 1)
+		*option = 1;
+	return (i);
 }

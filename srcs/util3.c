@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 12:46:02 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/12 12:52:54 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/13 19:57:34 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	check_argc(char *str)
 {
 	int		ret;
 
-	if (str && ft_isalpha(str[0]) == 1)
+	if (str && hj_envp_name_chk(str) == 0)
 		ret = 0;
 	else
 		ret = 2;
