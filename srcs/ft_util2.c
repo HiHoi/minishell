@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 12:39:44 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/06 12:41:04 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/14 16:47:25 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,10 @@ int	ft_strcmp(char *s1, char *s2)
 	int	i;
 
 	i = 0;
-	if (!s1 || !s2)
-		return (0);
+	if (!s1)
+		return (*s2);
+	else if (!s2)
+		return (*s1);
 	while (*(s1 + i) == *(s2 + i))
 	{
 		if (*(s1 + i) == '\0')

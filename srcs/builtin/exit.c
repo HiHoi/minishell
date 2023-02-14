@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 11:31:10 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/13 18:10:00 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/14 13:09:58 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,14 @@ int	set_exit_code(char *str)
 	idx = -1;
 	if (str[0] == '-')
 		idx = 0;
-	while (str[++idx])
+	if (str[idx + 1] == '\0')
+	{
+		write(2, "minishell: exit: ", 18);
+		write(2, str, ft_strlen(str));
+		write(2, ": numeric argument required\n", 29);
+		return (255);
+	}
+	while (str[++idx] != '\0')
 	{
 		if (ft_isdigit(str[idx]) == 0)
 		{
@@ -77,6 +84,7 @@ int	ft_exit(t_cmd *cmd, char ***envp)
 
 	cmd->exec_flag = 1;
 	parse = hj_split_cmd(cmd->str, *envp);
+	g_exit_code = 0;
 	if (!ft_strncmp(parse[0], "(exit)", 6))
 	{
 		free_parse(parse);
@@ -91,8 +99,9 @@ int	ft_exit(t_cmd *cmd, char ***envp)
 		free_parse(parse);
 		return (g_exit_code);
 	}
-	g_exit_code = set_exit_code(parse[1]);
-	free_parse(parse);
 	write(1, "exit\n", 5);
+	if (parse[1])
+		g_exit_code = set_exit_code(parse[1]);
+	free_parse(parse);
 	exit(g_exit_code);
 }

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 15:47:28 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/13 15:14:08 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/14 19:13:09 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,12 @@ int	error(t_info *info, char *s, int flag)
 	{
 		write(2, "minishell: ", 11);
 		write(2, s, ft_strlen(s));
-		if (flag == 1)
+		if (flag == 1 || flag == 3)
 		{
-			write(2, ": No such file or directory\n", 29);
+			if (flag == 1)
+				write(2, ": No such file or directory\n", 29);
+			else if (flag == 3)
+				write(2, ": Permission denied\n", 21);
 			g_exit_code = 1;
 		}
 		if (flag == 2)

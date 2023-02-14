@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 12:36:41 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/10 13:15:30 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/14 14:51:36 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,15 @@ int	syntax_redi(t_cmd *cmd)
 	return (1);
 }
 
+int	syntax_word(t_cmd *cmd)
+{
+	if (cmd->str == NULL)
+		return (1);
+	if (ft_strchr(cmd->str, '`') || hj_compare_check(cmd->str) == 0)
+		return (-1);
+	return (1);
+}
+
 int	check_cmd_syntax(t_cmd *cmd, char ***envp)
 {
 	int	ret;
@@ -39,6 +48,8 @@ int	check_cmd_syntax(t_cmd *cmd, char ***envp)
 		ret = syntax_pipe(cmd);
 	else if (cmd->type == T_REDI)
 		ret = syntax_redi(cmd->left);
+	else if (cmd->type == T_WORD)
+		ret = syntax_word(cmd);
 	if (cmd->left != NULL && ret == 1)
 		ret = check_cmd_syntax(cmd->left, envp);
 	if (cmd->right != NULL && ret == 1)
@@ -48,8 +59,6 @@ int	check_cmd_syntax(t_cmd *cmd, char ***envp)
 
 int	check_cmd_exec(t_cmd *cmd, char ***envp)
 {
-	if (hs_check_builtin(cmd) == 1)
-		return (-1);
 	if (check_cmd_syntax(cmd, envp) == -1)
 	{
 		write(2, "minishell: ", 12);
@@ -58,5 +67,7 @@ int	check_cmd_exec(t_cmd *cmd, char ***envp)
 		g_exit_code = 258;
 		return (g_exit_code);
 	}
+	if (hs_check_builtin(cmd, envp) == 1)
+		return (-1);
 	return (-1);
 }

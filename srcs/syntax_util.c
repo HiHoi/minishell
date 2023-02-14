@@ -1,37 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   syntax_util.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/30 20:36:33 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/14 12:33:52 by hoslim           ###   ########.fr       */
+/*   Created: 2023/02/14 14:16:07 by hoslim            #+#    #+#             */
+/*   Updated: 2023/02/14 16:50:17 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-//heredoc 환경변수
-//자식 프로세스의 sigign
-
-extern int	g_exit_code;
-
-int	main(int ac, char **av, char **envp)
+int	hj_compare_check(char *str)
 {
-	t_info	*info;
+	int	i;
 
-	if (ac != 1)
+	i = 0;
+	while (str[i])
 	{
-		write(2, "minishell: ", 12);
-		write(2, av[1], ft_strlen(av[1]));
-		write(2, ": No such file or directory\n", 29);
-		return (127);
+		if (str[i] == '\'')
+			while (str[++i] && str[i] != '\'')
+				;
+		else if (str[i] == '\"')
+			while (str[++i] && str[i] != '\"')
+				;
+		if (str[i] == '\0')
+			return (0);
+		if (str[i] == ';' || str[i] == '\\' || str[i] == '*')
+			return (0);
+		i++;
 	}
-	info = init_info(envp);
-	if (!info)
-		return (error(NULL, "Failed to initailzie\n", -1));
-	start_shell(info);
-	free_info(info);
-	return (0);
+	return (1);
 }

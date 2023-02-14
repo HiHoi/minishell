@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:38:13 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/12 19:31:49 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/14 13:26:28 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	check_key(char *envp, char *src)
 
 void	ft_unset(t_cmd *cmd, char ***envp)
 {
+	int		idx;
 	char	**target;
 	char	**ret;
 
@@ -47,7 +48,14 @@ void	ft_unset(t_cmd *cmd, char ***envp)
 		free_parse(target);
 		return ;
 	}
-	ret = hj_envp_del(*envp, target[1]);
-	*envp = ret;
+	idx = 0;
+	while (target[++idx])
+	{
+		if (target[idx][0] != '\0')
+		{
+			ret = hj_envp_del(*envp, target[idx]);
+			*envp = ret;
+		}
+	}
 	free_parse(target);
 }

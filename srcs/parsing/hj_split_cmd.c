@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   hj_split_cmd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hojsong <hojsong@student.42seoul.k>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 16:31:37 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/12 20:19:31 by hojsong          ###   ########.fr       */
+/*   Updated: 2023/02/14 14:01:57 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./test.h"
+
+extern int	g_exit_code;
 
 char	**hj_split_cmd(char *str, char **envp)
 {
@@ -76,7 +78,8 @@ int	hj_isseting(int i, int *set, int count)
 void	hj_ft_error(void)
 {
 	write(2, "minishell: not paired queto\n", 29);
-	exit(1);
+	g_exit_code = 1;
+	exit(g_exit_code);
 }
 
 int	hj_ft_strlen(char *str)

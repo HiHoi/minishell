@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 20:37:53 by hosunglim         #+#    #+#             */
-/*   Updated: 2023/02/13 19:57:24 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/14 16:49:02 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,15 +87,14 @@ char	**check_export(char **parse)
 
 	len = count_line(parse);
 	ret = malloc(sizeof(char *) * (len + 1));
+	if (ret == NULL)
+		return (NULL);
 	idx = -1;
 	idx_ret = 0;
 	while (parse[++idx])
 	{
 		if (hj_envp_name_chk(parse[idx]) == 1)
-		{
 			export_error(parse[idx]);
-			return (NULL);
-		}
 		else
 			ret[idx_ret++] = ft_strdup(parse[idx]);
 	}
@@ -106,25 +105,26 @@ char	**check_export(char **parse)
 void	ft_export(t_cmd *cmd, char ***envp)
 {
 	char	**new;
+	char	*test;
 	char	**admit;
 	char	**parsed;
 
 	cmd->exec_flag = 1;
-	if (ft_strcmp(cmd->str, "export") == 0)
-	{
+	test = ft_strtrim(cmd->str, " ");
+	if (ft_strcmp(test, "export") == 0)
 		export_declare(*envp);
-		return ;
-	}
-	parsed = hj_split_cmd(cmd->str, *envp);
-	admit = check_export(parsed);
-	if (admit == NULL)
+	else
 	{
+		parsed = hj_split_cmd(cmd->str, *envp);
+		admit = check_export(parsed);
+		if (admit != NULL)
+		{
+			new = hj_export_insert(admit, *envp);
+			free_parse(*envp);
+			*envp = new;
+			free_parse(admit);
+		}
 		free_parse(parsed);
-		return ;
 	}
-	new = hj_export_insert(admit, *envp);
-	free_parse(*envp);
-	*envp = new;
-	free_parse(parsed);
-	free_parse(admit);
+	free(test);
 }

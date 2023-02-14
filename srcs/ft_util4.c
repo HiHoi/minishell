@@ -6,11 +6,13 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 12:42:27 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/13 13:04:03 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/14 13:14:28 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+extern int	g_exit_code;
 
 int	nbrcheck(const char *str)
 {
@@ -99,5 +101,5 @@ void	shell_exit(t_info *info)
 	rl_on_new_line();
 	rl_redisplay();
 	printf("exit\n");
-	exit(1);
+	exit(g_exit_code);
 }

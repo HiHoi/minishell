@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/30 20:35:48 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/13 19:41:22 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/14 14:37:00 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ void	make_temp(t_cmd *cmd);
 int		exec_builtin(t_cmd *cmd, char ***envp);
 int		check_cmd_exec(t_cmd *cmd, char ***envp);
 int		hj_envp_name_chk(char *str);
+int		hj_compare_check(char *str);
 
 void	hs_search_tree(t_cmd *cmd, char ***envp);
 
@@ -124,7 +125,7 @@ void	close_other(int **fd, int cur, int count);
 void	close_all(int **fd, int cur);
 void	free_fd(int **fd, int count);
 
-int		hs_check_builtin(t_cmd *cmd);
+int		hs_check_builtin(t_cmd *cmd, char ***envp);
 void	hs_exec_builtin(t_cmd *cmd, char ***envp);
 int		check_option(char **str, int *option);
 void	ft_env(t_cmd *cmd, char ***envp);

@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 15:41:24 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/13 16:47:08 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/14 16:46:18 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,12 @@ char	*hj_envp_change(char *str, char **envp)
 	else if (str[1] == '?')
 	{
 		i = 2;
-		free(str);
-		return (hj_ft_atoi(g_exit_code));
+		set = hj_ft_atoi(g_exit_code);
 	}
 	else if ((!hj_ft_isalpha(str[1]) || str[1] == '\0'))
 		return (str);
-	set = hj_find_envp_val(str, &i, envp);
+	else
+		set = hj_find_envp_val(str, &i, envp);
 	if (i == hj_ft_strlen(str))
 	{
 		free(str);

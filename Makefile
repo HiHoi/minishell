@@ -3,7 +3,6 @@ CC = cc
 FLAG = -Wall -Werror -Wextra
 READLINE_LINK = -L $(shell brew --prefix readline)/lib -lreadline
 READLINE_COM = -I $(shell brew --prefix readline)/include
-TERMCAP = -lncurses
 RM = rm -rf
 SRCS = \
 		./srcs/main.c\
@@ -22,6 +21,7 @@ SRCS = \
 		./srcs/hj_redirection_split.c\
 		./srcs/hj_export_insert.c\
 		./srcs/syntax.c\
+		./srcs/syntax_util.c\
 		./srcs/hs_parse_util.c\
 		./srcs/pipe.c\
 		./srcs/redirection.c\
@@ -55,8 +55,8 @@ HEADER = ./includes/
 %.o : %.c
 	$(CC) $(FLAG) $(READLINE_COM) -I $(HEADER) -c $< -o $@
 
-$(NAME) : $(OBJS)
-	$(CC) $(FLAG) $(READLINE_LINK) $(TERMCAP) -o $(NAME) $(OBJS)
+$(NAME) : $(OBJS) $(HEADER)
+	$(CC) $(FLAG) $(READLINE_LINK) -o $(NAME) $(OBJS)
 
 all : $(NAME)
 

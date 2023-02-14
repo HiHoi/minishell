@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/02 19:09:03 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/13 16:10:59 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/14 18:47:01 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,10 @@ int	hs_check_heredoc(char *str)
 	{
 		if (str[i] == '<')
 		{
-			if (str[i + 1] == '<')
+			if (str[i + 1] == '<' && str[i + 2] != '<')
 				return (i + 1);
+			else
+				return (0);
 		}
 		i++;
 	}
