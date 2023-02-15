@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hj_split_util3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hojsong <hojsong@student.42seoul.k>        +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 14:13:27 by hojsong           #+#    #+#             */
-/*   Updated: 2023/02/12 17:53:51 by hojsong          ###   ########.fr       */
+/*   Updated: 2023/02/15 15:09:50 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ char	*hj_compare_split(char *str, int *idx, int *setpoint)
 	if (chk % 2 == 0 && str[i] != '$')
 		i++;
 	size = setpoint[*idx + 1];
-	if (str[size] == '\'' && chk % 2 == 0)
-		size++;
 	result = malloc(sizeof(char) * (size - i + 1));
 	if (result == NULL)
 		return (0);

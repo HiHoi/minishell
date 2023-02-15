@@ -6,7 +6,7 @@
 /*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/06 12:42:27 by hoslim            #+#    #+#             */
-/*   Updated: 2023/02/14 13:14:28 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/02/15 15:22:23 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 void	shell_exit(t_info *info)
 {
 	free(info);
+	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
 	printf("exit\n");
